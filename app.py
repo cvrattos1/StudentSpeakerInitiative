@@ -35,7 +35,7 @@ def post_something():
 
 @app.route('/')
 def index():
-	return "<h1>Welcome to our server!!</h1>"
+	return "<center><h1>Student Speakers Initiative</h1></center>"
 
 if __name__ == '__main__':
 	app.run(threaded=True, port=5000)
