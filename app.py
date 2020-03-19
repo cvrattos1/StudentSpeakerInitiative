@@ -19,5 +19,12 @@ def index():
 	response = make_response(html)
 	return response
 
+@app.route('/logout', methods=['GET'])
+def logout():
+	casClient = CASClient()
+	casClient.authenticate()
+	casClient.logout()
+	return redirect('/')
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
