@@ -3,40 +3,14 @@
 from flask import Flask, request, jsonify
 from flask import make_response, render_template
 from CASClient import CASClient
+from sys import argv
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
-@app.route('/getmsg/', methods=['GET'])
-def respond():
-	name = request.args.get("name",None)
-	print(f"got name {name}")
-	response = {}
+app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
-	if not name:
-		response["ERROR"] = "no name found, please send a name."
-	elif str(name).isdigit():
-		response["ERROR"] = "name can't be numeric."
-	else:
-		response["MESSAGE"] = f"Welcome {name} to our awesome platform!!!"
-
-	return jsonify(reponse)
-
-@app.route('/post/', methods=['POST'])
-def post_something():
-	param = request.form.get('name')
-	print(param)
-
-	if param:
-		return jsonify({
-			"Message": f"Welcome {name} to our awesome platform!!!",
-			"METHOD": "POST"
-			})
-	else:
-		return jsonify({
-			"ERROR": "no name found, please send a name."
-			})
-
-@app.route('/')
+@app.route('/', methods=['GET'])
+@app.route('/index', methods=['GET'])
 def index():
 
 	username = CASClient().authenticate()
@@ -46,4 +20,4 @@ def index():
 	return response
 
 if __name__ == '__main__':
-	app.run(threaded=True, port=5000)
+	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
