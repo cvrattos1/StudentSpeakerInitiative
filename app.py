@@ -1,6 +1,9 @@
 # app.py
 
 from flask import Flask, request, jsonify
+from flask import make_response, render_template
+from CASClient import CASClient
+
 app = Flask(__name__)
 
 @app.route('/getmsg/', methods=['GET'])
@@ -35,7 +38,12 @@ def post_something():
 
 @app.route('/')
 def index():
-	return "<center><h1>Student Speakers Initiative</h1><p>Change text here to test</p></center>"
+
+	username = CASClient().authenticate()
+
+	html = render_template('index.html', username=username)
+	response = make_response(html)
+	return response
 
 if __name__ == '__main__':
 	app.run(threaded=True, port=5000)
