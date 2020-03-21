@@ -1,0 +1,54 @@
+<!-- Landing Page -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="script.js" defer></script>
+        <link href="styles.css" rel="stylesheet">
+		<title>Student Speakers Initiative</title>
+	</head>
+	<body>
+		<center>
+			<h1>Student Speaker Initiative</h1>
+            <h2>Stude nt Page</h2>
+        </center>
+
+        <ul class="tabs">
+            <li data-tab-target="#home" class="active tab">Home</li>
+            <li data-tab-target="#nominate" class="tab">Nominate</li>
+            <li data-tab-target="#endorse" class="tab">Endorse</li>
+            <li data-tab-target="#vote" class="tab"> Vote</li>
+        </ul>
+
+        <div class="tab-contents">
+            <div id="home" data-tab-content class='active'>
+                <h1>Home</h1>
+                <p>This is the home page. The rules are you have one nomination, 10 endorsements. After a waiting period, blah blah blah
+                </p>
+            </div>
+            <div id="nominate" data-tab-content>
+                <h1>Nominate</h1>
+                <p>This is the nominating section.</p>
+            </div>
+            <div id="endorse" data-tab-content>
+                <h1>Endorse</h1>
+                <p>This is the endorsing section.</p>
+            </div>
+            <div id="vote" data-tab-content >
+                <h1>Nominate</h1>
+                <p>This is the voting section.</p>
+            </div>
+
+
+        </div>
+
+
+        <center>
+            <!--eventually link this to logout and then redirect to index.html-->
+			<a href='logout'>Click here to Logout!</a>
+		</center>
+	</body>
+</html>
