@@ -30,5 +30,9 @@ def logout():
 def student():
 	return render_template('student.html')
 
+@app.route('./admin.html')
+def admin():
+	return render_template('admin.html')
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
