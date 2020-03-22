@@ -46,18 +46,21 @@ function getNom() {
 endorsements_left = 5 
 endorsements_gained = 0
 function endorse() {
-    if (endorsements == 0){
+    if (endorsements_left == 0){
+        delete window.alert; 
         alert("No more endorsements left")
     }
     else {
         endorsements_gained = endorsements_gained + 1
         endorsements = endorsements - 1
-        document.getElementById("endorse_count").innerHTML = "count: " + endorsements_gained
+        document.getElementById("endorse_count").innerHTML = "Endorsement count: " + endorsements_gained
+        delete window.alert; 
         alert(endorsements + "left")
     }
     
 }
 function report() {
+    delete window.alert; 
     alert("Report will be reviewed soon.")
 
 }
