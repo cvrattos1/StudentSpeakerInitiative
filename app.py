@@ -14,14 +14,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/')
 @app.route('/index')
 def index():
-<<<<<<< HEAD
 	return render_template('index.html')
-=======
-	username = CASClient().authenticate()
-	html = render_template('index.html', username=username)
-	response = make_response(html)
-	return response
->>>>>>> ba2ccff28e2c21dc0cd905fbf0f4926685fc9097
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -33,13 +26,9 @@ def logout():
 @app.route('/student', methods=['GET'])
 def student():
 	username = CASClient().authenticate()
-<<<<<<< HEAD
 	html = render_template('student.html', username=username)
 	response = make_response(html)
 	return response
-=======
-	return render_template('student.html')
->>>>>>> ba2ccff28e2c21dc0cd905fbf0f4926685fc9097
 
 # Should add another layer of authentication
 @app.route('/admin', methods=['GET'])
