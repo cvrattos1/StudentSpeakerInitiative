@@ -21,7 +21,7 @@ def logout():
 	casClient = CASClient()
 	casClient.authenticate()
 	casClient.logout()
-	return redirect('https://studentspeakersinitiative.herokuapp.com/')
+	return redirect('/')
 
 @app.route('/student', methods=['GET'])
 def student():
