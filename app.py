@@ -30,9 +30,13 @@ def student():
 	response = make_response(html)
 	return response
 
-@app.route('/admin')
+# Should add another layer of authentication
+@app.route('/admin', methods=['GET'])
 def admin():
-	return render_template('admin.html')
-
+	username = CASClient().authenticate()
+	html = render_template('admin.html', username=username)
+	response = make_response(html)
+	return response
+	
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
