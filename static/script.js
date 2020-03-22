@@ -18,7 +18,6 @@ tabs.forEach(tab => {
 
 
 // Nominating 
-nominated = 0;
 function getNom() {
     var fname = document.getElementById("fname").value
     var lname = document.getElementById("lname").value
@@ -27,5 +26,10 @@ function getNom() {
     var photo = document.getElementById("photo").value
     document.getElementById("nom-button").style.display = "none"
     alert("Nomination submitted.")
+    document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
+    document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
+    document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
+
+
 
 }
