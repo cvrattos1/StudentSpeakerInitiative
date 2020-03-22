@@ -19,11 +19,11 @@ tabs.forEach(tab => {
 
 // Nominating 
 function getNom() {
-    var fname = document.getElementById("fname").value
-    var lname = document.getElementById("lname").value
-    var descrip = document.getElementById("descrip").value
-    var wiki = document.getElementById("wiki").value
-    var photo = document.getElementById("photo").value
+    // var fname = document.getElementById("fname").value
+    // var lname = document.getElementById("lname").value
+    // var descrip = document.getElementById("descrip").value
+    // var wiki = document.getElementById("wiki").value
+    // var photo = document.getElementById("photo").value
     
     // // show image 
     // var img = document.createElement("img");
