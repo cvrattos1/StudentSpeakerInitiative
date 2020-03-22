@@ -94,10 +94,8 @@ class CASClient:
         session.pop('username')
         
         # Redirect the browser to the logout page.
-        
-        # logout_url = self.cas_url + 'logout'
-        # abort(redirect(logout_url))
-        abort(redirect('https://studentspeakersinitiative.herokuapp.com/'))
+        logout_url = self.cas_url + 'logout'
+        abort(redirect(logout_url))
         
 #-----------------------------------------------------------------------
 

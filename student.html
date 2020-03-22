@@ -25,12 +25,28 @@
         <div class="tab-contents">
             <div id="home" data-tab-content class='active'>
                 <h1>Home</h1>
-                <p>This is the home page. The rules are you have one nomination, 10 endorsements. After a waiting period, blah blah blah
+                <p>This is the home page. The rules are you have one nomination, 10 endorsements. After a waiting period,
+                    there will be 5 people and you can vote on one. 
                 </p>
             </div>
             <div id="nominate" data-tab-content>
                 <h1>Nominate</h1>
-                <p>This is the nominating section.</p>
+                <p>You can only nominate one person. Nominations are not retractable.
+                   Fill out the fields below and press submit to see your nomination on the endorsement page.
+                   You cannot endorse a candidate that you nominated.  </p>
+                <!--form-->
+                <label for="fname">First name:</label>
+                <input type="text" id="fname" name="fname"><br><br>
+                <label for="lname">Last name:</label>
+                <input type="text" id="lname" name="lname"><br><br>
+                <label for="descrip">Description:</label>
+                <input type="text" id="descrip" name="descrip"><br><br>
+                <label for="wiki">Link to wiki:</label>
+                <input type="text" id="wiki" name="wiki"><br><br>
+                <label for="photo">Link to photo:</label>
+                <input type="text" id="photo" name="photo"><br><br> 
+                <button id="nom-button" onclick="getNom()">Submit</button>
+                <!--/form-->
             </div>
             <div id="endorse" data-tab-content>
                 <h1>Endorse</h1>
