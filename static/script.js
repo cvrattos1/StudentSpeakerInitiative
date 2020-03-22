@@ -35,7 +35,8 @@ function getNom() {
     // document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
     // document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
 
-    document.getElementById("nom-button").style.display = "none"
     alert("Nomination submitted.")
+    document.getElementById("nom-button").style.display = "none"
+    
 }
 
