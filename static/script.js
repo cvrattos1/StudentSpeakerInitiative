@@ -24,12 +24,18 @@ function getNom() {
     var descrip = document.getElementById("descrip").value
     var wiki = document.getElementById("wiki").value
     var photo = document.getElementById("photo").value
-    document.getElementById("nom-button").style.display = "none"
-    alert("Nomination submitted.")
+    
+    // show image 
+    var img = document.createElement("img");
+    img.src = photo;
+    var src = document.getElementById("x");
+    src.appendChild(img);
+    
     document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
     document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
     document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
 
-
-
+    document.getElementById("nom-button").style.display = "none"
+    alert("Nomination submitted.")
 }
+
