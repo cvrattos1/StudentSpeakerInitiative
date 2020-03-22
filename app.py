@@ -12,9 +12,7 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-
 	username = CASClient().authenticate()
-
 	html = render_template('index.html', username=username)
 	response = make_response(html)
 	return response
@@ -28,6 +26,7 @@ def logout():
 
 @app.route('/student')
 def student():
+	username = CASClient().authenticate()
 	return render_template('student.html')
 
 @app.route('/admin')
