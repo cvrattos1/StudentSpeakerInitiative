@@ -21,7 +21,7 @@ def logout():
 	casClient = CASClient()
 	casClient.authenticate()
 	casClient.logout()
-	return redirect('/')
+	return redirect('/index')
 
 @app.route('/student', methods=['GET'])
 def student():
@@ -37,6 +37,6 @@ def admin():
 	html = render_template('admin.html', username=username)
 	response = make_response(html)
 	return response
-	
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
