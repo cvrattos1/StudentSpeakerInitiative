@@ -19,22 +19,23 @@ tabs.forEach(tab => {
 
 // Nominating 
 function getNom() {
-    // var fname = document.getElementById("fname").value
-    // var lname = document.getElementById("lname").value
-    // var descrip = document.getElementById("descrip").value
-    // var wiki = document.getElementById("wiki").value
-    // var photo = document.getElementById("photo").value
+    var fname = document.getElementById("fname").value
+    var lname = document.getElementById("lname").value
+    var descrip = document.getElementById("descrip").value
+    var wiki = document.getElementById("wiki").value
+    var photo = document.getElementById("photo").value
     
-    // // show image 
-    // var img = document.createElement("img");
-    // img.src = photo;
-    // var src = document.getElementById("x");
-    // src.appendChild(img);
+    // show image 
+    var img = document.createElement("img");
+    img.src = photo;
+    var src = document.getElementById("x");
+    src.appendChild(img);
 
-    // document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
-    // document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
-    // document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
+    document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
+    document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
+    document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
 
+    delete window.alert; // true
     alert("Nomination submitted.")
     document.getElementById("nom-button").style.display = "none"
     
