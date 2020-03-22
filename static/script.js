@@ -26,18 +26,39 @@ function getNom() {
     var photo = document.getElementById("photo").value
     
     // show image 
-    var img = document.createElement("img");
-    img.src = photo;
-    var src = document.getElementById("x");
-    src.appendChild(img);
+    // var img = document.createElement("img");
+    // img.src = photo;
+    // var src = document.getElementById("x");
+    // src.appendChild(img);
 
-    document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
-    document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
-    document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
+    // document.getElementById("name_display").innerHTML = "Name: " + fname + " " + lname
+    // document.getElementById("descrip_display").innerHTML = "Description: " + descrip    
+    // document.getElementById("wiki_display").innerHTML = "Wiki Link: " + wiki
 
-    delete window.alert; // true
+    // bug - doesn't work in chrome 
+    delete window.alert; 
     alert("Nomination submitted.")
     document.getElementById("nom-button").style.display = "none"
     
+}
+
+// Endorsing 
+endorsements_left = 5 
+endorsements_gained = 0
+function endorse() {
+    if (endorsements == 0){
+        alert("No more endorsements left")
+    }
+    else {
+        endorsements_gained = endorsements_gained + 1
+        endorsements = endorsements - 1
+        document.getElementById("endorse_count").innerHTML = "count: " + endorsements_gained
+        alert(endorsements + "left")
+    }
+    
+}
+function report() {
+    alert("Report will be reviewed soon.")
+
 }
 
