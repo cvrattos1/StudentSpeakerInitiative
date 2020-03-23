@@ -4,14 +4,70 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie-edge">
-		<title>Student Speakers Initiative</title>
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet">
+        <title>Student Speakers Initiative</title>
 	</head>
 	<body>
 		<center>
 			<h1>Student Speaker Initiative</h1>
-			<h2>Admin: {{username}}</h2>
-			<a href='logout'>Click here to logout!</a>
-		</center>
+            <h2>Admin: {{username}}</h2>
+            <br>
+            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
+        </center>
+
+        <ul class="tabs">
+            <li data-tab-target="#home" class="active tab">Home</li>
+            <li data-tab-target="#reports" class="tab">Reports</li>
+            <li data-tab-target="#nominations" class="tab">Nominations</li>
+            <li data-tab-target="#votes" class="tab"> Votes</li>
+        </ul>
+
+        <div class="tab-contents">
+            <div id="home" data-tab-content class='active'>
+                <h1>Home</h1>
+                <p>This is the admin homepage, which means you have admin privileges. Use them wisely.</p>
+                <strong>((need a button for resetting database))</strong>
+                <br>
+                <strong>((need a button for setting the time periods for voting endorsements))</strong>
+            </div>
+            <div id="reports" data-tab-content>
+                <h1>Reports</h1>
+                <p>This is where we will display the reports that students have sent to the admin.
+                The admin will be able to accept or reject any report and then must give a reason
+            	for his/her/their decision. </p>
+                <!--form-->
+
+                <form action="nominate_flask" method = "get">
+                    <strong> ((reports will go here)) </strong>
+                </form>
+
+                <!--/form-->
+            </div>
+            <div id="nominations" data-tab-content>
+                <h1>Nominations</h1>
+                <p>These are the current nominations. </p><br>
+                {%for speaker in speakers: %}
+                    Name: {{database.getSpeakerFirstName(speaker)}} {{database.getSpeakerLastName(speaker)}}<br>
+                    Description: {{database.getSpeakerDescription(speaker)}}<br>
+                    Endorsement Count: {{database.getSpeakerEndorsements(speaker)}}<br>
+                    <br>
+                {% endfor %}
+
+            </div>
+            <div id="votes" data-tab-content >
+                <h1>Votes</h1>
+                <p>This is the voting section.</p>
+            </div>
+
+
+        </div>
+
+
+        <center>
+            <!--eventually link this to logout and then redirect to index.html-->
+			<a href='logout'>Click here to Logout!</a>
+        </center>
 	</body>
 </html>

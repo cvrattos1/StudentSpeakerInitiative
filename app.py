@@ -1,7 +1,7 @@
 # app.py
 
 from flask import Flask, request, jsonify
-from flask import make_response, render_template
+from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
 from database import *
 from sys import argv
@@ -27,6 +27,9 @@ def logout():
 
 @app.route('/student', methods=['GET'])
 def student():
+	errorMsg = request.args.get('errorMsg')
+	if errorMsg is None:
+		errorMsg = ''
 	username = CASClient().authenticate()
 
 	database = Database()
@@ -35,6 +38,7 @@ def student():
 
 	html = render_template('student.html',
 						   username=username,
+						   errorMsg=errorMsg,
 						   speakers=speakers,
 						   remaining=database.remainingEndorsements(username),
 						   database=database)
@@ -51,6 +55,11 @@ def nominate_flask():
 	fname=request.args.get('fname')
 	descrip=request.args.get('descrip')
 
+	if (lname=='' or fname=='' or descrip==''):
+		errorMsg = "None of the nomination's fields can be empty."
+		return redirect(url_for('student',
+						   errorMsg=errorMsg))
+
 	database.nominate(username, fname, lname, descrip)
 
 	speakers = database.getSpeakers()
@@ -58,6 +67,7 @@ def nominate_flask():
 	html = render_template('student.html',
 						   username=username,
 						   speakers=speakers,
+						   errormsg='',
 						   remaining=database.remainingEndorsements(username),
 						   database=database)
 	response = make_response(html)
@@ -66,7 +76,12 @@ def nominate_flask():
 @app.route('/admin', methods=['GET'])
 def admin():
 	username = CASClient().authenticate()
-	html = render_template('admin.html', username=username)
+	database = Database()
+	speakers = database.getSpeakers()
+	html = render_template('admin.html',
+							username=username, 
+							speakers=speakers, 
+							database=database)
 	response = make_response(html)
 	return response
 

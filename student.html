@@ -13,6 +13,8 @@
 		<center>
 			<h1>Student Speaker Initiative</h1>
             <h2>Student: {{username}}</h2>
+            <br>
+            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
         </center>
 
         <ul class="tabs">
@@ -37,6 +39,8 @@
                 <!--form-->
 
                 <form action="nominate_flask" method = "get">
+                    <strong> {{errorMsg}} </strong>
+                    <br>
                     <label for="fname">First name:</label>
                     <input type="text" id="fname" name="fname"><br><br>
                     <label for="lname">Last name:</label>
