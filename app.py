@@ -3,7 +3,9 @@
 from flask import Flask, request, jsonify
 from flask import make_response, render_template
 from CASClient import CASClient
+from database import *
 from sys import argv
+
 
 app = Flask(__name__, template_folder='.')
 
@@ -26,10 +28,40 @@ def logout():
 @app.route('/student', methods=['GET'])
 def student():
 	username = CASClient().authenticate()
-	html = render_template('student.html', username=username)
+
+	database = Database()
+
+	speakers = database.getSpeakers()
+
+	html = render_template('student.html',
+						   username=username,
+						   speakers=speakers,
+						   remaining=database.remainingEndorsements(username),
+						   database=database)
 	response = make_response(html)
+
 	return response
 
+@app.route('/nominate_flask')
+def nominate_flask():
+	username = CASClient().authenticate()
+	database = Database()
+
+	lname=request.args.get('lname')
+	fname=request.args.get('fname')
+	descrip=request.args.get('descrip')
+
+	database.nominate(username, fname, lname, descrip)
+
+	speakers = database.getSpeakers()
+
+	html = render_template('student.html',
+						   username=username,
+						   speakers=speakers,
+						   remaining=database.remainingEndorsements(username),
+						   database=database)
+	response = make_response(html)
+	return response
 # Should add another layer of authentication
 @app.route('/admin', methods=['GET'])
 def admin():

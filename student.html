@@ -35,49 +35,30 @@
                    Fill out the fields below and press submit to see your nomination on the endorsement page.
                    You cannot endorse a candidate that you nominated.  </p>
                 <!--form-->
-                <label for="fname">First name:</label>
-                <input type="text" id="fname" name="fname"><br><br>
-                <label for="lname">Last name:</label>
-                <input type="text" id="lname" name="lname"><br><br>
-                <label for="descrip">Description:</label>
-                <input type="text" id="descrip" name="descrip"><br><br>
-                <label for="wiki">Link to wiki:</label>
-                <input type="text" id="wiki" name="wiki"><br><br>
-                <label for="photo">Link to photo:</label>
-                <input type="text" id="photo" name="photo"><br><br> 
-                <button id="nom-button" onclick="getNom()">Submit</button>
+
+                <form action="nominate_flask" method = "get">
+                    <label for="fname">First name:</label>
+                    <input type="text" id="fname" name="fname"><br><br>
+                    <label for="lname">Last name:</label>
+                    <input type="text" id="lname" name="lname"><br><br>
+                    <label for="descrip">Description:</label>
+                    <input type="text" id="descrip" name="descrip"><br><br>
+                    <input type="submit" value = "Submit">
+                </form>
+
                 <!--/form-->
             </div>
             <div id="endorse" data-tab-content>
                 <h1>Endorse</h1>
-                <p>These are the current candidates. You have 5 retractable endorsement votes.</p><br><br> 
-                <img src="https://cdn.britannica.com/s:800x450,c:crop/97/172597-138-A04AE916/overview-George-Washington.jpg" width="500" height="333">
-                <p>Name: George Washington</p>
-                <p>Description: First US President.</p>
-                <p>Wiki Link: https://en.wikipedia.org/wiki/George_Washington</p>
-                <!-- Buttons broken -->
-                <button onclick="endorse()">Endorse</button>
-                <p id="endorse_count">Endorsement count: </p>
-                <button onclick="report()">Report</button>
-                <br><br><br><br>
-
-                <img src="https://celebsupdate.com/wp-content/uploads/2019/09/Kimmm.jpg"  width="500" height="333">
-                <p>Name: Kim K</p>
-                <p>Description: American media personality.</p>
-                <p>Wiki Link: https://en.wikipedia.org/wiki/Kim_Kardashian</p>
-                <!-- Buttons broken -->
-                <button onclick="endorse()">Endorse</button>
-                <p id="endorse_count">Endorsement count: </p>
-                <button onclick="report()">Report</button>
-                <br><br><br><br>
-
-                <!-- Can't figure out how to do image -->
-                <!-- <img src="" width="500" height="333"> -->
-                <!-- <div id="x"></div>
-                <p id="name_display">_</p>
-                <p id="descrip_display">_</p>
-                <p id="wiki_display">_ </p>
-                <br><br><br><br> -->
+                <p>These are the current candidates. You have 10 retractable endorsement votes. You have {{remaining}}
+                endorsements left. </p><br>
+                {%for speaker in speakers: %}
+                    Name: {{database.getSpeakerFirstName(speaker)}} {{database.getSpeakerLastName(speaker)}}<br>
+                    Description: {{database.getSpeakerDescription(speaker)}}<br>
+                    <input type="text" id="endorse_button" name="count">
+                    <input type="submit" value="Endorse"><br>
+                    </form>
+                {% endfor %}
 
             </div>
             <div id="vote" data-tab-content >
