@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet">
+        <title>Student Speakers Initiative</title>
+        <style>
+        {% include 'mainformat.html'%}
+        {% include 'navformat.html' %}
+        </style>
+	</head>
+	<div class="sidenav">
+        <a href="sHome">Home</a>
+        <a class="active">Nominate</a>
+        <a href="sEndorse">Endorse</a>
+        <a href="sVote">Vote</a>
+    </div>
+    <div class="main">
+		<body>
+			<center>
+				<h1>Student Speaker Initiative</h1>
+	            <h2>Student: {{username}}</h2>
+	            <br>
+	            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
+	        </center>
+	        <h1>Nominate</h1>
+	        <p>You have already nominated this cycle </p>
+	        <footer>
+	            <center>
+	                <!--eventually link this to logout and then redirect to index.html-->
+	                <a href='logout'>Click here to Logout!</a>
+	            </center>
+	        </footer>
+		</body>
+	</div>
+</html>

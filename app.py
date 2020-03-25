@@ -7,7 +7,7 @@ from database import *
 from sys import argv
 
 
-app = Flask(__name__, template_folder='.')
+app = Flask(__name__)
 
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
@@ -25,35 +25,33 @@ def logout():
 	casClient.logout()
 	return redirect('/')
 
-@app.route('/student', methods=['GET'])
+@app.route('/sHome', methods=['GET'])
 def student():
-    errorMsg = request.args.get('errorMsg')
-    if errorMsg is None:
-        errorMsg = ''
     username = CASClient().authenticate()
-
     database = Database()
 
-    speakers = database.getSpeakers() 
-    
-    nomname = database.hasNominated(username)
-    
-    if nomname == 1:
-        html = render_template('student1.html',
-    						   username=username,
-    						   errorMsg=errorMsg,
-    						   speakers=speakers,
-    						   remaining=database.remainingEndorsements(username),
-    						   database=database)
-    else: 
-        html = render_template('student.html',
-    						   username=username,
-    						   errorMsg=errorMsg,
-    						   speakers=speakers,
-    						   remaining=database.remainingEndorsements(username),
-    						   database=database)
+    html = render_template('sHome.html',
+    					   username=username)
     response = make_response(html)
+    return response
 
+@app.route('/sNom')
+def sNom():
+    username = CASClient().authenticate()
+    database = Database()
+    nomname = database.hasNominated(username)
+    if nomname == 1:
+        html = render_template('sNoNom.html',
+                               username=username)
+    else:
+        errorMsg = request.args.get('errorMsg')
+        if errorMsg is None:
+            errorMsg = ''
+        html = render_template('sNom.html',
+                               username=username,
+                               errorMsg=errorMsg)
+    
+    response = make_response(html)
     return response
 
 @app.route('/nominate_flask')
@@ -65,33 +63,90 @@ def nominate_flask():
     descrip=request.args.get('descrip')
     if (lname=='' or fname=='' or descrip==''):
         errorMsg = "None of the nomination's fields can be empty."
-        return redirect(url_for('student',
+        return redirect(url_for('sNom',
 						   errorMsg=errorMsg))
 
     database.nominate(username, fname, lname, descrip)
-
-    speakers = database.getSpeakers()
-
-    html = render_template('student.html',
+    speakers = database.getSpeakers() 
+    html = render_template('sEndorse.html',
 						   username=username,
 						   speakers=speakers,
-						   errormsg='',
 						   remaining=database.remainingEndorsements(username),
 						   database=database)
     response = make_response(html)
     return response
+
+
+@app.route('/sEndorse', methods=['GET'])
+def sEndorse():
+    username = CASClient().authenticate()
+
+    database = Database()
+
+    speakers = database.getSpeakers() 
+    html = render_template('sEndorse.html',
+                               username=username,
+                               speakers=speakers,
+                               remaining=database.remainingEndorsements(username),
+                               database=database)
+    response = make_response(html)
+
+    return response
+
+
+@app.route('/sVote', methods=['GET'])
+def sVote():
+    username = CASClient().authenticate()
+
+    database = Database()
+    html = render_template('sVote.html',
+                            username=username)
+    response = make_response(html)
+
+    return response
+
+
 # Should add another layer of authentication
-@app.route('/admin', methods=['GET'])
+@app.route('/aHome', methods=['GET'])
 def admin():
 	username = CASClient().authenticate()
 	database = Database()
-	speakers = database.getSpeakers()
-	html = render_template('admin.html',
-							username=username, 
-							speakers=speakers, 
-							database=database)
+	html = render_template('aHome.html',
+							username=username)
 	response = make_response(html)
 	return response
+
+@app.route('/aNoms', methods=['GET'])
+def aNoms():
+    username = CASClient().authenticate()
+    database = Database()
+    speakers = database.getSpeakers()
+    html = render_template('aNoms.html',
+                            username=username,
+                            speakers=speakers,
+                            database=database)
+    response = make_response(html)
+    return response
+
+@app.route('/aVotes', methods=['GET'])
+def aVotes():
+    username = CASClient().authenticate()
+    database = Database()
+
+    html = render_template('aVotes.html',
+                            username=username)
+    response = make_response(html)
+    return response
+
+@app.route('/aReports', methods=['GET'])
+def aReports():
+    username = CASClient().authenticate()
+    database = Database()
+
+    html = render_template('aReports.html',
+                            username=username)
+    response = make_response(html)
+    return response
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)

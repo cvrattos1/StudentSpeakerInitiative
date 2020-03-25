@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet">
+        <title>Student Speakers Initiative</title>
+        <style>
+        {% include 'mainformat.html'%}
+        {% include 'navformat.html' %}
+        </style>
+    </head>
+    <div class="sidenav">
+        <a href="aHome">Home</a>
+        <a href="aNoms">Nominations</a>
+        <a href="aVotes">Votes</a>
+        <a class="active">Reports</a>
+    </div>
+    <div class="main">
+    <body>
+        <center>
+            <h1>Student Speaker Initiative</h1>
+            <h2>Admin: {{username}}</h2>
+            <br>
+            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
+        </center>
+
+        <p>This is where we will display the reports that students have sent to the admin.
+        The admin will be able to accept or reject any report and then must give a reason
+        for his/her/their decision. </p>
+        
+        <footer>
+            <center>
+                <!--eventually link this to logout and then redirect to index.html-->
+                <a href='logout'>Click here to Logout!</a>
+            </center>
+        </footer>
+    </body>
+</div>
+</html>
