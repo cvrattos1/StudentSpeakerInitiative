@@ -27,51 +27,59 @@ def logout():
 
 @app.route('/student', methods=['GET'])
 def student():
-	errorMsg = request.args.get('errorMsg')
-	if errorMsg is None:
-		errorMsg = ''
-	username = CASClient().authenticate()
+    errorMsg = request.args.get('errorMsg')
+    if errorMsg is None:
+        errorMsg = ''
+    username = CASClient().authenticate()
 
-	database = Database()
+    database = Database()
 
-	speakers = database.getSpeakers()
+    speakers = database.getSpeakers() 
+    
+    nomname = database.hasNominated(username)
+    
+    if nomname == 1:
+        html = render_template('student1.html',
+    						   username=username,
+    						   errorMsg=errorMsg,
+    						   speakers=speakers,
+    						   remaining=database.remainingEndorsements(username),
+    						   database=database)
+    else: 
+        html = render_template('student.html',
+    						   username=username,
+    						   errorMsg=errorMsg,
+    						   speakers=speakers,
+    						   remaining=database.remainingEndorsements(username),
+    						   database=database)
+    response = make_response(html)
 
-	html = render_template('student.html',
-						   username=username,
-						   errorMsg=errorMsg,
-						   speakers=speakers,
-						   remaining=database.remainingEndorsements(username),
-						   database=database)
-	response = make_response(html)
-
-	return response
+    return response
 
 @app.route('/nominate_flask')
 def nominate_flask():
-	username = CASClient().authenticate()
-	database = Database()
-
-	lname=request.args.get('lname')
-	fname=request.args.get('fname')
-	descrip=request.args.get('descrip')
-
-	if (lname=='' or fname=='' or descrip==''):
-		errorMsg = "None of the nomination's fields can be empty."
-		return redirect(url_for('student',
+    username = CASClient().authenticate()
+    database = Database()
+    lname=request.args.get('lname')
+    fname=request.args.get('fname')
+    descrip=request.args.get('descrip')
+    if (lname=='' or fname=='' or descrip==''):
+        errorMsg = "None of the nomination's fields can be empty."
+        return redirect(url_for('student',
 						   errorMsg=errorMsg))
 
-	database.nominate(username, fname, lname, descrip)
+    database.nominate(username, fname, lname, descrip)
 
-	speakers = database.getSpeakers()
+    speakers = database.getSpeakers()
 
-	html = render_template('student.html',
+    html = render_template('student.html',
 						   username=username,
 						   speakers=speakers,
 						   errormsg='',
 						   remaining=database.remainingEndorsements(username),
 						   database=database)
-	response = make_response(html)
-	return response
+    response = make_response(html)
+    return response
 # Should add another layer of authentication
 @app.route('/admin', methods=['GET'])
 def admin():
