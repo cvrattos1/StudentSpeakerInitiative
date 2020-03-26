@@ -12,29 +12,26 @@
         {% include 'navformat.html' %}     
         </style>
     </head>
-    <div class="sidenav">
-        <a href="aHome">Home</a>
+     <div class="header">
+      <a href="index" class="logo">Student Speakers Initiative</a>
+      <div class="header-right">
+        <a  href="aHome">Home</a>
         <a href="aNoms">Nominations</a>
-        <a class="active">Votes</a>
+        <a class="active" href="aVotes">Votes</a>
         <a href="aReports">Reports</a>
+        <a href='logout' class="logout">Logout</a>
+      </div>
     </div>
     <div class="main">
-    <body>
-        <center>
-            <h1>Student Speaker Initiative</h1>
-            <h2>Admin: {{username}}</h2>
-            <br>
-            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
-        </center>
-        
-        <p>This is the voting section.</p>
-
-        <footer>
+        <body>
             <center>
-                <!--eventually link this to logout and then redirect to index.html-->
-                <a href='logout'>Click here to Logout!</a>
+                <h1>Student Speaker Initiative</h1>
+                <h2>Admin: {{username}}</h2>
+                <br>
+                <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
             </center>
-        </footer>
-    </body>
-</div>
+            
+            <p>This is the voting section.</p>
+        </body>
+    </div>
 </html>

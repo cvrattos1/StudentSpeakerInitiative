@@ -1,37 +1,57 @@
-.sidenav {
-          height: 100%;
-          width: 200px;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #111;
-          overflow-x: hidden;
-          padding-top: 20px;
-        }
+.header {
+  overflow: hidden;
+  background-color: #8c8c8c;
+  padding: 15px 15px;
+  font-family: "Arial Black", Gadget, sans-serif;
+  border-bottom-style: double;
+  border-top-style: double;
+  border-color: white;
+  border-width: 15px;
+  z-position: 1;
+}
 
-        .sidenav a {
-          padding: 6px 6px 6px 32px;
-          text-decoration: none;
-          font-size: 25px;
-          color: #818181;
-          display: block;
-        }
+.header a {
+  float: left;
+  color: #170b02;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px; 
+  line-height: 25px;
+  border-radius: 1px 20px 20px 20px;
+}
 
-        .sidenav a:hover {
-          color: #f1f1f1;
-        }
-        /* Add a color to the active/current link */
-        .sidenav a.active {
-        background-color: #F58025;
-        color: white;
-        }
+.header a.logo {
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
+}
 
-        .main {
-          margin-left: 200px; /* Same as the width of the sidenav */
-        }
+.header a.logout{
+  background-color: white;
+  color: #170b02;
+}
+.header a:hover {
+  background-color: #F58025;
+  color: white;
+}
 
-        @media screen and (max-height: 450px) {
-          .sidenav {padding-top: 15px;}
-          .sidenav a {font-size: 18px;}
-        }
+.header a.active {
+  background-color: #F58025;
+  color: white;
+}
+
+.header-right {
+  float: right;
+}
+
+@media screen and (max-width: 500px) {
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  
+  .header-right {
+    float: none;
+  }

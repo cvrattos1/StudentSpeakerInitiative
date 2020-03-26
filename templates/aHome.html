@@ -12,32 +12,29 @@
         {% include 'navformat.html' %}
         </style>
 	</head>
-    <div class="sidenav">
-        <a class="active">Home</a>
+    <div class="header">
+      <a href="index" class="logo">Student Speakers Initiative</a>
+      <div class="header-right">
+        <a class="active" href="aHome">Home</a>
         <a href="aNoms">Nominations</a>
         <a href="aVotes">Votes</a>
         <a href="aReports">Reports</a>
+        <a href='logout' class="logout">Logout</a>
+      </div>
     </div>
     <div class="main">
-	<body>
-		<center>
-			<h1>Student Speaker Initiative</h1>
-            <h2>Admin: {{username}}</h2>
-            <br>
-            <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
-            
-        </center>
-        <p>This is the admin homepage, which means you have admin privileges. Use them wisely.</p>
-        <strong>((need a button for resetting database))</strong>
-        <br>
-        <strong>((need a button for setting the time periods for voting endorsements))</strong>
-
-        <footer>
-            <center>
-                <!--eventually link this to logout and then redirect to index.html-->
-                <a href='logout'>Click here to Logout!</a>
+    	<body>
+    		<center>
+                <h2>Welcome {{username}}</h2>
+                <br>
+                <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3> 
             </center>
-        </footer>
-	</body>
-</div>
+            <p>This is the admin homepage, which means you have admin privileges. Use them wisely.</p>
+            <strong>((need a button for resetting database))</strong>
+            <br>
+            <strong>((need a button for setting the time periods for voting endorsements))</strong>
+            <br>
+            <strong> ((need a button for granting admin privileges))
+    	</body>
+    </div>
 </html>
