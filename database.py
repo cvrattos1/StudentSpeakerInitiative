@@ -95,6 +95,19 @@ class Database:
         query = 'SELECT speakid, count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
         endorsements = Database.connectDB(self, query)
         return endorsements
+    
+    # returns the string Endorse or Unendorse depending on if the student with netid has endorsed the speaker with
+    # speakid or not
+    def hasEndorsed(self, s_netid, s_speakid):
+        query = 'SELECT speakid, count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
+        endorsements = Database.connectDB(self, query)
+        idlist = []
+        for ids, _ in endorsements:
+            idlist.append(ids)
+        if s_speakid in idlist:
+            return "Unendorse"
+        else:
+            return "Endorse"
 
 
     # returns the speakid of the speaker that the student with netid netid has nominated if it exists, None otherwise
@@ -187,8 +200,15 @@ class Database:
         if len(exists) == 0:
             query = 'INSERT INTO endorsements VALUES (' + '\'' + s_netid + '\', \'' + s_speakid + '\', \'' + str(s_count) + '\')'
             Database.connectDB(self, query)
-        else:
-            query = 'UPDATE endorsements SET count = ' + str(s_count) + ' WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
+            
+    # allows the student with netid netid to unendorse the speaker with speakid speakid with count number of endorsements        
+    def unendorse(self, s_netid, s_speakid, s_count):
+        query = 'SELECT count FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
+        exists = Database.connectDB(self, query)
+        print(len(exists))
+        if len(exists) == 1:
+            print("yes")
+            query = 'DELETE FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
             Database.connectDB(self, query)
 
     # allows the student with netid netid to vote for the speaker with speakid speakid

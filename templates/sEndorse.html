@@ -35,14 +35,14 @@
     	<body>
             <p>These are the current candidates. You have 10 retractable endorsement votes. You have {{remaining}}
             endorsements left. </p><br>
-            <form>
-                {%for speaker in speakers: %}
-                    Name: {{database.getSpeakerFirstName(speaker)}} {{database.getSpeakerLastName(speaker)}}<br>
-                    Description: {{database.getSpeakerDescription(speaker)}}<br>
-                    <input type="text" id="endorse_button" name="count">
-                    <input type="submit" value="Endorse"><br>
-                {% endfor %}
-            </form>
+                {%for speaker in endorsementlist: %}
+                    <form action="endorse_flask" method = "put">
+                        Name: {{speaker.name}}<br>
+                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
+                        Description: {{speaker.description}}<br>
+                        <input type="submit" id="status" name="status" value={{speaker.endorsement}}><br>
+                    </form>
+                {% endfor %} 
     	</body>
     </div>
 </html>

@@ -11,6 +11,14 @@ app = Flask(__name__)
 
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
+class canidateprofile:
+  def __init__(self, speakerid, name, description, endorsement):
+    self.speakerid = speakerid  
+    self.name = name
+    self.description = description
+    self.endorsement = endorsement
+    
+
 # @app.route('/', methods=['GET'])
 # @app.route('/index', methods=['GET'])
 @app.route('/')
@@ -76,17 +84,62 @@ def nominate_flask():
     response = make_response(html)
     return response
 
+@app.route('/endorse_flask')
+def endorse_flask():
+    username = CASClient().authenticate()
+    database = Database()
+    speakerid =request.args.get('speakerid')
+    status = request.args.get('status')
+    
+    
+    if status == "Endorse":
+        database.endorse(username, speakerid, 1)
+    elif status == "Unendorse":
+        database.unendorse(username, speakerid, 1)
+    
+    speakers = database.getSpeakers() 
+    endorsementlist = []
+    
+    for speaker in speakers:
+        speakerid = speaker
+        name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
+        description = database.getSpeakerDescription(speaker)
+        endorsement = database.hasEndorsed(username,speaker)
+        print(endorsement)
+        tempcanidate = canidateprofile(speakerid, name, description, endorsement)
+        endorsementlist.append(tempcanidate)
+        
+    html = render_template('sEndorse.html',
+						   username=username,
+                           endorsementlist = endorsementlist,
+						   speakers=speakers,
+						   remaining=database.remainingEndorsements(username),
+						   database=database)
+    response = make_response(html)
+    return response
+
 
 @app.route('/sEndorse', methods=['GET'])
 def sEndorse():
     username = CASClient().authenticate()
 
     database = Database()
-
+    
     speakers = database.getSpeakers() 
+    
+    endorsementlist = []
+    
+    for speaker in speakers:
+        speakerid = speaker
+        name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
+        description = database.getSpeakerDescription(speaker)
+        endorsement = database.hasEndorsed(username,speaker)
+        tempcanidate = canidateprofile(speakerid, name, description, endorsement)
+        endorsementlist.append(tempcanidate)
+    
     html = render_template('sEndorse.html',
                                username=username,
-                               speakers=speakers,
+                               endorsementlist = endorsementlist,
                                remaining=database.remainingEndorsements(username),
                                database=database)
     response = make_response(html)
