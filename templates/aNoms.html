@@ -8,60 +8,40 @@
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
         <style>
-        table {
-          border-collapse: collapse;
-          margin: auto;
-          border: groove #170b02;
-        }
-
-        th, td {
-          text-align: center;
-          padding: 15px;
-        }
-
-        tr:nth-child(even){background-color: white}
-
-        th {
-          background-color: #F58025;
-          color: white;
-        }
+        {% include 'sideformat.html' %}
         {% include 'mainformat.html'%}
         {% include 'navformat.html' %}
         </style>
 	</head>
-    <div class="header">
-      <a href="index" class="logo">Student Speakers Initiative</a>
-      <div class="header-right">
-        <a href="aHome">Home</a>
-        <a class="active" href="aNoms">Nominations</a>
-        <a href="aVotes">Votes</a>
-        <a href="aReports">Reports</a>
-        <a href='logout' class="logout">Logout</a>
-      </div>
-    </div>
-    <div class="main">
-    	<body>
-            <center>
-                <h2>Admin: {{username}}</h2>
-                <br>
-                <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
-            </center>
-            <table>
-                <tr>
-                    <th><strong>First</strong></th>
-                    <th><strong>Last</strong></th>
-                    <th><strong>Description</strong></th>
-                    <th><strong>Endorsement Count</strong></th>
-                </tr>
-                {% for speaker in speakers: %}
-                    <tr>
-                        <td>{{database.getSpeakerFirstName(speaker)}}</td>
-                        <td>{{database.getSpeakerLastName(speaker)}}</td>
-                        <td>{{database.getSpeakerDescription(speaker)}}</td>
-                        <td>{{database.getSpeakerEndorsements(speaker)}}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-    	</body>
-    </div>
+    <body>
+        <div class="header">
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <div class="header-right">
+            <a href="aHome">Home</a>
+            <a class="active" href="aNoms">Nominations</a>
+            <a href="aVotes">Votes</a>
+            <a href="aReports">Reports</a>
+            <a href='logout' class="logout">Logout</a>
+          </div>
+        </div>
+        </div>
+            <div id="sidebar">
+            <p>Admin: {{username}}</p>
+            <p>((Endorsement)) is currently underway</p>
+            <p>Current period ends on ((TBD))</p>
+            <p>Current Admins</p>
+            <p>((Add list of admins))</p>
+        </div>
+        <div class="main">
+            {% for speaker in speakers: %}
+            <div class="nom">
+                <p class=text> Name: {{database.getSpeakerFirstName(speaker)}} {{database.getSpeakerLastName(speaker)}} <br>
+                Description: {{database.getSpeakerDescription(speaker)}} <br>
+                Endorsement Count: {{database.getSpeakerEndorsements(speaker)}}<br><br>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'sidescript.html' %}
+    </body>
 </html>

@@ -9,11 +9,12 @@
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
         <style>
-        {% include 'sideformat.html' %}
+        {% include 'sideformat.html'%}
         {% include 'mainformat.html'%}
         {% include 'navformat.html' %}
         </style>
 	</head>
+    <body>
     <div class="header">
       <a href="index" class="logo">Student Speakers Initiative</a>
       <div class="header-right">
@@ -24,7 +25,7 @@
         <a href='logout' class="logout">Logout</a>
       </div>
     </div>
-        <div class="sidebar">
+        <div id="sidebar">
         <p>Student: {{username}}</p>
         <p>((Endorsement)) is currently underway</p>
         <p>Current period ends on ((TBD))</p>
@@ -32,17 +33,20 @@
         <p>((Add list of admins))</p>
     </div>
     <div class="main">
-    	<body>
             <p>These are the current candidates. You have 10 retractable endorsement votes. You have {{remaining}}
             endorsements left. </p><br>
                 {%for speaker in endorsementlist: %}
+                <div class="nom">
                     <form action="endorse_flask" method = "put">
-                        Name: {{speaker.name}}<br>
+                        <p class="text"> Name: {{speaker.name}}<br>
+                        Description: {{speaker.description}}<br></p>
                         <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        Description: {{speaker.description}}<br>
-                        <input type="submit" id="status" name="status" value={{speaker.endorsement}}><br>
+                        <input type="submit" class="button" id="status" name="status" value={{speaker.endorsement}}><br>
                     </form>
-                {% endfor %} 
-    	</body>
+                </div>
+                <br>
+                {% endfor %}
     </div>
+    {% include 'sidescript.html'%}
+</body>
 </html>

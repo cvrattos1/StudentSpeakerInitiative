@@ -8,33 +8,37 @@
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
         <style>
+        {% include 'sideformat.html' %}
         {% include 'mainformat.html'%}
         {% include 'navformat.html' %}
         </style>
 	</head>
-    <div class="header">
-      <a href="index" class="logo">Student Speakers Initiative</a>
-      <div class="header-right">
-        <a class="active" href="aHome">Home</a>
-        <a href="aNoms">Nominations</a>
-        <a href="aVotes">Votes</a>
-        <a href="aReports">Reports</a>
-        <a href='logout' class="logout">Logout</a>
-      </div>
-    </div>
-    <div class="main">
-    	<body>
-    		<center>
-                <h2>Welcome {{username}}</h2>
-                <br>
-                <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3> 
-            </center>
-            <p>This is the admin homepage, which means you have admin privileges. Use them wisely.</p>
-            <strong>((need a button for resetting database))</strong>
-            <br>
-            <strong>((need a button for setting the time periods for voting endorsements))</strong>
-            <br>
-            <strong> ((need a button for granting admin privileges))
-    	</body>
-    </div>
+    <body>
+        <div class="header">
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <div class="header-right">
+            <a class="active" href="aHome">Home</a>
+            <a href="aNoms">Nominations</a>
+            <a href="aVotes">Votes</a>
+            <a href="aReports">Reports</a>
+            <a href='logout' class="logout">Logout</a>
+          </div>
+        </div>
+        </div>
+            <div id="sidebar">
+            <p>Admin: {{username}}</p>
+            <p>((Endorsement)) is currently underway</p>
+            <p>Current period ends on ((TBD))</p>
+            <p>Current Admins</p>
+            <p>((Add list of admins))</p>
+        </div>
+        <div class="main">
+            <p>Welcome {{username}}</p><br>
+            <p>This is the admin homepage, which means you have admin privileges. Use them wisely.
+            <br>((need a button for resetting database))
+            <br>((need a button for setting the time periods for voting endorsements))
+            <br>((need a button for granting admin privileges))</p>
+        </div>
+    {% include 'sidescript.html' %}
+    </body>
 </html>

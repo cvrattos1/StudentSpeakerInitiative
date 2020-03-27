@@ -8,31 +8,35 @@
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
         <style>
+        {% include 'sideformat.html' %}
         {% include 'mainformat.html'%}
         {% include 'navformat.html' %}
         </style>
     </head>
-    <div class="header">
-      <a href="index" class="logo">Student Speakers Initiative</a>
-      <div class="header-right">
-        <a  href="aHome">Home</a>
-        <a href="aNoms">Nominations</a>
-        <a href="aVotes">Votes</a>
-        <a class="active" href="aReports">Reports</a>
-        <a href='logout' class="logout">Logout</a>
-      </div>
-    </div>
-    <div class="main">
-        <body>
-            <center>
-                <h2>Admin: {{username}}</h2>
-                <br>
-                <h3> ((Nomination/Endorsement)) is currently underway and ends on ((TBD)). </h3>
-            </center>
-
+    <body>
+        <div class="header">
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <div class="header-right">
+            <a  href="aHome">Home</a>
+            <a href="aNoms">Nominations</a>
+            <a href="aVotes">Votes</a>
+            <a class="active" href="aReports">Reports</a>
+            <a href='logout' class="logout">Logout</a>
+          </div>
+        </div>
+        </div>
+            <div id="sidebar">
+            <p>Admin: {{username}}</p>
+            <p>((Endorsement)) is currently underway</p>
+            <p>Current period ends on ((TBD))</p>
+            <p>Current Admins</p>
+            <p>((Add list of admins))</p>
+        </div>
+        <div class="main">
             <p>This is where we will display the reports that students have sent to the admin.
             The admin will be able to accept or reject any report and then must give a reason
             for his/her/their decision. </p>
-        </body>
-    </div>
+        </div>
+        {% include 'sidescript.html' %}
+    </body>
 </html>

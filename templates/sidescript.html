@@ -1,0 +1,18 @@
+<script>
+  window.onscroll = function() {stickyFunction()};
+
+  var sidebar = document.getElementById("sidebar");
+  var sticky = sidebar.offsetTop;
+  sidebar.classList.add("nosticky");
+
+  function stickyFunction() {
+    if (window.pageYOffset > sticky + 10) {
+      sidebar.classList.add("sticky")
+      sidebar.classList.remove("nosticky");
+    } else {
+      sidebar.classList.remove("sticky");
+      sidebar.classList.add("nosticky");
+    }
+  }
+</script>
+
