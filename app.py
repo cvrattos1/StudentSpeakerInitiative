@@ -1,5 +1,5 @@
 # app.py
-
+from random import shuffle
 from flask import Flask, request, jsonify
 from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
@@ -47,7 +47,30 @@ def filllist(username, database, request):
     
     return finallist
     
-
+def renderendorse(username, database):
+    templist = filllist(username, database, "endorsement")
+    endorselist = []
+    for speaker in templist:
+        if speaker.endorsement == "Unendorse":
+            endorselist.append(speaker)
+            templist.remove(speaker)
+    for i in endorselist:
+        print(i.name)
+    print('')
+    for i in templist:
+        print(i.name)
+    shuffle(templist)
+    endorsementlist = endorselist + templist
+    for i in endorsementlist:
+        print (i.name)
+    remaining=database.remainingEndorsements(username)  
+    html = render_template('sEndorse.html',
+						   username=username,
+                           endorsementlist = endorsementlist,
+						   remaining = remaining)
+    response = make_response(html)
+    return response
+    
 # @app.route('/', methods=['GET'])
 # @app.route('/index', methods=['GET'])
 @app.route('/')
@@ -106,13 +129,8 @@ def nominate_flask():
     if not database.hasNominated(username):
         database.nominate(username, fname, lname, descrip)
     
-    endorsementlist = filllist(username, database, "endorsement")
-    remaining=database.remainingEndorsements(username)  
-    html = render_template('sEndorse.html',
-						   username=username,
-                           endorsementlist = endorsementlist,
-						   remaining = remaining)
-    response = make_response(html)
+    response = renderendorse(username, database)
+   
     return response
 
 @app.route('/endorse_flask')
@@ -128,14 +146,7 @@ def endorse_flask():
     elif status == "Unendorse":
         database.unendorse(username, speakerid, 1)
     
-    endorsementlist = filllist(username, database, "endorsement")
-    remaining = database.remainingEndorsements(username) 
-
-    html = render_template('sEndorse.html',
-						   username=username,
-                           endorsementlist = endorsementlist,
-						   remaining = remaining)
-    response = make_response(html)
+    response = renderendorse(username, database)
     return response
 
 
@@ -143,13 +154,7 @@ def endorse_flask():
 def sEndorse():
     username = CASClient().authenticate()
     database = Database()
-    endorsementlist = filllist(username, database, "endorsement")
-    remaining = database.remainingEndorsements(username) 
-    html = render_template('sEndorse.html',
-                               username = username,
-                               endorsementlist = endorsementlist,
-                               remaining = remaining)
-    response = make_response(html)
+    response = renderendorse(username, database)
 
     return response
 
@@ -166,6 +171,7 @@ def sVote():
             response = make_response(html)
         else:
             votinglist = filllist(username,database, "voting")
+            shuffle(votinglist)
             html = render_template('sVote.html',
                                    username=username,
                                    votinglist = votinglist)
