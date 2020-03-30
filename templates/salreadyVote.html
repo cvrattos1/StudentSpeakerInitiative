@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet">
+        <title>Student Speakers Initiative</title>
+        <style>
+        {% include 'sideformat.html' %}
+        {% include 'mainformat.html'%}
+        {% include 'navformat.html' %}
+        </style>
+	</head>
+    <body>
+        <div class="header">
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <div class="header-right">
+            <a href="sHome">Home</a>
+            <a href="sNom">Nominate</a>
+            <a href="sEndorse">Endorse</a>
+            <a class="active" href="sVote">Vote</a>
+            <a href='logout' class="logout">Logout</a>
+          </div>
+        </div>
+            <div id="sidebar">
+            <p>Student: {{username}}</p>
+            <p>((Endorsement)) is currently underway</p>
+            <p>Current period ends on ((TBD))</p>
+            <p>Current Admins</p>
+            <p>((Add list of admins))</p>
+        </div>
+        <div class="main">
+            <p>You have already voted. Please return on ((TBD)) to see the results.</p>	
+        </div>
+        {% include 'sidescript.html' %}
+    </body>
+</html>

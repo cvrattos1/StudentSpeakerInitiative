@@ -137,10 +137,11 @@ class Database:
     def getEndorsed(self, threshold):
         query = 'SELECT speakid FROM endorsements WHERE count >= ' + str(threshold)
         endorsed = Database.connectDB(self, query)
-
+        print(endorsed)
         endorsed_list = []
         for i in range(len(endorsed)):
-            endorsed_list.append(endorsed[i][0])
+            if endorsed[i][0] not in endorsed_list:
+                endorsed_list.append(endorsed[i][0])
 
         return endorsed_list
 

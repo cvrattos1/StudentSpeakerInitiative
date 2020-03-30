@@ -19,22 +19,34 @@ class canidateprofile:
     self.endorsement = endorsement
     self.totalcount = totalcount
 
-def filllist(username, database):
+def filllist(username, database, request):
     
-    speakers = database.getSpeakers() 
-    endorsementlist = []
+    finallist = []
     
-    for speaker in speakers:
-        speakerid = speaker
-        name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
-        print(name)
-        description = database.getSpeakerDescription(speaker)
-        endorsement = database.hasEndorsed(username,speaker)
-        totalcount = database.getSpeakerEndorsements(speaker)
-        tempcanidate = canidateprofile(speakerid, name, description, endorsement, totalcount)
-        endorsementlist.append(tempcanidate)   
-        
-    return endorsementlist
+    if request is "endorsement":
+        speakers = database.getSpeakers() 
+        for speaker in speakers:
+            speakerid = speaker
+            name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
+            description = database.getSpeakerDescription(speaker)
+            endorsement = database.hasEndorsed(username,speaker)
+            totalcount = database.getSpeakerEndorsements(speaker)
+            tempcanidate = canidateprofile(speakerid, name, description, endorsement, totalcount)
+            finallist.append(tempcanidate)   
+    
+    else:
+        speakers = database.getEndorsed(2)
+        print(speakers)
+        for speaker in speakers:
+            speakerid = speaker
+            name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
+            description = database.getSpeakerDescription(speaker)
+            totalcount = database.getSpeakerVotes(speaker)
+            tempcanidate = canidateprofile(speakerid, name, description, None, totalcount)
+            finallist.append(tempcanidate)  
+    
+    return finallist
+    
 
 # @app.route('/', methods=['GET'])
 # @app.route('/index', methods=['GET'])
@@ -94,7 +106,7 @@ def nominate_flask():
     if not database.hasNominated(username):
         database.nominate(username, fname, lname, descrip)
     
-    endorsementlist = filllist(username, database)
+    endorsementlist = filllist(username, database, "endorsement")
     remaining=database.remainingEndorsements(username)  
     html = render_template('sEndorse.html',
 						   username=username,
@@ -111,13 +123,14 @@ def endorse_flask():
     status = request.args.get('status')
     
     if status == "Endorse":
-        database.endorse(username, speakerid, 1)
+        if (database.remainingEndorsements(username)) > 0 :
+            database.endorse(username, speakerid, 1)
     elif status == "Unendorse":
         database.unendorse(username, speakerid, 1)
     
-    endorsementlist = filllist(username, database)
-    remaining=database.remainingEndorsements(username) 
-        
+    endorsementlist = filllist(username, database, "endorsement")
+    remaining = database.remainingEndorsements(username) 
+
     html = render_template('sEndorse.html',
 						   username=username,
                            endorsementlist = endorsementlist,
@@ -130,7 +143,7 @@ def endorse_flask():
 def sEndorse():
     username = CASClient().authenticate()
     database = Database()
-    endorsementlist = filllist(username, database)
+    endorsementlist = filllist(username, database, "endorsement")
     remaining = database.remainingEndorsements(username) 
     html = render_template('sEndorse.html',
                                username = username,
@@ -144,12 +157,24 @@ def sEndorse():
 @app.route('/sVote', methods=['GET'])
 def sVote():
     username = CASClient().authenticate()
-
     database = Database()
-    html = render_template('sVote.html',
-                            username=username)
-    response = make_response(html)
-
+    votingperiod = "True"
+    if votingperiod:
+        if database.hasVoted(username):
+            html = render_template('salreadyVote.html',
+                                username=username)
+            response = make_response(html)
+        else:
+            votinglist = filllist(username,database, "voting")
+            html = render_template('sVote.html',
+                                   username=username,
+                                   votinglist = votinglist)
+            response = make_response(html)
+    else:
+        html = render_template('snoVote.html',
+                                username=username)
+        response = make_response(html)
+    
     return response
 
 
