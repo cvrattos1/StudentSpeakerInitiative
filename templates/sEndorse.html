@@ -8,53 +8,43 @@
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
-        <style>
-        {% include 'sideformat.html'%}
-        {% include 'mainformat.html'%}
-        {% include 'navformat.html' %}
-        </style>
 	</head>
     <body>
-    <div class="header">
-      <a href="index" class="logo">Student Speakers Initiative</a>
-      <div class="header-right">
-        <a href="sHome">Home</a>
-        <a href="sNom">Nominate</a>
-        <a class="active" href="sEndorse">Endorse</a>
-        <a href="sVote">Vote</a>
-        <a href='logout' class="logout">Logout</a>
-      </div>
-    </div>
-        <div id="sidebar">
-        <p>Student: {{username}}</p>
-        <p>((Endorsement)) is currently underway</p>
-        <p>Current period ends on ((TBD))</p>
-        <p>Current Admins</p>
-        <p>((Add list of admins))</p>
-    </div>
-    <div class="main">
-            <p>These are the current candidates. You have 10 retractable endorsement votes. You have {{remaining}}
-            endorsements left. </p><br>
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="sHome">Home</a>
+            <a href="sNom">Nominate</a>
+            <a class="active" href="sEndorse">Endorse</a>
+            <a href="sVote">Vote</a>
+            <a href='logout' class="logout">Logout</a>
+        </div>
+        <div class="header" id="myHeader">
+          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <a class="user"> Student: {{username}} </a>
+        </div>
+        <div class="main">
+            <p class="misc">These are the current candidates. You may endorse up to 10 speakers at any given time 
+                during the endorsement period. You have {{remaining}} endorsements left. </p><br>
                 {%for speaker in endorsementlist: %}
                 <div class="nom">
                     <form action="endorse_flask" method = "put">
-                        <p class="text"> Name: {{speaker.name}}<br>
+                        <p> Name: {{speaker.name}}<br>
                         Description: {{speaker.description}}<br></p>
                         <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        <input type="submit" class="button" id="status" name="status" value={{speaker.endorsement}}><br>
+                        <input type="submit" class="acceptButton" id="status" name="status" value={{speaker.endorsement}}>
                     </form>
                     <form action="flag_flask" method = "put">
-                        <input type="submit" class="button" id="status" name="flag" value="Flag"><br>
-                        <center>
-                            <label for="reason">Reason:</label><br>
-                            <input type="text" id="reason" name="reason"><br>
-                            <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        </center>
+                        <input type="submit" class="rejectButton" id="status" name="flag" value="Flag">
+                        <br><br>
+                        <label for="reason">Reason for report:</label>
+                        <input class="textfield" type="text" id="reason" name="reason">
+                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
+                        <br>
                     </form>
                 </div>
                 <br>
                 {% endfor %}
-    </div>
-    {% include 'sidescript.html'%}
-</body>
+        </div>
+    </body>
 </html>

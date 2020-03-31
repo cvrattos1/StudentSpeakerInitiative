@@ -149,6 +149,43 @@ def endorse_flask():
     response = renderendorse(username, database)
     return response
 
+
+@app.route('/vote_flask')
+def vote_flask():
+    username = CASClient().authenticate()
+    database = Database()
+    speakerid =request.args.get('speakerid')
+    
+
+    #Please add stuff here!
+
+    response = renderendorse(username, database)
+    return response
+
+@app.route('/reset_flask')
+def reset_flask():
+    username = CASClient().authenticate()
+    database = Database()
+    speakerid =request.args.get('speakerid')
+    
+
+    #Please add stuff here!
+
+    response = renderendorse(username, database)
+    return response
+
+@app.route('/changeStep_flask')
+def changeStep_flask():
+    username = CASClient().authenticate()
+    database = Database()
+    speakerid =request.args.get('speakerid')
+    
+
+    #Please add stuff here!
+
+    response = renderendorse(username, database)
+    return response
+
 @app.route('/flag_flask')
 def flag_flask():
     username = CASClient().authenticate()

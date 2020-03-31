@@ -7,53 +7,47 @@
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
-        <style>
-        {% include 'sideformat.html' %}
-        {% include 'mainformat.html'%}
-        {% include 'navformat.html' %}
-        </style>
     </head>
     <body>
-        <div class="header">
-          <a href="index" class="logo">Student Speakers Initiative</a>
-          <div class="header-right">
-            <a  href="aHome">Home</a>
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="aHome">Home</a>
             <a href="aNoms">Nominations</a>
             <a href="aVotes">Votes</a>
             <a class="active" href="aReports">Reports</a>
-            <a href='logout' class="logout">Logout</a>
+            <a href="logout">Logout</a>
+        </div>
+        <div class="header" id="myHeader">
+          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <a class="user"> Admin: {{username}} </a>
           </div>
         </div>
-        </div>
-            <div id="sidebar">
-            <p>Admin: {{username}}</p>
-            <p>((Endorsement)) is currently underway</p>
-            <p>Current period ends on ((TBD))</p>
-            <p>Current Admins</p>
-            <p>((Add list of admins))</p>
-        </div>
         <div class="main">
-            <p>This is where we will display the reports that students have sent to the admin.
-            The admin will be able to accept or reject any report and then must give a reason
-            for his/her/their decision. </p>
+            <p class="misc">These are the nominated speakers that have been flagged for additional review.
+            You may either dismiss the report (in which the speaker will remain in the list of candidates)
+            or accept the report (in which the speaker will be removed and any endorsements will be
+            refunded). </p>
             {% for report in reports: %}
             <div class="nom">
-                <p class=text> Netid: {{report[0]}}<br>
+                <p> Netid: {{report[0]}}<br>
                 Speaker: {{database.getSpeakerFirstName(report[1])}} {{database.getSpeakerLastName(report[1])}} <br>
-                Reason: {{report[2]}}<br><br>
+                Reason: {{report[2]}}<br>
                 </p>
+                <center>
                 <form action="dismiss_flag" method = "put">
-                    <input type="submit" class="button" id="status" name="dismiss" value="Dismiss">
-                    <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}><br>
-                </form>
-                <form action="remove_nomination" method = "put">
-                    <input type="submit" class="button" id="status" name="remove" value="Remove"><br>
+                    <input type="submit" class="acceptButton" id="status" name="dismiss" value="Dismiss">
                     <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
                 </form>
+                <form action="remove_nomination" method = "put">
+                    <input type="submit" class="rejectButton" id="status" name="remove" value="Remove">
+                    <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
+                </form>
+                <br><br>
+                </center>
             </div>
-            <br>
+            <br><br>
             {% endfor %}
         </div>
-        {% include 'sidescript.html' %}
     </body>
 </html>

@@ -1,3 +1,11 @@
+//For the sidenav
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0px";
+}
 
 // Tab graphics 
 const tabs = document.querySelectorAll('[data-tab-target]')

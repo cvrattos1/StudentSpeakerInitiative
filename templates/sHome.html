@@ -8,35 +8,24 @@
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
         <title>Student Speakers Initiative</title>
-        <style>
-        {% include 'sideformat.html' %}
-        {% include 'mainformat.html'%}
-        {% include 'navformat.html' %}
-        </style>
 	</head>
     <body>
-        <div class="header">
-          <a href="index" class="logo">Student Speakers Initiative</a>
-          <div class="header-right">
-            <a class="active" href="sHome">Home</a>
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a class="active"href="sHome">Home</a>
             <a href="sNom">Nominate</a>
             <a href="sEndorse">Endorse</a>
             <a href="sVote">Vote</a>
             <a href='logout' class="logout">Logout</a>
+        </div>
+        <div class="header" id="myHeader">
+          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <a class="user"> Student: {{username}} </a>
           </div>
-        </div>
-            <div id="sidebar">
-            <p>Student: {{username}}</p>
-            <p>((Endorsement)) is currently underway</p>
-            <p>Current period ends on ((TBD))</p>
-            <p>Current Admins</p>
-            <p>((Add list of admins))</p>
-        </div>
         <div class="main">
-        	
-                    <p>This is the home page. The rules are you have one nomination, 10 endorsements. After a waiting period,
+            <p class="misc">This is the home page. The rules are you have one nomination, 10 endorsements. After a waiting period,
                         there will be 5 people and you can vote on one. </p>
         </div>
-        {% include 'sidescript.html' %}
     </body>
 </html>
