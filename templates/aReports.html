@@ -36,6 +36,14 @@
             <p>This is where we will display the reports that students have sent to the admin.
             The admin will be able to accept or reject any report and then must give a reason
             for his/her/their decision. </p>
+            {% for report in reports: %}
+            <div class="nom">
+                <p class=text> Netid: {{report[0]}}<br>
+                Speaker: {{database.getSpeakerFirstName(report[1])}} {{database.getSpeakerLastName(report[1])}} <br>
+                Reason: {{report[2]}}<br><br>
+                </p>
+            </div>
+            {% endfor %}
         </div>
         {% include 'sidescript.html' %}
     </body>

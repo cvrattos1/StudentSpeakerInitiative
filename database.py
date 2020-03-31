@@ -109,22 +109,25 @@ class Database:
         else:
             return "Endorse"
 
-    # returns True or False depending on if teh student with netid s_netid has endorsed the speakid
+    # returns True or False depending on if the student with netid s_netid has flagged the speakid
     # s_speakid or not
     def hasFlagged(self, s_netid, s_speakid):
         query = 'SELECT speakid FROM reports WHERE netid = ' + '\'' + s_netid + '\''
         reports = Database.connectDB(self, query)
 
-        print(reports)
-        print(s_speakid)
         idlist = []
         for report in reports:
-            print(report[0])
             idlist.append(report[0])
         if s_speakid in idlist:
-            return True
+            return "Flagged"
         else:
-            return False
+            return "Flag"
+
+    # returns a list of all of the reports that have been submitted
+    def getReports(self):
+        query = 'SELECT netid, speakid, reason FROM reports'
+        reports = Database.connectDB(self, query)
+        return reports
 
     # returns the speakid of the speaker that the student with netid netid has nominated if it exists, None otherwise
     def getNomination(self, s_netid):

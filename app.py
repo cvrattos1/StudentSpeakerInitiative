@@ -36,7 +36,7 @@ def filllist(username, database, request):
     
     else:
         speakers = database.getEndorsed(2)
-        print(speakers)
+        # print(speakers)
         for speaker in speakers:
             speakerid = speaker
             name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
@@ -156,10 +156,7 @@ def flag_flask():
     reason = request.args.get('reason')
     speakerid = request.args.get('speakerid')
 
-    if database.hasFlagged(username, speakerid):
-        print("Already flagged")
-    else:
-        database.flag(username, speakerid, reason)
+    database.flag(username, speakerid, reason)
 
     response = renderendorse(username, database)
     return response
@@ -235,8 +232,11 @@ def aReports():
     username = CASClient().authenticate()
     database = Database()
 
+    reports = database.getReports()
     html = render_template('aReports.html',
-                            username=username)
+                            username=username,
+                            reports=reports,
+                            database=database)
     response = make_response(html)
     return response
 
