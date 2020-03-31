@@ -109,6 +109,22 @@ class Database:
         else:
             return "Endorse"
 
+    # returns True or False depending on if teh student with netid s_netid has endorsed the speakid
+    # s_speakid or not
+    def hasFlagged(self, s_netid, s_speakid):
+        query = 'SELECT speakid FROM reports WHERE netid = ' + '\'' + s_netid + '\''
+        reports = Database.connectDB(self, query)
+
+        print(reports)
+        print(s_speakid)
+        idlist = []
+        for report in reports:
+            print(report[0])
+            idlist.append(report[0])
+        if s_speakid in idlist:
+            return True
+        else:
+            return False
 
     # returns the speakid of the speaker that the student with netid netid has nominated if it exists, None otherwise
     def getNomination(self, s_netid):
@@ -200,6 +216,16 @@ class Database:
         exists = Database.connectDB(self, query)
         if len(exists) == 0:
             query = 'INSERT INTO endorsements VALUES (' + '\'' + s_netid + '\', \'' + s_speakid + '\', \'' + str(s_count) + '\')'
+            Database.connectDB(self, query)
+
+    # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
+    def flag(self, s_netid, s_speakid, reason):
+        query = 'SELECT speakid FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
+        exists = Database.connectDB(self, query)
+        print('called')
+        if len(exists) == 0:
+            print('inserted')
+            query = 'INSERT INTO reports VALUES (' + '\'' + s_netid + '\', \'' + s_speakid + '\', \'' + str(reason) + '\')'
             Database.connectDB(self, query)
             
     # allows the student with netid netid to unendorse the speaker with speakid speakid with count number of endorsements        

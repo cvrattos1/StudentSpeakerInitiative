@@ -43,6 +43,14 @@
                         <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
                         <input type="submit" class="button" id="status" name="status" value={{speaker.endorsement}}><br>
                     </form>
+                    <form action="flag_flask" method = "put">
+                        <input type="submit" class="button" id="status" name="flag" value="Flag"><br>
+                        <center>
+                            <label for="reason">Reason:</label><br>
+                            <input type="text" id="reason" name="reason"><br>
+                            <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
+                        </center>
+                    </form>
                 </div>
                 <br>
                 {% endfor %}

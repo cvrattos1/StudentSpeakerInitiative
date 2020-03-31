@@ -54,15 +54,15 @@ def renderendorse(username, database):
         if speaker.endorsement == "Unendorse":
             endorselist.append(speaker)
             templist.remove(speaker)
-    for i in endorselist:
-        print(i.name)
-    print('')
-    for i in templist:
-        print(i.name)
+    # for i in endorselist:
+    #     print(i.name)
+    # print('')
+    # for i in templist:
+    #     print(i.name)
     shuffle(templist)
     endorsementlist = endorselist + templist
-    for i in endorsementlist:
-        print (i.name)
+    # for i in endorsementlist:
+    #     print (i.name)
     remaining=database.remainingEndorsements(username)  
     html = render_template('sEndorse.html',
 						   username=username,
@@ -149,6 +149,20 @@ def endorse_flask():
     response = renderendorse(username, database)
     return response
 
+@app.route('/flag_flask')
+def flag_flask():
+    username = CASClient().authenticate()
+    database = Database()
+    reason = request.args.get('reason')
+    speakerid = request.args.get('speakerid')
+
+    if database.hasFlagged(username, speakerid):
+        print("Already flagged")
+    else:
+        database.flag(username, speakerid, reason)
+
+    response = renderendorse(username, database)
+    return response
 
 @app.route('/sEndorse', methods=['GET'])
 def sEndorse():
