@@ -249,6 +249,16 @@ class Database:
             query = 'DELETE FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
             Database.connectDB(self, query)
 
+    def removeNomination(self, s_speakid):
+        query = 'SELECT netid FROM endorsements WHERE speakid = \'' + s_speakid + '\''
+        netids = Database.connectDB(self, query)
+        query = 'DELETE FROM endorsements WHERE netid IN netids'
+        Database.connectDB(self, query)
+        query = 'DELETE FROM speakers WHERE speakid = \'' + s_speakid +'\''
+        Database.connectDB(self, query)
+        query = 'DELETE FROM reports WHERE speakid = \'' + s_speakid +'\''
+        Database.connectDB(self, query)
+
     # allows the student with netid netid to vote for the speaker with speakid speakid
     def vote(self, s_netid, s_speakid):
         query = 'UPDATE speakers SET votes = votes + 1 WHERE speakid = ' + '\'' + s_speakid + '\''

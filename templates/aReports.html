@@ -43,10 +43,15 @@
                 Reason: {{report[2]}}<br><br>
                 </p>
                 <form action="dismiss_flag" method = "put">
-                    <input type="submit" class="button" id="status" name="dismiss" value="Dismiss"><br>
+                    <input type="submit" class="button" id="status" name="dismiss" value="Dismiss">
+                    <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}><br>
+                </form>
+                <form action="remove_nomination" method = "put">
+                    <input type="submit" class="button" id="status" name="remove" value="Remove"><br>
                     <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
                 </form>
             </div>
+            <br>
             {% endfor %}
         </div>
         {% include 'sidescript.html' %}

@@ -161,6 +161,16 @@ def flag_flask():
     response = renderendorse(username, database)
     return response
 
+@app.route('/remove_nomination')
+def remove_nomination():
+    username = CASClient().authenticate()
+    database = Database()
+    speakerid = request.args.get('speakerid')
+
+    database.removeNomination(speakerid)
+
+    return redirect('aReports')
+
 @app.route('/dismiss_flag')
 def dismiss_flag():
     username = CASClient().authenticate()
