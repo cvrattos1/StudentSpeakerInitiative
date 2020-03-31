@@ -161,6 +161,16 @@ def flag_flask():
     response = renderendorse(username, database)
     return response
 
+@app.route('/dismiss_flag')
+def dismiss_flag():
+    username = CASClient().authenticate()
+    database = Database()
+
+    speakerid = request.args.get('speakerid')
+    database.dismissFlag(username, speakerid)
+
+    return redirect('aReports')
+
 @app.route('/sEndorse', methods=['GET'])
 def sEndorse():
     username = CASClient().authenticate()

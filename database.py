@@ -241,6 +241,14 @@ class Database:
             query = 'DELETE FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
             Database.connectDB(self, query)
 
+    # allows admin to dismiss a flagged speaker
+    def dismissFlag(self, s_netid, s_speakid):
+        query = 'SELECT speakid FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
+        exists = Database.connectDB(self, query)
+        if len(exists) == 1:
+            query = 'DELETE FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
+            Database.connectDB(self, query)
+
     # allows the student with netid netid to vote for the speaker with speakid speakid
     def vote(self, s_netid, s_speakid):
         query = 'UPDATE speakers SET votes = votes + 1 WHERE speakid = ' + '\'' + s_speakid + '\''
