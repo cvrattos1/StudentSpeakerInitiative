@@ -99,20 +99,28 @@ def sNom():
     username = CASClient().authenticate()
     database = Database()
     nomname = database.hasNominated(username)
-    if nomname == 1:
-        html = render_template('sNoNom.html',
-                               username=username)
+    votingperiod = database.votePeriod()
+    if not votingperiod:
+        if nomname == 1:
+            html = render_template('sNoNom.html',
+                                   username=username)
+        else:
+            errorMsg = request.args.get('errorMsg')
+            if errorMsg is None:
+                errorMsg = ''
+            html = render_template('sNom.html',
+                                   username=username,
+                                   errorMsg=errorMsg)
+        
+        response = make_response(html)
+        return response
     else:
-        errorMsg = request.args.get('errorMsg')
-        if errorMsg is None:
-            errorMsg = ''
-        html = render_template('sNom.html',
-                               username=username,
-                               errorMsg=errorMsg)
+        html = render_template('snotNom.html',
+                                username=username)
+        response = make_response(html)
     
-    response = make_response(html)
-    return response
-
+        return response
+        
 @app.route('/nominate_flask')
 def nominate_flask():
     username = CASClient().authenticate()
@@ -120,6 +128,7 @@ def nominate_flask():
     lname=request.args.get('lname')
     fname=request.args.get('fname')
     descrip=request.args.get('descrip')
+    
     if (lname=='' or fname=='' or descrip==''):
         errorMsg = "None of the nomination's fields can be empty."
         return redirect(url_for('sNom',
@@ -166,8 +175,13 @@ def reset_flask():
     username = CASClient().authenticate()
     database = Database()
     database.adminClearTables()
+    if (database.votePeriod()):
+        changecycle = "endorsement"
+    else:
+        changecycle = "voting"
     html = render_template('aHome.html',
-                           username=username)
+                           username=username,
+                           changecycle = changecycle)
     response = make_response(html)
     return response
 
@@ -175,12 +189,20 @@ def reset_flask():
 def changeStep_flask():
     username = CASClient().authenticate()
     database = Database()
-    speakerid =request.args.get('speakerid')
-    
-
-    #Please add stuff here!
-
-    response = renderendorse(username, database)
+    currentPeriod = database.votePeriod()
+    if currentPeriod == 1:
+        database.changePeriod(0) 
+    else:
+        database.changePeriod(1) 
+    currentPeriod = database.votePeriod()
+    if (currentPeriod):
+        changecycle = "endorsement"
+    else:
+        changecycle = "voting"
+    html = render_template('aHome.html',
+                           username = username,
+                           changecycle = changecycle )
+    response = make_response(html)
     return response
 
 @app.route('/flag_flask')
@@ -219,16 +241,23 @@ def dismiss_flag():
 def sEndorse():
     username = CASClient().authenticate()
     database = Database()
-    response = renderendorse(username, database)
-
-    return response
+    votingperiod = database.votePeriod()
+    if not votingperiod:
+        response = renderendorse(username, database)
+        return response
+    else:
+        html = render_template('snotEndorse.html',
+                                username=username)
+        response = make_response(html)
+    
+        return response
 
 
 @app.route('/sVote', methods=['GET'])
 def sVote():
     username = CASClient().authenticate()
     database = Database()
-    votingperiod = "True"
+    votingperiod = database.votePeriod()
     if votingperiod:
         if database.hasVoted(username):
             html = render_template('salreadyVote.html',
@@ -242,7 +271,7 @@ def sVote():
                                    votinglist = votinglist)
             response = make_response(html)
     else:
-        html = render_template('snoVote.html',
+        html = render_template('snotVote.html',
                                 username=username)
         response = make_response(html)
     
@@ -252,12 +281,17 @@ def sVote():
 # Should add another layer of authentication
 @app.route('/aHome', methods=['GET'])
 def admin():
-	username = CASClient().authenticate()
-	database = Database()
-	html = render_template('aHome.html',
-							username=username)
-	response = make_response(html)
-	return response
+    username = CASClient().authenticate()
+    database = Database()
+    if (database.votePeriod):
+        changecycle = "endorsement"
+    else:
+        changecycle = "voting"
+    html = render_template('aHome.html',
+							username=username,
+                            changecycle = changecycle)
+    response = make_response(html)
+    return response
 
 @app.route('/aNoms', methods=['GET'])
 def aNoms():
@@ -275,11 +309,14 @@ def aNoms():
 def aVotes():
     username = CASClient().authenticate()
     database = Database()
-
+    votinglist = filllist(username,database, "voting")
     html = render_template('aVotes.html',
-                            username=username)
+                           username=username,
+                           votinglist = votinglist)
     response = make_response(html)
+    
     return response
+
 
 @app.route('/aReports', methods=['GET'])
 def aReports():

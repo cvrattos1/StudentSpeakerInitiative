@@ -215,12 +215,20 @@ class Database:
     def adminClearTables(self):
         query = "SELECT table_schema, table_name FROM information_schema.tables WHERE ( table_schema = 'public' ) ORDER BY table_schema, table_name;"
         tables = Database.connectDB(self, query) 
+        tables.remove(('public', 'cycleinfo'))
         tablelist = []
         for _, table in tables:
             Database.connectDB(self, "DELETE FROM " + table + ";")
         
-        
+    def votePeriod(self):
+        query = 'SELECT votingperiod FROM cycleinfo'
+        votingperiod = Database.connectDB(self, query) 
+        return votingperiod[0][0]
     
+    def changePeriod(self,currentPeriod):
+        query = 'UPDATE cycleinfo SET votingperiod = ' + str(currentPeriod)
+        Database.connectDB(self, query)
+        
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def endorse(self, s_netid, s_speakid, s_count):
         query = 'SELECT count FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''

@@ -12,9 +12,9 @@
         <div id="mySidenav" class="sidenav">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="sHome">Home</a>
-            <a href="sNom">Nominate</a>
+            <a class="active" href="sNom">Nominate</a>
             <a href="sEndorse">Endorse</a>
-            <a class="active" href="sVote">Vote</a>
+            <a href="sVote">Vote</a>
             <a href='logout' class="logout">Logout</a>
         </div>
         <div class="header" id="myHeader">
@@ -23,18 +23,7 @@
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc">These are the current candidates. Please vote. </p><br>
-                {%for speaker in votinglist: %}
-                <div class="nom">
-                    <form action="vote_flask" method = "put">
-                        <p> Name: {{speaker.name}}<br>
-                        Description: {{speaker.description}}<br></p>
-                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        <input type="submit" class="acceptButton" id="status" name="status" value= "Vote"><br>
-                    </form>
-                </div>
-                <br>
-                {% endfor %}
+            <p class="misc"> Nominations are now closed. Please vote.</p>	
         </div>
     </body>
 </html>
