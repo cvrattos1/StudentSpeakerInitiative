@@ -29,8 +29,8 @@
                 You cannot endorse a candidate that you nominated.  </p>
                 <!--form-->
             <form action="nominate_flask" method = "get">
-                <p class="misc"> <strong> {{errorMsg}} </strong> </p>
                 <div class="nom">
+                	<p>{{errorMsg}}</p>
                     <label for="fname">First name:</label>
                     <input type="text" class="textfield" id="fname" name="fname">
                     <br><br>
@@ -41,9 +41,8 @@
 
                     <label for="descrip">Description:</label>
                     <input class="textfield" type="text" id="descrip" name="descrip">
-                    <br>
-                    <input type="submit" class="acceptButton" value = "Submit">
                     <br><br>
+                    <input type="submit" class="acceptButton" value = "Submit">
                 </div>
              </form>
         </div>
