@@ -34,9 +34,8 @@ def filllist(username, database, request):
             tempcanidate = canidateprofile(speakerid, name, description, endorsement, totalcount)
             finallist.append(tempcanidate)   
     
-    else:
-        speakers = database.getEndorsed(2)
-        # print(speakers)
+    elif request is "voting":
+        speakers = database.getEndorsed(1)
         for speaker in speakers:
             speakerid = speaker
             name = database.getSpeakerFirstName(speaker) + " " + database.getSpeakerLastName(speaker)
@@ -154,24 +153,22 @@ def endorse_flask():
 def vote_flask():
     username = CASClient().authenticate()
     database = Database()
-    speakerid =request.args.get('speakerid')
-    
-
-    #Please add stuff here!
-
-    response = renderendorse(username, database)
+    speakerid = request.args.get('speakerid')
+    if not (database.hasVoted(username)) :
+        database.vote(username, speakerid)
+    html = render_template('sHome.html',
+    					   username=username)
+    response = make_response(html)
     return response
 
 @app.route('/reset_flask')
 def reset_flask():
     username = CASClient().authenticate()
     database = Database()
-    speakerid =request.args.get('speakerid')
-    
-
-    #Please add stuff here!
-
-    response = renderendorse(username, database)
+    database.adminClearTables()
+    html = render_template('aHome.html',
+                           username=username)
+    response = make_response(html)
     return response
 
 @app.route('/changeStep_flask')

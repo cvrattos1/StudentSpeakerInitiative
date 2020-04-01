@@ -148,7 +148,7 @@ class Database:
         speaker_list = []
         for i in range (len(speakers)):
             speaker_list.append(speakers[i][0])
-
+        print(speaker_list)
         return speaker_list
 
 
@@ -156,12 +156,11 @@ class Database:
     def getEndorsed(self, threshold):
         query = 'SELECT speakid FROM endorsements WHERE count >= ' + str(threshold)
         endorsed = Database.connectDB(self, query)
-        print(endorsed)
         endorsed_list = []
         for i in range(len(endorsed)):
             if endorsed[i][0] not in endorsed_list:
                 endorsed_list.append(endorsed[i][0])
-
+        
         return endorsed_list
 
 
@@ -212,7 +211,16 @@ class Database:
             for i in range(len(endorsements)):
                 total = total + endorsements[i][0]
             return total
-
+    
+    def adminClearTables(self):
+        query = "SELECT table_schema, table_name FROM information_schema.tables WHERE ( table_schema = 'public' ) ORDER BY table_schema, table_name;"
+        tables = Database.connectDB(self, query) 
+        tablelist = []
+        for _, table in tables:
+            Database.connectDB(self, "DELETE FROM " + table + ";")
+        
+        
+    
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def endorse(self, s_netid, s_speakid, s_count):
         query = 'SELECT count FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
