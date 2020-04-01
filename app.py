@@ -23,7 +23,7 @@ def filllist(username, database, request):
     
     finallist = []
     
-    if request is "endorsement":
+    if request == "endorsement":
         speakers = database.getSpeakers() 
         for speaker in speakers:
             speakerid = speaker
@@ -34,7 +34,7 @@ def filllist(username, database, request):
             tempcanidate = canidateprofile(speakerid, name, description, endorsement, totalcount)
             finallist.append(tempcanidate)   
     
-    elif request is "voting":
+    elif request == "voting":
         speakers = database.getEndorsed(1)
         for speaker in speakers:
             speakerid = speaker
@@ -87,7 +87,7 @@ def logout():
 @app.route('/sHome', methods=['GET'])
 def student():
     username = CASClient().authenticate()
-    database = Database()
+    #database = Database()
 
     html = render_template('sHome.html',
     					   username=username)
@@ -283,7 +283,8 @@ def sVote():
 def admin():
     username = CASClient().authenticate()
     database = Database()
-    if (database.votePeriod):
+
+    if (database.votePeriod()):
         changecycle = "endorsement"
     else:
         changecycle = "voting"
