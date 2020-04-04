@@ -6,7 +6,6 @@ from CASClient import CASClient
 from database import *
 from sys import argv
 
-from flask import flask_login 
 from flask_login import LoginManager
 
 app = Flask(__name__)
