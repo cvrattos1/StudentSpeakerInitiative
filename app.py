@@ -5,12 +5,9 @@ from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
 from database import *
 from sys import argv
-<<<<<<< HEAD
 import cloudinary as Cloud
 import cloudinary.uploader
-=======
 import datetime
->>>>>>> 8662175ac6d9b48e2a5c7c6f81142e9fdf654c60
 
 # from flask_login import LoginManager
 
