@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <script src="./static/script.js" defer></script>
+    <link href="./static/styles.css" rel="stylesheet">
+    <title>Student Speakers Initiative</title>
+</head>
+<body>
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a class="active" href="aHome">Home</a>
+            <a href="aNoms">Nominations</a>
+            <a href="aVotes">Votes</a>
+            <a href="aReports">Reports</a>
+            <a href="logout">Logout</a>
+        </div>
+        <div class="header">
+          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+          <a href="index" class="logo">Student Speakers Initiative</a>
+          <a class="user"> Admin: {{username}} </a>
+          </div>
+        </div>
+        <div class="main">
+        	<p class="misc">Let's create a new cycle!</p> <br><br>
+            <div class="nom">
+                <p>{{errorMsg}}</p>
+                <script type="text/javascript">
+                    function handleTextBoxNom(value) {
+                        if (value == 1) {
+                            var limited = document.getElementById("limitnom");
+                            var text = document.getElementById("nomtext")
+                            text.disabled = limited.checked ? false : true;
+                            if (!text.disabled) {
+                                text.focus()
+                            }
+                        }
+                        if (value == 2) {
+                            var limited = document.getElementById("limitend");
+                            var text = document.getElementById("endorsetext")
+                            text.disabled = limited.checked ? false : true;
+                            if (!text.disabled) {
+                                text.focus()
+                            }
+                        }
+                        if (value == 3) {
+                            var limited = document.getElementById("limitvot");
+                            var text = document.getElementById("votetext")
+                            text.disabled = limited.checked ? false : true;
+                            if (!text.disabled) {
+                                text.focus()
+                            }
+                        }
+                    }
+                </script>
+                <br>
+                <form action="new_cycle" method="get">
+                     <label for="cname">Name of voting cycle:</label>
+                    <input type="text" class="textfield" id="cname" name="cname">
+                    <br><br>
+                    <label for="nominations">Number of nominations allowed per student:</label> <br>
+                    <input type="radio" name="nominatenum" value="unlimited" id="unlimitnom" onclick="handleTextBoxNom(1)"> Unlimited nominations <br>
+                    <input type="radio" name="nominatenum" value="limited" id="limitnom" onclick="handleTextBoxNom(1)"> Limited nominations  <input type="number" name="nominatetext" id="nomtext" disabled="disabled">
+                    <br><br>
+
+                    <label for="endorsements">Number of endorsements allowed per student:</label> <br>
+                    <input type="radio" name="endorsenum" value="unlimited" id="unlimitend" onclick="handleTextBoxNom(2)"> Unlimited endorsements <br>
+                    <input type="radio" name="endorsenum" value="limited" id="limitend" onclick="handleTextBoxNom(2)"> Limited endorsements  <input type="number" name="endorsetext" id="endorsetext" disabled="disabled">
+                    <br><br>
+
+                    <label for="votes">Number of votes allowed per student:</label> <br>
+                    <input type="radio" name="votenum" value="unlimited" id="unlimitvot" onclick="handleTextBoxNom(3)"> Unlimited votes <br>
+                    <input type="radio" name="votenum" value="limited" id="limitvot" onclick="handleTextBoxNom(3)"> Limited votes  <input type="number" name="votetext" id="votetext" disabled="disabled">
+                    <br><br><br>
+
+                    <label for="rollover">Rollover from previous cycle: </label> <br>
+                    <input type="checkbox" name="rollovernom"  value="nom"> Nominations <br>
+                    <input type="checkbox" name="rolloverend"  value="end"> Endorsements <br>
+                    <input type="checkbox" name="rollovervot"  value="vot"> Votes <br> <br>
+
+                    <label for="votingdate">Set voting to begin on </label>
+                    <input type="date" name="votingdate" value="votingdate"> <br> <br>
+
+                    <label for="threshold">Set the endorsement threshold </label>
+                    <input type="number" name="threshold" value="threshold">
+
+                    <br><br>
+                    <input type="submit" class="acceptButton" value = "Submit">
+                    <br>
+                </form>
+
+            </div>
+        </div>
+    </body>
+</html>
