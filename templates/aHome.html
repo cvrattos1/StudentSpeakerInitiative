@@ -27,13 +27,24 @@
         	<p class="misc">Welcome to the admin homepage!</p> <br><br>
             <div class="nom">
                 <br>
-                <form action="changeStep_flask" method = "put">
-                    <input type="submit" class="acceptButton" id="status" name="status" value= "Change to {{changecycle}} cycle"><br>
-                </form>
-                <br>
+{#                <form action="changeStep_flask" method = "put">#}
+{#                    <input type="submit" class="acceptButton" id="status" name="status" value= "Change to {{changecycle}} cycle"><br>#}
+{#                </form>#}
+{#                <br>#}
                 <form action="reset_flask" method = "put">
-                    <input type="submit" class="rejectButton" id="status" name="status" value= "Reset the database to start new cycle"><br>
+                    <input type="submit" class="rejectButton" id="status" name="status" value= "Create a new cycle"><br>
                 </form>
+
+                <br>
+                {% if exists == 0: %}
+                There is no current cycle.
+                {% else: %}
+                <br>Information for cycle {{ info[0][0] }}: <br>
+                Created on: {{info[0][1]}} by {{ info[0][3] }}. <br>
+                Students are allowed {{ info[0][6] }} nominations, {{ info[0][4] }} endorsements and {{ info[0][5] }} votes. <br>
+                Voting will begin on {{ info[0][2] }}. <br>
+                The endorsement threshold is {{ info[0][7] }}. <br>
+                {% endif %}
                 <br>
             </div>
             <!-- ((need a button for granting admin privileges)) -->

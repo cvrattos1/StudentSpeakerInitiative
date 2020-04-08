@@ -304,7 +304,106 @@ class Database:
         query = 'INSERT INTO nominations VALUES (' + '\'' + s_netid + '\', \'' + new_speakid + '\')'
         Database.connectDB(self, query)
 
+    def createCycle(self, name, datecreated, datevoting, admin, endorsenum, votenum, nominatenum, threshold):
+        query = 'INSERT INTO cycle VALUES (\'' + name + '\', \'' + str(datecreated) + '\', \'' + str(datevoting) + '\', \'' + admin + '\', \'' + str(endorsenum) + '\', \'' + str(votenum) + '\', \'' + str(nominatenum) + '\', \'' + str(threshold) + '\')'
+        Database.connectDB(self, query)
+
+    def getCycleInfo(self):
+        query = 'SELECT * FROM cycle'
+        return Database.connectDB(self, query)
+
+    def getThreshold(self):
+        query = 'SELECT threshold FROM cycle'
+        threshold = Database.connectDB(self, query)
+        if (threshold == []):
+            return 0
+        else:
+            return threshold[0][0]
+
+    def getNomAllowance(self):
+        query = 'SELECT nominatenum FROM cycle'
+        num = Database.connectDB(self, query)
+        if (num == []):
+            return 0
+        else:
+            return num[0][0]
+
+    def getEndAllowance(self):
+        query = 'SELECT endorsenum FROM cycle'
+        num = Database.connectDB(self, query)
+        if (num == []):
+            return 0
+        else:
+            return num[0][0]
+
+    def getVotAllowance(self):
+        query = 'SELECT votenum FROM cycle'
+        num = Database.connectDB(self, query)
+        if not num:
+            return 0
+        else:
+            return num[0][0]
+
+    def getCycleName(self):
+        query = 'SELECT name FROM cycle'
+        name = Database.connectDB(self, query)
+        if not name:
+            return ''
+        else:
+            return name[0][0]
+
+    def getCycleDateCreated(self):
+        query = 'SELECT datecreated FROM cycle'
+        date = Database.connectDB(self, query)
+        if not date:
+            return ''
+        else:
+            return date[0][0]
+
+
+    def getCycleDateVoting(self):
+        query = 'SELECT datevoting FROM cycle'
+        date = Database.connectDB(self, query)
+        if not date:
+            return ''
+        else:
+            return date[0][0]
+
+    def getCycleAdmin(self):
+        query = 'SELECT admin FROM cycle'
+        admin = Database.connectDB(self, query)
+        if not admin:
+            return ''
+        else:
+            return admin[0][0]
+
+    def existsCurrentCycle(self):
+        query = 'SELECT threshold FROM cycle'
+        if (Database.connectDB(self, query) == []):
+            return 0
+        else:
+            return 1
+
+    def clearAllSpeakers(self):
+        query = 'DELETE FROM speakers'
+        Database.connectDB(query)
+
+        query = 'DELETE FROM votes'
+        Database.connectDB(query)
+
+        query = 'DELETE FROM reports'
+        Database.connectDB(query)
+
+        query = 'DELETE FROM nominations'
+        Database.connectDB(query)
+
+        query = 'DELETE FROM endorsements'
+        Database.connectDB(query)
+
+
 
 
 # ---------------------------------------------------------------------
-
+if __name__ == '__main__':
+   database = Database()
+   print(str(database.existsCurrentCycle()))

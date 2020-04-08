@@ -26,8 +26,14 @@
         <div class="main">
             <p class="misc">Welcome to the student homepage!</p>
             <br><br>
-            <p class="misc"> You have one nomination, 10 endorsements. After a waiting period,
-                        there will be 5 people and you can vote on one. </p>
+            <p class="misc">
+                {% if exists == 0: %}
+                There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!
+                {% else: %}
+                You have {{info[0][6]}} nomination and {{ info[0][4] }} endorsements. The threshold for
+                a speaker to be eligible as a candidate in the voting process is {{ info[0][7] }}. You are allowed {{ info[0][5] }} votes.
+                {% endif %}
+            </p>
         </div>
     </body>
 </html>

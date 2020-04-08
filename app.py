@@ -5,10 +5,14 @@ from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
 from database import *
 from sys import argv
+<<<<<<< HEAD
 import cloudinary as Cloud
 import cloudinary.uploader
+=======
+import datetime
+>>>>>>> 8662175ac6d9b48e2a5c7c6f81142e9fdf654c60
 
-from flask_login import LoginManager
+# from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -69,11 +73,13 @@ def renderendorse(username, database):
     endorsementlist = endorselist + templist
     # for i in endorsementlist:
     #     print (i.name)
-    remaining=database.remainingEndorsements(username)  
+    allowance = database.getEndAllowance()
+    remaining=allowance - database.usedEndorsements(username)
     html = render_template('sEndorse.html',
 						   username=username,
                            endorsementlist = endorsementlist,
-						   remaining = remaining)
+						   remaining = remaining,
+                           allowance = allowance)
     response = make_response(html)
     return response
     
@@ -94,10 +100,18 @@ def logout():
 @app.route('/sHome', methods=['GET'])
 def student():
     username = CASClient().authenticate()
-    #database = Database()
+    database = Database()
+
+    cycle = database.getCycleInfo()
+    if not cycle:
+        exists = 0
+    else:
+        exists = 1
 
     html = render_template('sHome.html',
-    					   username=username)
+    					   username=username,
+                           info = cycle,
+                           exists = exists)
     response = make_response(html)
     return response
 
@@ -152,6 +166,60 @@ def nominate_flask():
    
     return response
 
+@app.route('/new_cycle')
+def new_cycle():
+    username = CASClient().authenticate()
+    database = Database()
+
+    if (request.args.get('nominatenum') == '' or request.args.get('endorsenum') == '' or request.args.get('votenum') == '' or request.args.get('votingdate') == '' or request.args.get('threshold') == '' or request.args.get('cname') == ''):
+        errorMsg = "None of the nomination's fields can be empty."
+        return redirect(url_for('new_cycle',
+                                errorMsg=errorMsg,
+                                username=username))
+
+    name = request.args.get('cname')
+    votingdate = request.args.get('votingdate')
+    threshold = request.args.get('threshold')
+    datecreated = datetime.datetime.now().strftime("%x")
+
+    if (request.args.get('nominatenum') == "limited"):
+        nomination_count = request.args.get('nominatetext')
+    else:
+        nomination_count = 2147483647
+
+    if (request.args.get('endorsenum') == "limited"):
+        endorse_count = request.args.get('endorsetext')
+    else:
+        endorse_count = 2147483647
+
+    if (request.args.get('votenum') == "limited"):
+        vote_count = request.args.get('votetext')
+    else:
+        vote_count = 2147483647
+
+    database.createCycle(name, datecreated, votingdate, username, endorse_count, vote_count, nomination_count, threshold)
+
+    rolloverNom = request.args.get('rolloverNom')
+    rolloverEnd = request.args.get('rolloverEnd')
+    rolloverVot = request.args.get('rolloverVot')
+
+    cycle = database.getCycleInfo()
+    if not cycle:
+        exists = 0
+    else:
+        exists = 1
+
+    html = render_template('aHome.html',
+    					   username=username,
+                           info = cycle,
+                           exists = exists)
+    response = make_response(html)
+    return response
+
+
+
+
+
 @app.route('/endorse_flask')
 def endorse_flask():
     username = CASClient().authenticate()
@@ -160,7 +228,7 @@ def endorse_flask():
     status = request.args.get('status')
     
     if status == "Endorse":
-        if (database.remainingEndorsements(username)) > 0 :
+        if (database.usedEndorsements(username) < database.getEndAllowance()):
             database.endorse(username, speakerid, 1)
     elif status == "Unendorse":
         database.unendorse(username, speakerid, 1)
@@ -176,8 +244,17 @@ def vote_flask():
     speakerid = request.args.get('speakerid')
     if not (database.hasVoted(username)) :
         database.vote(username, speakerid)
+
+    cycle = database.getCycleInfo()
+    if not cycle:
+        exists = 0
+    else:
+        exists = 1
     html = render_template('sHome.html',
-    					   username=username)
+    					   username=username,
+                           info = cycle,
+                           exists = exists
+                           )
     response = make_response(html)
     return response
 
@@ -190,7 +267,7 @@ def reset_flask():
         changecycle = "endorsement"
     else:
         changecycle = "voting"
-    html = render_template('aHome.html',
+    html = render_template('aCreateCycle.html',
                            username=username,
                            changecycle = changecycle)
     response = make_response(html)
@@ -257,8 +334,16 @@ def sEndorse():
         response = renderendorse(username, database)
         return response
     else:
+        cycle = database.getCycleInfo()
+        if not cycle:
+            exists = 0
+        else:
+            exists = 1
         html = render_template('snotEndorse.html',
-                                username=username)
+                                username=username,
+                                info=cycle,
+                                exists = exists
+                               )
         response = make_response(html)
     
         return response
@@ -282,8 +367,17 @@ def sVote():
                                    votinglist = votinglist)
             response = make_response(html)
     else:
+        cycle = database.getCycleInfo()
+        if not cycle:
+            cycle = "TBD"
+            exists = 0
+        else:
+            cycle = cycle[0][2]
+            exists = 1
         html = render_template('snotVote.html',
-                                username=username)
+                                username=username,
+                                info = cycle,
+                                exists = exists)
         response = make_response(html)
     
     return response
@@ -299,9 +393,19 @@ def admin():
         changecycle = "endorsement"
     else:
         changecycle = "voting"
+
+    cycle = database.getCycleInfo()
+    if not cycle:
+        exists = 0
+    else:
+        exists = 1
+
     html = render_template('aHome.html',
-							username=username,
-                            changecycle = changecycle)
+                           username=username,
+                           changecycle = changecycle,
+                           info = cycle,
+                           exists = exists
+                           )
     response = make_response(html)
     return response
 
