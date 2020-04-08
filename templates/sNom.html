@@ -28,7 +28,7 @@
                 Fill out the fields below and press submit to see your nomination on the endorsement page.
                 You cannot endorse a candidate that you nominated.  </p>
                 <!--form-->
-            <form action="nominate_flask" method = "post">
+            <form action="nominate_flask" method = "post" enctype="multipart/form-data">
                 <div class="nom">
                 	<p>{{errorMsg}}</p>
                     <label for="fname">First name:</label>
