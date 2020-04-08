@@ -356,8 +356,10 @@ def sVote():
     else:
         cycle = database.getCycleInfo()
         if not cycle:
+            cycle = "TBD"
             exists = 0
         else:
+            cycle = cycle[0][2]
             exists = 1
         html = render_template('snotVote.html',
                                 username=username,
