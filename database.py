@@ -267,13 +267,13 @@ class Database:
 
     def removeNomination(self, s_speakid):
         query = 'SELECT netid FROM endorsements WHERE speakid = \'' + s_speakid + '\''
-        netids = Database.connectDB(self, query)
-        query = 'DELETE FROM endorsements WHERE netid IN netids'
-        Database.connectDB(self, query)
-        query = 'DELETE FROM speakers WHERE speakid = \'' + s_speakid +'\''
-        Database.connectDB(self, query)
-        query = 'DELETE FROM reports WHERE speakid = \'' + s_speakid +'\''
-        Database.connectDB(self, query)
+        query = 'SELECT FROM endorsements WHERE netid IN (' + query + ')'
+        endorsements = Database.connectDB(self, query)
+        print(endorsements)
+        # query = 'DELETE FROM speakers WHERE speakid = \'' + s_speakid +'\''
+        # Database.connectDB(self, query)
+        # query = 'DELETE FROM reports WHERE speakid = \'' + s_speakid +'\''
+        # Database.connectDB(self, query)
 
     # allows the student with netid netid to vote for the speaker with speakid speakid
     def vote(self, s_netid, s_speakid):
@@ -283,14 +283,22 @@ class Database:
         query = 'INSERT INTO votes VALUES (' + '\'' + s_netid + '\', 1)'
         Database.connectDB(self, query)
 
+    # allows access of an image for a particular speakid
+    def getImage(self, s_speakid):
+        query = 'SELECT imagelink FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
+        imagelink = Database.connectDB(self, query)
+        return imagelink
+
     # allows the student with netid netid to nominate a new speaker by providing the speaker’s firstname, lastname, descrip. Returns the speakid of the new speaker.
-    def nominate(self, s_netid, s_firstname, s_lastname, s_descrip):
+    def nominate(self, s_netid, s_firstname, s_lastname, s_descrip, s_imglink):
         query = 'SELECT * FROM speakers'
         speakers = Database.connectDB(self, query)
         new_speakid = str(len(speakers))
 
+        print(s_descrip)
+
         query = 'INSERT INTO speakers VALUES (' + '\'' + new_speakid + '\', \'' + s_firstname + '\', \'' + s_lastname + \
-                '\', \'' + s_descrip + '\', 0)'
+                '\', \'' + s_descrip + '\', \'' + s_imglink + '\', 0)'
         Database.connectDB(self, query)
 
         query = 'INSERT INTO nominations VALUES (' + '\'' + s_netid + '\', \'' + new_speakid + '\')'

@@ -5,12 +5,18 @@ from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
 from database import *
 from sys import argv
+import cloudinary as Cloud
+import cloudinary.uploader
 
 from flask_login import LoginManager
 
 app = Flask(__name__)
 
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
+
+cloudinary.config(cloud_name='dqp1yoed2',
+                  api_key='129874246392789',
+                  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
 
 class canidateprofile:
   def __init__(self, speakerid, name, description, endorsement, totalcount):
@@ -122,21 +128,25 @@ def sNom():
     
         return response
         
-@app.route('/nominate_flask')
+@app.route('/nominate_flask', methods=['POST'])
 def nominate_flask():
     username = CASClient().authenticate()
     database = Database()
-    lname=request.args.get('lname')
-    fname=request.args.get('fname')
-    descrip=request.args.get('descrip')
+    lname=request.form['lname']
+    fname=request.form['fname']
+    descrip=request.form['descrip']
+
+    img = request.files['file']
+    result = Cloud.uploader.upload(img, use_filename='true', filename=img.filename, folder='SSI')
+    imglink = result['secure_url']
     
     if (lname=='' or fname=='' or descrip==''):
         errorMsg = "None of the nomination's fields can be empty."
         return redirect(url_for('sNom',
 						   errorMsg=errorMsg))
-    
+
     if not database.hasNominated(username):
-        database.nominate(username, fname, lname, descrip)
+        database.nominate(username, fname, lname, descrip, imglink)
     
     response = renderendorse(username, database)
    

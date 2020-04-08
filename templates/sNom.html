@@ -28,7 +28,7 @@
                 Fill out the fields below and press submit to see your nomination on the endorsement page.
                 You cannot endorse a candidate that you nominated.  </p>
                 <!--form-->
-            <form action="nominate_flask" method = "get">
+            <form action="nominate_flask" method = "post">
                 <div class="nom">
                 	<p>{{errorMsg}}</p>
                     <label for="fname">First name:</label>
@@ -41,6 +41,9 @@
 
                     <label for="descrip">Description:</label>
                     <input class="textfield" type="text" id="descrip" name="descrip">
+                    <br><br>
+                    <label for="img">Select image:</label>
+                    <input type="file" name="file" id="img" accept="image/*">
                     <br><br>
                     <input type="submit" class="acceptButton" value = "Submit">
                 </div>
