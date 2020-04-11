@@ -24,15 +24,19 @@
           </div>
         </div>
         <div class="main">
-            <p class="misc">These are the currently nominated speakers and their endorsement counts.</p>
-            {% for speaker in speakers: %}
-            <div class="nom">
-                <p> Name: {{database.getSpeakerFirstName(speaker)}} {{database.getSpeakerLastName(speaker)}} <br>
-                Description: {{database.getSpeakerDescription(speaker)}} <br>
-                Endorsement Count: {{database.getSpeakerEndorsements(speaker)}}</p>
-            </div>
-            <br>
-            {% endfor %}
+            {% if exists == 0: %}
+                <p class="misc">There is no current cycle. Please start a cycle.</p>
+            {% else: %}
+                <p class="misc">These are the currently nominated speakers and their endorsement counts.</p>
+                {% for speaker in speakers: %}
+                <div class="nom">
+                    <p> Name: {{speaker.getName()}} <br>
+                    Description: {{speaker.getDescrip()}} <br>
+                    Endorsement Count: {{speaker.getEndorsements()}}</p>
+                </div>
+                <br>
+                {% endfor %}
+            {% endif %}
         </div>
     </body>
 </html>

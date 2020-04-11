@@ -57,7 +57,8 @@
                 </script>
                 <br>
                 <form action="new_cycle" method="get">
-                     <label for="cname">Name of voting cycle:</label>
+                    <label for="cname">Name of voting cycle:</label>
+                    <input type="hidden" name="admin" value={{ username }}>
                     <input type="text" class="textfield" id="cname" name="cname">
                     <br><br>
                     <label for="nominations">Number of nominations allowed per student:</label> <br>
@@ -80,11 +81,14 @@
                     <input type="checkbox" name="rolloverend"  value="end"> Endorsements <br>
                     <input type="checkbox" name="rollovervot"  value="vot"> Votes <br> <br>
 
+                    <label for="threshold">Set the endorsement threshold </label>
+                    <input type="number" name="threshold" value="threshold">
+
                     <label for="votingdate">Set voting to begin on </label>
                     <input type="date" name="votingdate" value="votingdate"> <br> <br>
 
-                    <label for="threshold">Set the endorsement threshold </label>
-                    <input type="number" name="threshold" value="threshold">
+                    <label for="enddate">Set the end of the voting period on </label>
+                    <input type="date" name="enddate" value="enddate"> <br> <br>
 
                     <br><br>
                     <input type="submit" class="acceptButton" value = "Submit">

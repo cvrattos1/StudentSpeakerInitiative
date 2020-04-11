@@ -23,7 +23,13 @@
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc"> Endorsements are now closed. Please vote.</p>	
+            {% if exists == 0: %}
+                <p class="misc">There is no current cycle. Please come back later.</p>
+            {% elif exists == 2: %}
+                <p class="misc">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting() }} to vote.</p>
+            {% else: %}
+                <p class="misc"> Endorsements are now closed. Please vote.</p>
+            {% endif %}
         </div>
     </body>
 </html>

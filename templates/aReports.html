@@ -24,29 +24,33 @@
           </div>
         </div>
         <div class="main">
-            <p class="misc">These are the nominated speakers that have been flagged for additional review.
-            You may either dismiss (the speaker will remain in the list of candidates)
-            or reject (the speaker will be removed and any endorsements of the speaker will be
-            refunded). </p>
-            {% for report in reports: %}
-            <div class="nom">
-                <p> Netid: {{report[0]}}<br>
-                Speaker: {{database.getSpeakerFirstName(report[1])}} {{database.getSpeakerLastName(report[1])}} <br>
-                Reason: {{report[2]}}<br>
-                </p>
-                <center>
-                <form action="dismiss_flag" method = "put">
-                    <input type="submit" class="acceptButton" id="status" name="dismiss" value="Dismiss">
-                    <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
-                </form>
-                <form action="remove_nomination" method = "put">
-                    <input type="submit" class="rejectButton" id="status" name="remove" value="Remove">
-                    <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
-                </form>
-                </center>
-            </div>
-            <br><br>
-            {% endfor %}
+            {% if exists == 0: %}
+                 <p class="misc">There is no current cycle. Please start a new cycle. </p>
+            {% else: %}
+                <p class="misc">These are the nominated speakers that have been flagged for additional review.
+                You may either dismiss (the speaker will remain in the list of candidates)
+                or reject (the speaker will be removed and any endorsements of the speaker will be
+                refunded). </p>
+                {% for i in range(length): %}
+                <div class="nom">
+                    <p> Netid: {{reports[i].getNetid()}}<br>
+                    Speaker: {{speakers[i].getName()}} <br>
+                    Reason: {{reports[i].getReason()}}<br>
+                    </p>
+                    <center>
+                    <form action="dismiss_flag" method = "put">
+                        <input type="submit" class="acceptButton" id="status" name="dismiss" value="Dismiss">
+                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
+                    </form>
+                    <form action="remove_nomination" method = "put">
+                        <input type="submit" class="rejectButton" id="status" name="remove" value="Remove">
+                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
+                    </form>
+                    </center>
+                </div>
+                <br><br>
+                {% endfor %}
+            {% endif %}
         </div>
     </body>
 </html>

@@ -24,13 +24,13 @@
         </div>
         <div class="main">
             <p class="misc">These are the current candidates. Please vote. </p><br>
-                {%for speaker in votinglist: %}
+                {%for speaker in speakers: %}
                 <div class="nom">
                     <form action="vote_flask" method = "put">
-                        <p> Name: {{speaker.name}}<br>
-                        Description: {{speaker.description}}<br></p>
-                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        <input type="submit" class="acceptButton" id="status" name="status" value= "Vote"><br>
+                        <p> Name: {{speaker.getName()}}<br>
+                        Description: {{speaker.getDescrip()}}<br></p>
+                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
+                        <input type="checkbox" class="acceptButton" id="status" name="status" value= "vote"> Vote<br>
                     </form>
                 </div>
                 <br>

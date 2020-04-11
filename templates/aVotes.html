@@ -24,14 +24,18 @@
           </div>
         </div>
         <div class="main">
+            {% if exists == 0: %}
+                <p class="misc"> There is no current cycle. Please start a cycle. </p>
+            {% else: %}
                 <p class="misc">These are the current standings of the candidates in the voting block.</p>
-                {%for speaker in votinglist: %}
+                {%for speaker in speakers: %}
                 <div class="nom">
-                  <p> Name: {{speaker.name}}<br>
-                      Number of Votes: {{speaker.totalcount}}<br></p>
+                  <p> Name: {{speaker.getName()}}<br>
+                      Number of Votes: {{speaker.getVotes()}}<br></p>
                 </div>
                 <br>
                 {% endfor %}
+            {% endif %}
         </div>
     </body>
 </html>

@@ -24,23 +24,22 @@
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc">You can only nominate one person. Nominations are not retractable.
-                Fill out the fields below and press submit to see your nomination on the endorsement page.
-                You cannot endorse a candidate that you nominated.  </p>
+            <p class="misc">This is your opportunity to nominate a speaker you would like to invite to our campus;
+                fill out the fields below and press submit to nominate a speaker of your choice!
+                You can nominate {{cycle.getNominateNum()}} people; you have {{ remaining }} nominations left.
+                Nominations are not retractable and you cannot endorse a candidate that you nominated.  </p>
                 <!--form-->
             <form action="nominate_flask" method = "post" enctype="multipart/form-data">
                 <div class="nom">
                 	<p>{{errorMsg}}</p>
-                    <label for="fname">First name:</label>
-                    <input type="text" class="textfield" id="fname" name="fname">
+                    <label for="name">Name:</label>
+                    <input type="text" class="textfield" id="name" name="name">
                     <br><br>
-
-                    <label for="lname">Last name:</label>
-                    <input type="text" class="textfield" id="lname" name="lname">
-                    <br><br>
-
                     <label for="descrip">Description:</label>
                     <input class="textfield" type="text" id="descrip" name="descrip">
+                    <br><br>
+                    <label for="links">Link to works:</label>
+                    <input type="text" class="textfield" id="links" name="links">
                     <br><br>
                     <label for="img">Select image:</label>
                     <input type="file" name="file" id="img" accept="image/*">

@@ -24,22 +24,22 @@
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc">These are the current candidates. You may endorse up to {{ allowance }} speakers at any given time
-                during the endorsement period. You have {{remaining}} endorsements left. </p><br>
-                {%for speaker in endorsementlist: %}
+            <p class="misc">These are the current candidates. You may endorse up to {{ cycle.getEndorseNum() }} speakers at any given time
+                during the endorsement period.</p><br>
+                {%for speaker in speakers: %}
                 <div class="nom">
                     <form action="endorse_flask" method = "put">
-                        <p> Name: {{speaker.name}}<br>
-                        Description: {{speaker.description}}<br></p>
-                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
-                        <input type="submit" class="acceptButton" id="status" name="status" value={{speaker.endorsement}}>
+                        <p> Name: {{speaker.getName()}}<br>
+                        Description: {{speaker.getDescrip()}}<br></p>
+                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
+                        <input type="checkbox" class="acceptButton" id="status" name="status" value="endorsed"> Endorse <br>
                     </form>
                     <form action="flag_flask" method = "put">
                         <input type="submit" class="rejectButton" id="status" name="flag" value="Flag">
                         <br><br>
                         <label for="reason">Reason for report:</label>
                         <input class="textfield" type="text" id="reason" name="reason">
-                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.speakerid}}>
+                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
                     </form>
                 </div>
                 <br>

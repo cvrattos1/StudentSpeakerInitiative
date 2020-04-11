@@ -23,7 +23,11 @@
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc"> Nominations are now closed. Please vote.</p>	
+            {% if exists == 0: %}
+                <p class="misc">There is no current cycle. Please come back later. </p>
+            {% else: %}
+                <p class="misc"> Nominations are now closed. Please vote.</p>
+            {% endif %}
         </div>
     </body>
 </html>
