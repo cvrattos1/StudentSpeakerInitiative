@@ -7,25 +7,6 @@
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
         <title>Students' Speaker Initiative</title>
-        <script type="text/javascript">
-        
-        function checkboxlimit(checkgroup, limit){
-        	var checkgroup=checkgroup
-        	var limit=limit
-        	for (var i=0; i<checkgroup.length; i++){
-        		checkgroup[i].onclick=function(){
-        		var checkedcount=0
-        		for (var i=0; i<checkgroup.length; i++)
-        			checkedcount+=(checkgroup[i].checked)? 1 : 0
-        		if (checkedcount>limit){
-        			alert("You can only vote for a maximum of "+limit+" canidate(s)")
-        			this.checked=false
-        			}
-        		}
-        	}
-        }
-        
-        </script>
 	</head>
     <body>
         <div id="mySidenav" class="sidenav">
@@ -33,10 +14,10 @@
             <a href="sHome">Home</a>
             <a href="sNom">Nominate</a>
             <a href="sEndorse">Endorse</a>
-            <a class="active" href="sVote">Vote</a>
+            <a href="sVote">Vote</a>
             <a href="scNom">CCNominate</a>
             <a href="scEndorse">CCEndorse</a>
-            <a href="scVote">CCVote</a>
+            <a class="active" href="scVote">CCVote</a>
             <a href='logout' class="logout">Logout</a>
         </div>
         <div class="header" id="myHeader">
@@ -48,31 +29,23 @@
             {% if cycle %}
                 {% if validation['voting'] %}
                     {% if hasvoted %}
-                        <p class="misc">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
+                        <p class=""misc">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results. }}</p>
                     {% else %}
                         <p class="misc">These are the current candidates. Please vote. </p><br>
-                        <form action="vote_flask" method= "post" name= "vote_form" id="vote_form">
                         {%for speaker in speakers: %}
                             <div class="nom">
+                                <form action="vote_flask" method = "put">
                                     <p> Name: {{speaker.getName()}}<br>
                                     Description: {{speaker.getDescrip()}}<br></p>
-                                    <input type="checkbox" class="acceptButton" id="status" name="check" value={{speaker.getSpeakid()}}> Vote<br>
+                                    <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
+                                    <input type="checkbox" class="acceptButton" id="status" name="status" value= "vote"> Vote<br>
+                                </form>
                             </div>
                             <br>
                         {% endfor %}
-                        <br><br>
-                        <input type="submit" class="acceptButton" id="status" name="submit" value="Submit Votes">
-                        </form>
-                        <script type="text/javascript">
-
-                        checkboxlimit(document.getElementById("vote_form").elements.namedItem("check"), {{ cycle.getVoteNum() }});
-
-                        </script>
-                            
-                    <br>
                     {% endif %}
                  {% else %}
-                     <p class="misc"> The voting cycle will begin on {{ cycle.getDateVoting() }}.</p>
+                     <p class="misc"> The voting cycle will begin on {{ cycle.getDateVoting() }}</p>
                 
                  {% endif %}
             {% else %}

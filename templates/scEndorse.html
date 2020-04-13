@@ -8,35 +8,16 @@
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
         <title>Students' Speaker Initiative</title>
-        <script type="text/javascript">
-        
-        function checkboxlimit(checkgroup, limit){
-        	var checkgroup=checkgroup
-        	var limit=limit
-        	for (var i=0; i<checkgroup.length; i++){
-        		checkgroup[i].onclick=function(){
-        		var checkedcount=0
-        		for (var i=0; i<checkgroup.length; i++)
-        			checkedcount+=(checkgroup[i].checked)? 1 : 0
-        		if (checkedcount>limit){
-        			alert("You can only endorse a maximum of "+limit+" candidate(s)")
-        			this.checked=false
-        			}
-        		}
-        	}
-        }
-        
-        </script>
 	</head>
     <body>
         <div id="mySidenav" class="sidenav">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="sHome">Home</a>
             <a href="sNom">Nominate</a>
-            <a class="active" href="sEndorse">Endorse</a>
+            <a href="sEndorse">Endorse</a>
             <a href="sVote">Vote</a>
             <a href="scNom">CCNominate</a>
-            <a href="scEndorse">CCEndorse</a>
+            <a class="active" href="scEndorse">CCEndorse</a>
             <a href="scVote">CCVote</a>
             <a href='logout' class="logout">Logout</a>
         </div>
@@ -71,29 +52,17 @@
                     {% else %}
                         <p class="misc">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You
                             can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><br>
-                        
-                            
-                                <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
-                                    {%for speaker in speakers: %}
-                                        <div class="nom">
-                                        <p> Name: {{speaker.getName()}}<br>
-                                            Description: {{speaker.getDescrip()}}<br></p>
-                                            <input type="checkbox" name="check" value={{speaker.getSpeakid()}} > Endorse <br>
-                                        </div>
-                                        <br>
-                                     {% endfor %}
-                                     <br><br>
-                                     <input type="submit" class="acceptButton" id="status" name="submit" value="Submit Endorsements">
+                        {%for speaker in speakers: %}
+                            <div class="nom">
+                                <form action="endorse_flask" method = "put">
+                                    <p> Name: {{speaker.getName()}}<br>
+                                        Description: {{speaker.getDescrip()}}<br></p>
+                                        <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
+                                        <input type="checkbox" class="acceptButton" id="status" name="status" value="endorsed"> Endorse <br>
                                 </form>
-                                
-                                <script type="text/javascript">
-
-                                checkboxlimit(document.getElementById("endorse_form").elements.namedItem("check"), {{ cycle.getEndorseNum() }});
-
-                                </script>
-                            
+                            </div>
                             <br>
-                       
+                        {% endfor %}
                         
                     {% endif %}
                     

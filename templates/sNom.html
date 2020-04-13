@@ -7,7 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
         <script src="./static/script.js" defer></script>
         <link href="./static/styles.css" rel="stylesheet">
-        <title>Student Speakers Initiative</title>
+        <title>Students' Speaker Initiative</title>
 	</head>
     <body>
         <div id="mySidenav" class="sidenav">
@@ -16,37 +16,54 @@
             <a class="active" href="sNom">Nominate</a>
             <a href="sEndorse">Endorse</a>
             <a href="sVote">Vote</a>
+            <a href="scNom">CCNominate</a>
+            <a href="scEndorse">CCEndorse</a>
+            <a href="scVote">CCVote</a>
             <a href='logout' class="logout">Logout</a>
         </div>
         <div class="header" id="myHeader">
           <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Student Speakers Initiative</a>
+          <a href="index" class="logo">Students' Speaker Initiative</a>
           <a class="user"> Student: {{username}} </a>
         </div>
         <div class="main">
-            <p class="misc">This is your opportunity to nominate a speaker you would like to invite to our campus;
-                fill out the fields below and press submit to nominate a speaker of your choice!
-                You can nominate {{cycle.getNominateNum()}} people; you have {{ remaining }} nominations left.
-                Nominations are not retractable and you cannot endorse a candidate that you nominated.  </p>
-                <!--form-->
-            <form action="nominate_flask" method = "post" enctype="multipart/form-data">
-                <div class="nom">
-                	<p>{{errorMsg}}</p>
-                    <label for="name">Name:</label>
-                    <input type="text" class="textfield" id="name" name="name">
-                    <br><br>
-                    <label for="descrip">Description:</label>
-                    <input class="textfield" type="text" id="descrip" name="descrip">
-                    <br><br>
-                    <label for="links">Link to works:</label>
-                    <input type="text" class="textfield" id="links" name="links">
-                    <br><br>
-                    <label for="img">Select image:</label>
-                    <input type="file" name="file" id="img" accept="image/*">
-                    <br><br>
-                    <input type="submit" class="acceptButton" value = "Submit">
-                </div>
-             </form>
+        {% if not cycle %}
+            <p class="misc">There is no current cycle. Please come back later. </p>
+        {% else %}
+            {% if validation['voting'] %}
+                <p class="misc"> Nominations are now closed. Please vote.</p>
+            {% elif validation['endorsing']%}                
+                 <p class="misc"> Nominations are now closed. Please endorse.</p>
+            {% else %}    
+                 {% if remaining %}
+                    <p class="misc">This is your opportunity to nominate a speaker you would like to invite to our campus;
+                        fill out the fields below and press submit to nominate a speaker of your choice!
+                        You can nominate {{cycle.getNominateNum()}} people; you have {{ remaining }} nomination(s) left.
+                        Nominations are not retractable and you cannot endorse a candidate that you have nominated.  </p>
+                        <!--form-->
+                    <form action="nominate_flask" method = "post" enctype="multipart/form-data">
+                        <div class="nom">
+                        	<p class= "error">{{errorMsg}}</p>
+                            <label for="name">Name:</label>
+                            <input type="text" class="textfield" id="name" name="name" value= {{name}}>
+                            <br><br>
+                            <label for="descrip">Description:</label>
+                            <input class="textfield" type="text" id="descrip" name="descrip" value= {{descrip}}>
+                            <br><br>
+                            <label for="links">Link to works:</label>
+                            <input type="text" class="textfield" id="links" name="links" value= {{links}}>
+                            <br><br>
+                            <label for="img">Select image:</label>
+                            <input type="file" name="file" id="img" accept="image/*">
+                            <br><br>
+                            <input type="submit" class="acceptButton" value = "Submit">
+                        </div>
+                     </form>
+                 {% else %}
+                    <p class="misc">You have already nominated your allowed amount of speakers.</p>
+                 {% endif %}
+            {% endif %}
+        {% endif %}
         </div>
     </body>
 </html>

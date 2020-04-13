@@ -26,7 +26,7 @@
         <div class="main">
         	<p class="misc">Let's create a new cycle!</p> <br><br>
             <div class="nom">
-                <p>{{errorMsg}}</p>
+                <p class = "error">{{errorMsg}}</p>
                 <script type="text/javascript">
                     function handleTextBoxNom(value) {
                         if (value == 1) {
@@ -59,7 +59,7 @@
                 <form action="new_cycle" method="get">
                     <label for="cname">Name of voting cycle:</label>
                     <input type="hidden" name="admin" value={{ username }}>
-                    <input type="text" class="textfield" id="cname" name="cname">
+                    <input type="text" class="textfield" id="cname" name="cname" value= {{cname}}>
                     <br><br>
                     <label for="nominations">Number of nominations allowed per student:</label> <br>
                     <input type="radio" name="nominatenum" value="unlimited" id="unlimitnom" onclick="handleTextBoxNom(1)"> Unlimited nominations <br>
@@ -82,13 +82,19 @@
                     <input type="checkbox" name="rollovervot"  value="vot"> Votes <br> <br>
 
                     <label for="threshold">Set the endorsement threshold </label>
-                    <input type="number" name="threshold" value="threshold">
+                    <input type="number" name="threshold" value={{threshold}}><br> <br>
 
+                    <label for="nomdate">Set nominations to begin on </label>
+                    <input type="date" name="nomdate" value={{nomdate}}> <br> <br>
+                    
+                    <label for="endorsedate">Set endorsements to begin on </label>
+                    <input type="date" name="endorsedate" value={{endorsedate}}> <br> <br>
+                    
                     <label for="votingdate">Set voting to begin on </label>
-                    <input type="date" name="votingdate" value="votingdate"> <br> <br>
+                    <input type="date" name="votingdate" value={{votingdate}}> <br> <br>
 
-                    <label for="enddate">Set the end of the voting period on </label>
-                    <input type="date" name="enddate" value="enddate"> <br> <br>
+                    <label for="enddate">Set cycle end date as: </label>
+                    <input type="date" name="enddate" value={{enddate}}> <br> <br>
 
                     <br><br>
                     <input type="submit" class="acceptButton" value = "Submit">

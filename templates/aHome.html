@@ -42,6 +42,8 @@
                 <br>Information for cycle {{ cycle.getName() }}: <br>
                 Created on: {{cycle.getDateCreated()}} by {{ cycle.getAdmin()}}. <br>
                 Students are allowed {{ cycle.getNominateNum() }} nominations, {{ cycle.getEndorseNum()}} endorsements and {{ cycle.getVoteNum() }} votes. <br>
+                Nominations will begin on {{ cycle.getDateNom()}}. <br>
+                Endorsements will begin on {{ cycle.getDateEndorse()}}. <br>
                 Voting will begin on {{ cycle.getDateVoting()}}. <br>
                 The endorsement threshold is {{ cycle.getThreshold() }}. <br>
                 The end date of this cycle is {{ cycle.getDateEnd() }}.

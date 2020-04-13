@@ -14,6 +14,8 @@ from cycle import Cycle
 from report import Report
 from conversation import Conversation
 
+UNLIMITED_VALUE = 2147483647
+
 class Database:
 
     # connect to the database and execute query, return result of query, if there is one.
@@ -43,13 +45,19 @@ class Database:
 
     # returns the information about the student with netid as a Student object, or None if does not exist
     def getStudent(self, netid):
-        query = "SELECT * from students WHERE netid = '" + netid + "'"
+        query = "SELECT * from students WHERE netid = '" + netid.strip() + "'"
+        print(query)
         result = Database.connectDB(self, query)
 
         if not result:
             return None
         student = Student(netid, result[0][1], result[0][2], result[0][3])
         return student
+    
+    def makeStudent(self, netid):
+        query = "INSERT INTO students VALUES('" + netid.strip() + "', 0, 0, 0)"
+        print(query)
+        result = Database.connectDB(self, query)
 
     # ---------------------------------------------------------------------
 
@@ -73,7 +81,7 @@ class Database:
             return None
         else:
             return Cycle(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5],
-                         result[0][6], result[0][7], result[0][8], result[0][8])
+                         result[0][6], result[0][7], result[0][8], result[0][9],result[0][10],result[0][11])
 
     # ---------------------------------------------------------------------
 
@@ -90,7 +98,8 @@ class Database:
 
     # returns as an integer the number of endorsements remaining for the student with netid netid
     def remainingNominations(self, netid):
-        query = "SELECT nominations FROM students WHERE netid = '" + netid + "'"
+        query = "SELECT nominations FROM students WHERE netid = '" + netid.strip() + "'"
+        print(query)
         noms = Database.connectDB(self, query)
         if noms:
             nominations=noms[0][0]
@@ -100,8 +109,27 @@ class Database:
         query = "SELECT nominatenum FROM cycle"
         allowance = Database.connectDB(self, query)[0][0]
 
+        if allowance == UNLIMITED_VALUE:
+            return "unlmited"
+        else:
+            return allowance - nominations
+        
+    def remainingccNominations(self, netid):
+        query = "SELECT ccnominations FROM students WHERE netid = '" + netid.strip() + "'"
+        ccnoms = Database.connectDB(self, query)
+        if ccnoms:
+            ccnominations=ccnoms[0][0]
+        else:
+            ccnominations=0
 
-        return allowance - nominations
+        query = "SELECT nominatenum FROM cycle"
+        allowance = Database.connectDB(self, query)[0][0]
+
+        if allowance == UNLIMITED_VALUE:
+            return "unlmited"
+        else:
+            return allowance - ccnominations
+
 
     # ---------------------------------------------------------------------
 
@@ -179,15 +207,16 @@ class Database:
 
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def endorse(self, netid, speakid, count):
-        query = "UPDATE students SET endorsements = endorsesemnts + " + count + " WHERE netid = '" + netid + "'"
+        query = "UPDATE students SET endorsements = endorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
+        print(query)
         Database.connectDB(self, query)
 
         query = "UPDATE speakers SET endorsements = endorsements + " + str(count) + " WHERE speakid = '" + speakid + "'"
-        Database.connectDB(query)
+        Database.connectDB(self, query)
 
     # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
     def flag(self, netid, speakid, reason):
-        query = "INSERT INTO reports VALUES('" + netid + "', '" + speakid + "', '" + "', '" + reason + "'"
+        query = "INSERT INTO reports VALUES('" + netid + "', '" + speakid + "', '" + "', '" + reason + "')"
         Database.connectDB(self, query)
 
 
@@ -209,7 +238,7 @@ class Database:
         query = 'UPDATE speakers SET votes = votes + 1 WHERE speakid = ' + '\'' + speakid + '\''
         Database.connectDB(self, query)
 
-        query = 'UPDATE students SET votes = votes + 1 WHERE netid = ' + '\'' + netid + '\''
+        query = 'UPDATE students SET votes = votes + 1 WHERE netid = ' + '\'' + netid.strip() + '\''
         Database.connectDB(self, query)
 
     # allows access of an image for a particular speakid
@@ -230,21 +259,48 @@ class Database:
                 + str(name) + '\', \'' + str(descrip) + '\', \'' + str(links) + '\', \'' + str(imglink) + '\', 0, 0)'
         print(query)
         Database.connectDB(self, query)
+        
+        query = 'UPDATE students SET nominations = nominations + 1 WHERE netid = \'' + str(netid).strip() + '\''
+        print(query)
+        Database.connectDB(self, query)
+        
+    def ccnominate(self, netid, cycle, names, descrips, links, imglinks):
+        query = 'SELECT ccids FROM cycle'
+        new_ccid = int(Database.connectDB(self, query)[0][0])
+        query = "UPDATE cycle SET ccids = ccids + 1"
+        Database.connectDB(self, query)
 
-    def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, threshold, datevoting, dateend):
+        query = 'INSERT INTO conversation VALUES (\'' + str(new_ccid) + '\', \'' + str(netid).strip() + '\', \'' + str(cycle) + '\', \'' \
+                + str(names) + '\', \'' + str(descrips) + '\', \'' + str(links) + '\', \'' + str(imglinks) + '\', 0, 0, 0)'
+        print (query)        
+        Database.connectDB(self, query)
+        
+        query = 'UPDATE students SET ccnominations = ccnominations + 1 WHERE netid = \'' + str(netid).strip() + '\''
+        
+        Database.connectDB(self, query)
+
+    def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, threshold, nomdate, endorsedate, datevoting, dateend):
         query = 'SELECT ids FROM cycle'
         result = Database.connectDB(self, query)
         if not result:
             ids = 0
         else:
             ids = int(result[0][0])
+            
+        query = 'SELECT ccids FROM cycle'
+        result = Database.connectDB(self, query)
+        if not result:
+            ccids = 0
+        else:
+            ccids = int(result[0][0])
 
         query='DELETE FROM cycle'
         Database.connectDB(self, query)
 
         query = 'INSERT INTO cycle VALUES (\'' + str(name) + '\', \'' + str(datecreated) + '\', \'' + str(admin) + \
                 '\', \'' + str(ids) + '\', \'' + str(nominatenum) + '\', \'' + str(endorsenum) + '\', \'' + \
-                str(votenum) + '\', \'' + str(threshold) + '\', \'' + str(datevoting) + '\', \'' +  str(dateend) + '\')'
+                str(votenum) + '\', \'' + str(threshold) + '\', \'' + str(nomdate) + '\', \'' + str(endorsedate) + '\', \'' + str(datevoting) + '\', \'' +  str(dateend) + '\', \''+ str(ccids) + '\')'
+        print (query)
         Database.connectDB(self, query)
 
     def adminAuthenticate(self, username):
