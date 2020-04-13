@@ -4,81 +4,118 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
-        <script type="text/javascript">
         
-        function checkboxlimit(checkgroup, limit){
-        	var checkgroup=checkgroup
-        	var limit=limit
-        	for (var i=0; i<checkgroup.length; i++){
-        		checkgroup[i].onclick=function(){
-        		var checkedcount=0
-        		for (var i=0; i<checkgroup.length; i++)
-        			checkedcount+=(checkgroup[i].checked)? 1 : 0
-        		if (checkedcount>limit){
-        			alert("You can only vote for a maximum of "+limit+" canidate(s)")
-        			this.checked=false
-        			}
-        		}
-        	}
-        }
-        
-        </script>
 	</head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="sHome">Home</a>
-            <a href="sNom">Nominate</a>
-            <a href="sEndorse">Endorse</a>
-            <a class="active" href="sVote">Vote</a>
-            <a href="scNom">CCNominate</a>
-            <a href="scEndorse">CCEndorse</a>
-            <a href="scVote">CCVote</a>
-            <a href='logout' class="logout">Logout</a>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown active">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Bring a Speaker to Campus
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
+                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
+                            <a class="dropdown-item active" href="sVote">Vote for Speakers</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Create a Conversation Panel
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
+                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
+                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+                {% if cycle %}
+                    {% if validation['voting'] %}
+                        {% if hasvoted %}
+                            <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
+                        {% else %}
+                            <br><p class="lead text-center font-weight-bold">These are the current candidates. Please vote. </p><hr>
+                            <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                                        <div class="card-columns">
+                                        {%for speaker in speakers: %}
+                                            <div class="card">
+                                                <img data-src={{speaker.getImgLinks}} alt="" class="card-img-top cld-responsive">
+                                                <div class="card-body">
+                                                    <h4 class="card-title">{{speaker.getName()}}</h4>
+                                                    <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+                                                    <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                                    <p class="card-text"> Current Vote Count: {{speaker.getVotes()}}</p>
+                                                    <div class="text-center font-weight-bolder custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
+                                                        <label class="custom-control-label" for={{speaker.getSpeakid()}}>Vote</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                         {% endfor %}
+                                        </div>
+                                         <br>
+                                         <input type="submit" class="btn btn-primary" id="status" name="submit" value="Submit Votes">
+                                    </form>
+                                <br>
+                        {% endif %}
+                     {% else %}
+                         <br><p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p>
+                    
+                     {% endif %}
+                {% else %}
+                    <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p>
+                {% endif %}
         </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Students' Speaker Initiative</a>
-          <a class="user"> Student: {{username}} </a>
-        </div>
-        <div class="main">
-            {% if cycle %}
-                {% if validation['voting'] %}
-                    {% if hasvoted %}
-                        <p class="misc">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
-                    {% else %}
-                        <p class="misc">These are the current candidates. Please vote. </p><br>
-                        <form action="vote_flask" method= "post" name= "vote_form" id="vote_form">
-                        {%for speaker in speakers: %}
-                            <div class="nom">
-                                    <p> Name: {{speaker.getName()}}<br>
-                                    Description: {{speaker.getDescrip()}}<br></p>
-                                    <input type="checkbox" class="acceptButton" id="status" name="check" value={{speaker.getSpeakid()}}> Vote<br>
-                            </div>
-                            <br>
-                        {% endfor %}
-                        <br><br>
-                        <input type="submit" class="acceptButton" id="status" name="submit" value="Submit Votes">
-                        </form>
-                        <script type="text/javascript">
+        <script type="text/javascript">
+            let voteForm = document.getElementById("vote_form");
+            if (voteForm) {
+                let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
+                $(voteForm).submit(function(event) {
+                    
+                    let checkedcount=0;
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount==0){
+                        alert("You have not voted for any speakers.");
+                        event.preventDefault();
+                    }
+                });
 
-                        checkboxlimit(document.getElementById("vote_form").elements.namedItem("check"), {{ cycle.getVoteNum() }});
-
-                        </script>
-                            
-                    <br>
-                    {% endif %}
-                 {% else %}
-                     <p class="misc"> The voting cycle will begin on {{ cycle.getDateVoting() }}.</p>
-                
-                 {% endif %}
-            {% else %}
-                <p class="misc">There is no current cycle. Please come back later. </p>
-            {% endif %}
+                let limit={{cycle.getVoteNum()}};
+                for (let i=0; i<checkgroup.length; i++){
+                    checkgroup[i].onclick=function(){
+                    let checkedcount=0
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount>limit){
+                        alert("You can only vote for a maximum of "+limit+" candidate(s).")
+                        this.checked=false
+                        }
+                    }
+                };
+            }
+            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+            // Call
+            cl.responsive();
             
-        </div>
+        </script>
     </body>
 </html>

@@ -5,38 +5,59 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
 	</head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a class="active"href="sHome">Home</a>
-            <a href="sNom">Nominate</a>
-            <a href="sEndorse">Endorse</a>
-            <a href="sVote">Vote</a>
-            <a href="scNom">CCNominate</a>
-            <a href="scEndorse">CCEndorse</a>
-            <a href="scVote">CCVote</a>
-            <a href='logout' class="logout">Logout</a>
-        </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Students' Speaker Initiative</a>
-          <a class="user"> Student: {{username}} </a>
-          </div>
-        <div class="main">
-            <p class="misc">Welcome to the student homepage!</p>
-            <br><br>
-            <p class="misc">
-                {% if exists == 0: %}
-                There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!
-                {% else: %}
-                You have {{cycle.getNominateNum()}} nomination and {{ cycle.getEndorseNum()}} endorsements. The threshold for
-                a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} votes.
-                {% endif %}
-            </p>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Bring a Speaker to Campus
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
+                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
+                            <a class="dropdown-item" href="sVote">Vote for Speakers</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Create a Conversation Panel
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
+                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
+                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid text-center">
+            <div>
+                <br><h2 class="font-weight-bold">Welcome to the student homepage!</h2>
+                <br><hr>
+                <p class="lead">
+                    {% if exists == 0: %}
+                    There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!
+                    {% else: %}
+                    You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
+                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).
+                    {% endif %}
+                </p>
+            </div>
         </div>
     </body>
 </html>

@@ -101,7 +101,7 @@ class Database:
         query = "SELECT nominations FROM students WHERE netid = '" + netid.strip() + "'"
         print(query)
         noms = Database.connectDB(self, query)
-        if noms:
+        if noms[0][0]:
             nominations=noms[0][0]
         else:
             nominations=0
@@ -117,7 +117,7 @@ class Database:
     def remainingccNominations(self, netid):
         query = "SELECT ccnominations FROM students WHERE netid = '" + netid.strip() + "'"
         ccnoms = Database.connectDB(self, query)
-        if ccnoms:
+        if ccnoms[0][0]:
             ccnominations=ccnoms[0][0]
         else:
             ccnominations=0
@@ -295,6 +295,9 @@ class Database:
             ccids = int(result[0][0])
 
         query='DELETE FROM cycle'
+        Database.connectDB(self, query)
+
+        query='DELETE FROM students'
         Database.connectDB(self, query)
 
         query = 'INSERT INTO cycle VALUES (\'' + str(name) + '\', \'' + str(datecreated) + '\', \'' + str(admin) + \

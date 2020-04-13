@@ -4,39 +4,72 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
-        <title>Student Speakers Initiative</title>
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
+        <title>Students' Speaker Initiative</title>
 	</head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="aHome">Home</a>
-            <a class="active" href="aNoms">Nominations</a>
-            <a href="aVotes">Votes</a>
-            <a href="aReports">Reports</a>
-            <a href="logout">Logout</a>
-        </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Student Speakers Initiative</a>
-          <a class="user"> Admin: {{username}} </a>
-          </div>
-        </div>
-        <div class="main">
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown active">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Speaker Information
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item active" href="aNoms">View Nominations</a>
+                            <a class="dropdown-item" href="aVotes">Check Standings</a>
+                            <a class="dropdown-item" href="aReports">Review Reports</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Conversation Information
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="acNoms">View Nominations</a>
+                        <a class="dropdown-item" href="acVotes">Check Standings</a>
+                        <a class="dropdown-item" href="acReports">Review Reports</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
             {% if exists == 0: %}
-                <p class="misc">There is no current cycle. Please start a cycle.</p>
+                <br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p>
             {% else: %}
-                <p class="misc">These are the currently nominated speakers and their endorsement counts.</p>
-                {% for speaker in speakers: %}
-                <div class="nom">
-                    <p> Name: {{speaker.getName()}} <br>
-                    Description: {{speaker.getDescrip()}} <br>
-                    Endorsement Count: {{speaker.getEndorsements()}}</p>
-                </div>
-                <br>
-                {% endfor %}
+                <br><p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
+                <div class="card-columns">
+                            {%for speaker in speakers: %}
+                                <div class="card">
+                                    <img data-src={{speaker.getImgLinks}} alt="" class="card-img-top cld-responsive">
+                                    <div class="card-body">
+                                        <h4 class="card-title">{{speaker.getName()}}</h4>
+                                        <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+                                        <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                        <p class="card-text"> Endorsment Count: {{speaker.getEndorsements()}}</p>
+                                        </div>
+                                    </div>
+                                <br>
+                            {% endfor %}
+                            </div>
             {% endif %}
+            </div>
         </div>
+        <script>
+            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+            // Call
+            cl.responsive();
+        </script>
     </body>
 </html>

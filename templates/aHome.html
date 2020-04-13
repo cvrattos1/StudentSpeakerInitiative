@@ -4,71 +4,86 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
-        <title>Student Speakers Initiative</title>
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <title>Students' Speaker Initiative</title>
     </head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a class="active" href="aHome">Home</a>
-            <a href="aNoms">Nominations</a>
-            <a href="aVotes">Votes</a>
-            <a href="aReports">Reports</a>
-            <a href="logout">Logout</a>
-        </div>
-        <div class="header">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Student Speakers Initiative</a>
-          <a class="user"> Admin: {{username}} </a>
-          </div>
-        </div>
-        <div class="main">
-        	<p class="misc">Welcome to the admin homepage!</p> <br><br>
-            <div class="nom">
-                <br>
-{#                <form action="changeStep_flask" method = "put">#}
-{#                    <input type="submit" class="acceptButton" id="status" name="status" value= "Change to {{changecycle}} cycle"><br>#}
-{#                </form>#}
-{#                <br>#}
-                <form action="reset_flask" method = "put">
-                    <input type="submit" class="rejectButton" id="status" name="status" value= "Create a new cycle"><br>
-                </form>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Speaker Information
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="aNoms">View Nominations</a>
+                            <a class="dropdown-item" href="aVotes">Check Standings</a>
+                            <a class="dropdown-item" href="aReports">Review Reports</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Conversation Information
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="acNoms">View Nominations</a>
+                        <a class="dropdown-item" href="acVotes">Check Standings</a>
+                        <a class="dropdown-item" href="acReports">Review Reports</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid text-center">
+        	<br><p class="lead font-weight-bold">Welcome to the admin homepage!</p> <hr>
+            <br>
+            <form action="reset_flask" method = "put">
+                <input type="submit" class="btn btn-lg btn-primary" id="status" name="status" value= "Create a new cycle"><br>
+            </form> <br>
 
-                <br>
+            <div class="container bg-secondary rounded-lg text-left lead text-light">
                 {% if exists == 0: %}
-                There is no current cycle.
+                <p class="font-weight-bold text-center">There is no current cycle.</p>
                 {% else: %}
-                <br>Information for cycle {{ cycle.getName() }}: <br>
-                Created on: {{cycle.getDateCreated()}} by {{ cycle.getAdmin()}}. <br>
-                Students are allowed {{ cycle.getNominateNum() }} nominations, {{ cycle.getEndorseNum()}} endorsements and {{ cycle.getVoteNum() }} votes. <br>
+                <br><p class="font-weight-bold text-center">Information for cycle {{ cycle.getName() }}:</p>
+                <p>Created on: {{cycle.getDateCreated()}} by {{ cycle.getAdmin()}}. <br>
+                Students have {{ cycle.getNominateNum() }} nomination(s), {{ cycle.getEndorseNum()}} endorsement(s) and {{ cycle.getVoteNum() }} vote(s). <br>
+                The endorsement threshold is {{ cycle.getThreshold() }}.<br>
                 Nominations will begin on {{ cycle.getDateNom()}}. <br>
-                Endorsements will begin on {{ cycle.getDateEndorse()}}. <br>
+                Endorsements will begin on {{ cycle.getDateEndorse()}}.<br>
                 Voting will begin on {{ cycle.getDateVoting()}}. <br>
-                The endorsement threshold is {{ cycle.getThreshold() }}. <br>
-                The end date of this cycle is {{ cycle.getDateEnd() }}.
+                The end date of this cycle is {{ cycle.getDateEnd() }}. </p>
                 {% endif %}
                 <br>
-
-                 <br>
-                <br>
-                <br>
-                <p>Add a new Admin!</p>
-                <form action='addAdmin' method='get'>
-                    <label for="newAdmin">New Admin:</label>
-                    <input type='text' name='newAdmin'>
-                </form>
-                <br>
-                <p>Remove an Admin!</p>
+            </div>
+            <br>
+            <div class="container rounded-lg text-light bg-secondary">
+                <h4 class="font-weight-bold text-center">Add a new Admin:</h4>
+                <div class=" form-group">
+                    <form action='addAdmin' method='get'>
+                        <input type="text" placeholder="Netid of Admin" class="form-control" name="newAdmin" id="newAdmin">
+                    </form>
+                    <center><input type="submit" class="btn btn-lg bg-primary text-light" value = "Add"></center>
+                </div>
+                <hr>
+                <h4 class="font-weight-bold text-center">Remove an Admin:</h4>
                 <form action='removeAdmin' method='get'>
-                    <label for='oldAdmin'>Old Admin:</label>
-                    <input type='text' name='oldAdmin'>
+                    <input type="text" placeholder="Netid of Admin" class="form-control" name="oldAdmin" id="oldAdmin">
+                    <center><input type="submit" class="btn btn-lg bg-danger text-light" value = "Remove"></center>
                 </form>
 
                 <br>
                 <br>
             </div>
-            <!-- ((need a button for granting admin privileges)) -->
         </div> 
     </body>
 </html>

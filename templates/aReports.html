@@ -4,51 +4,73 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
-        <title>Student Speakers Initiative</title>
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
+        <title>Students' Speaker Initiative</title>
     </head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="aHome">Home</a>
-            <a href="aNoms">Nominations</a>
-            <a href="aVotes">Votes</a>
-            <a class="active" href="aReports">Reports</a>
-            <a href="logout">Logout</a>
-        </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Student Speakers Initiative</a>
-          <a class="user"> Admin: {{username}} </a>
-          </div>
-        </div>
-        <div class="main">
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown active">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Speaker Information
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item " href="aNoms">View Nominations</a>
+                            <a class="dropdown-item" href="aVotes">Check Standings</a>
+                            <a class="dropdown-item active" href="aReports">Review Reports</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Conversation Information
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="acNoms">View Nominations</a>
+                        <a class="dropdown-item" href="acVotes">Check Standings</a>
+                        <a class="dropdown-item" href="acReports">Review Reports</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
             {% if exists == 0: %}
-                 <p class="misc">There is no current cycle. Please start a new cycle. </p>
+                <br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a new cycle. </p>
             {% else: %}
-                <p class="misc">These are the nominated speakers that have been flagged for additional review.
-                You may either dismiss (the speaker will remain in the list of candidates)
-                or reject (the speaker will be removed and any endorsements of the speaker will be
-                refunded). </p>
-                {% for i in range(length): %}
-                <div class="nom">
-                    <p> Netid: {{reports[i].getNetid()}}<br>
-                    Speaker: {{speakers[i].getName()}} <br>
-                    Reason: {{reports[i].getReason()}}<br>
-                    </p>
-                    <center>
-                    <form action="dismiss_flag" method = "put">
-                        <input type="submit" class="acceptButton" id="status" name="dismiss" value="Dismiss">
-                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
-                    </form>
-                    <form action="remove_nomination" method = "put">
-                        <input type="submit" class="rejectButton" id="status" name="remove" value="Remove">
-                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
-                    </form>
-                    </center>
-                </div>
-                <br><br>
+                <br><p class="lead text-center font-weight-bold">These are the nominated speakers that have been flagged for additional review.
+                You may either dismiss the report or accept the report (which deletes the speaker). </p> <hr>
+
+                <div class="card-columns">
+                    {% for i in range(length): %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">{{speaker.getName()}}</h4>
+                                <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
+                                <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
+                                <div class="form-control">
+                                    <form action="dismiss_flag" method = "put">
+                                        <input type="submit" class="btn btn-primary" id="status" name="dismiss" value="Dismiss">
+                                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
+                                    </form>
+                                </div>
+                                <div class="form-control">
+                                    <form action="remove_nomination" method = "put">
+                                        <input type="submit" class="btn btn-danger" id="status" name="remove" value="Remove">
+                                        <input type="hidden" id="speakerid" name="speakerid" value={{report[1]}}>
+                                    </form>
+                                </div>
+                        <br>
                 {% endfor %}
             {% endif %}
         </div>

@@ -5,102 +5,165 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
-        <script type="text/javascript">
         
-        function checkboxlimit(checkgroup, limit){
-        	var checkgroup=checkgroup
-        	var limit=limit
-        	for (var i=0; i<checkgroup.length; i++){
-        		checkgroup[i].onclick=function(){
-        		var checkedcount=0
-        		for (var i=0; i<checkgroup.length; i++)
-        			checkedcount+=(checkgroup[i].checked)? 1 : 0
-        		if (checkedcount>limit){
-        			alert("You can only endorse a maximum of "+limit+" candidate(s)")
-        			this.checked=false
-        			}
-        		}
-        	}
-        }
-        
-        </script>
 	</head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="sHome">Home</a>
-            <a href="sNom">Nominate</a>
-            <a class="active" href="sEndorse">Endorse</a>
-            <a href="sVote">Vote</a>
-            <a href="scNom">CCNominate</a>
-            <a href="scEndorse">CCEndorse</a>
-            <a href="scVote">CCVote</a>
-            <a href='logout' class="logout">Logout</a>
-        </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Students' Speaker Initiative</a>
-          <a class="user"> Student: {{username}} </a>
-        </div>
-        <div class="main">
-            {% if cycle %}
-                {% if validation['voting'] %}
-                    <p class="misc"> Endorsements are now closed. Please vote.</p>
-                {% elif validation['nominating'] %}
-                    <p class="misc">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><br>
-                        {%for speaker in speakers: %}
-                            <div class="nom">
-                                    <p> Name: {{speaker.getName()}}<br>
-                                        Description: {{speaker.getDescrip()}}<br></p>
-                                    <form action="flag_flask" method = "put">
-                                    <input type="submit" class="rejectButton" id="status" name="flag" value="Flag">
-                                    <br><br>
-                                    <label for="reason">Reason for report:</label>
-                                    <input class="textfield" type="text" id="reason" name="reason">
-                                    <input type="hidden" id="speakerid" name="speakerid" value={{speaker.getSpeakid()}}>
-                                </form>
-                            </div>
-                            <br>
-                        {% endfor %}
-                {% else %}
-                    {% if hasendorsed %}
-                        <p class="misc">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
-                    {% else %}
-                        <p class="misc">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You
-                            can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><br>
-                        
-                            
-                                <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
-                                    {%for speaker in speakers: %}
-                                        <div class="nom">
-                                        <p> Name: {{speaker.getName()}}<br>
-                                            Description: {{speaker.getDescrip()}}<br></p>
-                                            <input type="checkbox" name="check" value={{speaker.getSpeakid()}} > Endorse <br>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown active">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Bring a Speaker to Campus
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
+                            <a class="dropdown-item active" href="sEndorse">Endorse Speakers</a>
+                            <a class="dropdown-item" href="sVote">Vote for Speakers</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Create a Conversation Panel
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
+                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
+                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+                {% if cycle %}
+                    {% if validation['voting'] %}
+                        <br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p>
+                    {% elif validation['nominating'] %}
+                        <br><p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
+                        <div class="card-columns">
+                            {%for speaker in speakers: %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal">
+                                        Report</button>
+                                        
+                                        <h4 class="card-title"> Speaker: {{speaker.getName()}}</h4>
+                                        <p class="card-text"> Link: {{speaker.getLinks()}}</p>
                                         </div>
-                                        <br>
-                                     {% endfor %}
-                                     <br><br>
-                                     <input type="submit" class="acceptButton" id="status" name="submit" value="Submit Endorsements">
-                                </form>
-                                
-                                <script type="text/javascript">
-
-                                checkboxlimit(document.getElementById("endorse_form").elements.namedItem("check"), {{ cycle.getEndorseNum() }});
-
-                                </script>
-                            
-                            <br>
-                       
+                                    </div>
+                                <br>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if hasendorsed %}
+                            <br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
+                        {% else %}
+                            <br><p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsement(s). You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><br>
+                                    <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                                        <div class="card-columns">
+                                        {%for speaker in speakers: %}
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="card-title">{{speaker.getName()}}</h4>
+                                                    <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                                    <p class="card-text"> Endorsement Count: {{speaker.getEndorsements()}}</p>
+                                                    <div class="text-center font-weight-bolder custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
+                                                        <label class="custom-control-label" for={{speaker.getSpeakid()}}>Endorse</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                         {% endfor %}
+                                        </div>
+                                         <br>
+                                         <input type="submit" class="btn btn-primary" id="status" name="submit" value="Submit Endorsements">
+                                    </form>
+                                <br>                           
+                        {% endif %}
                         
                     {% endif %}
-                    
+                {% else %}
+                      <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
                 {% endif %}
-            {% else %}
-                  <p class="misc">There is no current cycle. Please come back later.</p>
-            {% endif %}
+            </div>
+
+                    <!-- The Modal -->
+              <div class="modal" id="reportModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                  
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Report This Speaker</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body text-center">
+                      Please give a reason for why you would like to flag this speaker for admin review.<br><br>
+                      <form action="flag_flask" method = "put">
+                            <div class="form-group">
+                            <input type="hidden" name="speakerid" value="" id="speakerid">
+                            <input type="text" placeholder="Reason for Report" class="form-control" id="reason" name="reason">
+                            <br>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="submitButton btn btn-primary" name="flag"> 
+                            </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         </div>
+        <script type="text/javascript">
+                        //triggered when modal is about to be shown
+            $(document).on("click", ".reportButton", function() {
+                //get data-id attribute of the clicked element
+                var speakerid = $(this).data('speakerid');
+                $(".modal-body #reportSpeaker").val(speakerid);
+            });
+            let endorseForm = document.getElementById("endorse_form");
+            if (endorseForm) {
+                let checkgroup = document.getElementById("endorse_form").elements.namedItem("check");
+                $(endorseForm).submit(function(event) {
+                    
+                    let checkedcount=0;
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount==0){
+                        alert("You have not endorsed any speakers.");
+                        event.preventDefault();
+                    }
+                });
+
+                let limit={{cycle.getEndorseNum()}};
+                for (let i=0; i<checkgroup.length; i++){
+                    checkgroup[i].onclick=function(){
+                    let checkedcount=0
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount>limit){
+                        alert("You can only endorse a maximum of "+limit+" candidate(s).")
+                        this.checked=false
+                        }
+                    }
+                };
+            }
+            
+        </script>
     </body>
 </html>

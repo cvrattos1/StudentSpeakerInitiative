@@ -29,6 +29,7 @@ class Speaker:
         return self._links
 
     def getImgLink(self):
+        print(self._imglink)
         return self._imglink
 
     def getEndorsements(self):

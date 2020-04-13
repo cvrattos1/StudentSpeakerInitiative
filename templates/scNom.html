@@ -4,77 +4,93 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-        <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet">
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
 	</head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="sHome">Home</a>
-            <a href="sNom">Nominate</a>
-            <a href="sEndorse">Endorse</a>
-            <a href="sVote">Vote</a>
-            <a class="active" href="scNom">CCNominate</a>
-            <a href="scEndorse">CCEndorse</a>
-            <a href="scVote">CCVote</a>
-            <a href='logout' class="logout">Logout</a>
-        </div>
-        <div class="header" id="myHeader">
-          <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-          <a href="index" class="logo">Students' Speaker Initiative</a>
-          <a class="user"> Student: {{username}} </a>
-        </div>
-        <div class="main">
-        {% if not cycle %}
-            <p class="misc">There is no current cycle. Please come back later. </p>
-        {% else %}
-            {% if validation['voting'] %}
-                <p class="misc"> Nominations are now closed. Please vote.</p>
-            {% elif validation['endorsing']%}                
-                 <p class="misc"> Nominations are now closed. Please endorse.</p>
-            {% else %}    
-                 {% if remaining %}
-                    <p class="misc">This is your opportunity to nominate a conversation that you would like to create on our campus;
-                        fill out the fields below and press submit to nominate a conversation!
-                        You can nominate {{cycle.getNominateNum()}} conversation(s); you have {{ remaining }} nomination(s) left.
-                        Nominations are not retractable and you cannot endorse a conversation that you have nominated.  </p>
-                        <!--form-->
-                    <form action="ccnominate_flask" method = "post" enctype="multipart/form-data">
-                        <div class="nom">
-                        	<p class= "error">{{errorMsg}}</p>
-                            <label for="name1">First Speaker:</label>
-                            <input type="text" class="textfield" id="name1" name="name1" value= {{name1}}>
-                            <br><br>
-                            <label for="descrip1">Description:</label>
-                            <input class="textfield" type="text" id="descrip1" name="descrip1" value= {{descrip1}}>
-                            <br><br>
-                            <label for="links1">Link to works:</label>
-                            <input type="text" class="textfield" id="links1" name="links1" value= {{links1}}>
-                            <br><br>
-                            <label for="img1">Select image:</label>
-                            <input type="file" name="file1" id="img1" accept="image/*">
-                            <br><br><br><br>
-                            <label for="name2">Second Speaker:</label>
-                            <input type="text" class="textfield" id="name2" name="name2" value= {{name2}}>
-                            <br><br>
-                            <label for="descrip2">Description:</label>
-                            <input class="textfield" type="text" id="descrip2" name="descrip2" value= {{descrip2}}>
-                            <br><br>
-                            <label for="links2">Link to works:</label>
-                            <input type="text" class="textfield" id="links2" name="links2" value= {{links2}}>
-                            <br><br>
-                            <label for="img2">Select image:</label>
-                            <input type="file" name="file2" id="img2" accept="image/*">
-                            <br><br>
-                            <input type="submit" class="acceptButton" value = "Submit">
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <a class="navbar-brand font-weight-bold" href="index">Students' Speaker Initiative</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Bring a Speaker to Campus
+                          </a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
+                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
+                            <a class="dropdown-item" href="sVote">Vote for Speakers</a>
+                          </div>
+                    </li>
+                    <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Create a Conversation Panel
+                        </a>
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item active" href="scNom">Nominate a Panel</a>
+                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
+                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
                         </div>
-                     </form>
-                 {% else %}
-                    <p class="misc">You have already nominated your allowed amount of conversations.</p>
-                 {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <br>
+            {% if not cycle %}
+                <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p>
+            {% else %}
+                {% if validation['voting'] %}
+                    <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p>
+                {% elif validation['endorsing']%}                
+                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p>
+                {% else %}    
+                     {% if remaining %}
+                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a conversation that you would like to create on our campus; fill out the fields below and press "submit" to nominate a conversation!</p><hr>
+                        <p class="text-center font-italic"> You have this many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a conversation that you have nominated.  </p>
+                            <!--form-->
+                        <form action="ccnominate_flask" method = "post" enctype="multipart/form-data">
+                            <div class="container-fluid rounded-lg bg-secondary form-group">
+                                <h3 class="text-center text-light">First Speaker:</h3>
+                                <input type="text" placeholder="Speaker1: Name" class="form-control" id="name1" name="name1" value= {{name1}}>
+                                <br>
+                                <input type="text" placeholder="Speaker1: Brief Description" class="form-control" id="descrip1" name="descrip1" value= {{descrip1}}>
+                                <br>
+                                <input type="text" placeholder="Speaker1: Links to Works/Biography" class="form-control" id="links1" name="links1" value= {{links1}}>
+                                <br>
+                                <div class="custom-file mb-3">
+                                    <input type="file" class="custom-file-input" id="img1" name="file1" accept="image/*">
+                                    <label class="custom-file-label" for="img1">Speaker 1: Select an Image</label>
+                                </div>
+                                <br><hr>
+                                <h3 class="text-center text-light">Second Speaker:</h3>
+                                <input type="text" placeholder="Speaker 2: Name" class="form-control" id="name2" name="name2" value= {{name2}}>
+                                <br>
+                                <input type="text" placeholder="Speaker 2: Brief Description" class="form-control" id="descrip2" name="descrip2" value= {{descrip2}}>
+                                <br>
+                                <input type="text" placeholder="Speaker 2: Links to Works/Biography" class="form-control" id="links2" name="links2" value= {{links2}}>
+                                <br>
+                                <div class="custom-file mb-3">
+                                    <input type="file" class="custom-file-input" id="img2" name="file2" accept="image/*">
+                                    <label class="custom-file-label" for="img2">Speaker 2: Select an Image</label>
+                                </div>
+                                <br><hr>
+                                <center><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></center><br>
+                            </div>
+                         </form>
+                     {% else %}
+                        <p class="misc">You have already nominated your allowed amount of conversations.</p>
+                     {% endif %}
+                {% endif %}
             {% endif %}
-        {% endif %}
         </div>
     </body>
 </html>
