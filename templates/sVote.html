@@ -24,7 +24,7 @@
                 <ul class="navbar-nav d-flex justify-content-end w-100">
                     <li class="nav-item dropdown active">
                           <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker to Campus
+                            Bring a Speaker
                           </a>
                           <div class="dropdown-menu">
                             <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
@@ -34,7 +34,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation Panel
+                            Create a Conversation
                         </a>
                         <div class="dropdown-menu">
                         <a class="dropdown-item" href="scNom">Nominate a Panel</a>
@@ -51,8 +51,8 @@
                         {% if hasvoted %}
                             <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
                         {% else %}
-                            <br><p class="lead text-center font-weight-bold">These are the current candidates. Please vote. </p><hr>
-                            <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                            <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
+                            <form action="vote_flask" method= "post" name="vote_form" id="vote_form">
                                         <div class="card-columns">
                                         {%for speaker in speakers: %}
                                             <div class="card">

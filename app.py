@@ -282,6 +282,7 @@ def endorse_flask():
 	uservalidation(username, database)
 	cycle = database.getCycle()
 	endorsed = request.form.getlist('check')
+	student = database.getStudent(username)
 	if student.getEndorsements():
 		return redirect('sHome')
 	if cycle.getEndorseNum() != 'unlimited':
@@ -301,6 +302,7 @@ def vote_flask():
 	uservalidation(username, database)
 	cycle = database.getCycle()
 	voted = request.form.getlist('check')
+	student = database.getStudent(username)
 	if student.getVotes():
 		return redirect('sHome')
 	print(voted)

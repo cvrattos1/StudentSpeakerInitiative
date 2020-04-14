@@ -23,7 +23,7 @@
                 <ul class="navbar-nav d-flex justify-content-end w-100">
                     <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker to Campus
+                            Bring a Speaker
                           </a>
                           <div class="dropdown-menu">
                             <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
@@ -33,7 +33,7 @@
                     </li>
                     <li class="nav-item dropdown active">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation Panel
+                            Create a Conversation
                         </a>
                         <div class="dropdown-menu">
                         <a class="dropdown-item" href="scNom">Nominate a Panel</a>
@@ -71,7 +71,7 @@
                             <br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
                         {% else %}
                             <br><p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr>
-                            <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                            <form action="ccendorse_flask" method= "post" name= "ccendorse_form" id="ccendorse_form">
                                         <div class="card-columns">
                                         {%for speaker in speakers: %}
                                             <div class="card">
@@ -134,9 +134,9 @@
                 var speakerid = $(this).data('speakerid');
                 $(".modal-body #reportSpeaker").val(speakerid);
             });
-            let endorseForm = document.getElementById("endorse_form");
+            let endorseForm = document.getElementById("ccendorse_form");
             if (endorseForm) {
-                let checkgroup = document.getElementById("endorse_form").elements.namedItem("check");
+                let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
                 $(endorseForm).submit(function(event) {
                     
                     let checkedcount=0;

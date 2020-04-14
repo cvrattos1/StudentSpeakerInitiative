@@ -22,7 +22,7 @@
                 <ul class="navbar-nav d-flex justify-content-end w-100">
                     <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker to Campus
+                            Bring a Speaker
                           </a>
                           <div class="dropdown-menu">
                             <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
@@ -32,7 +32,7 @@
                     </li>
                     <li class="nav-item dropdown active">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation Panel
+                            Create a Conversation
                         </a>
                         <div class="dropdown-menu">
                         <a class="dropdown-item" href="scNom">Nominate a Panel</a>
@@ -49,8 +49,8 @@
                         {% if hasvoted %}
                             <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
                         {% else %}
-                            <br><p class="lead text-center font-weight-bold">These are the current candidates. Please vote. </p><hr>
-                            <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                            <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
+                            <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
                                         <div class="card-columns">
                                         {%for speaker in speakers: %}
                                             <div class="card">
@@ -83,5 +83,38 @@
                 {% endif %}
                 
         </div>
+        <script type="text/javascript">
+            let voteForm = document.getElementById("ccvote_form");
+            if (voteForm) {
+                let checkgroup = document.getElementById("ccvote_form").elements.namedItem("check");
+                $(voteForm).submit(function(event) {
+                    
+                    let checkedcount=0;
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount==0){
+                        alert("You have not voted for any conversations.");
+                        event.preventDefault();
+                    }
+                });
+
+                let limit={{cycle.getVoteNum()}};
+                for (let i=0; i<checkgroup.length; i++){
+                    checkgroup[i].onclick=function(){
+                    let checkedcount=0
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount>limit){
+                        alert("You can only vote for a maximum of "+limit+" conversation(s).")
+                        this.checked=false
+                        }
+                    }
+                };
+            }
+            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+            // Call
+            cl.responsive();
+            
+        </script>
     </body>
 </html>
