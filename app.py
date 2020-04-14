@@ -174,7 +174,7 @@ def nominate_flask():
 		
 		return response
 		
-	result = Cloud.uploader.upload(argdict['Image'], use_filename='true', filename=(argdict['Image'].filename), folder='SSI')
+	result = Cloud.uploader.upload(argdict['Image'], use_filename='true', filename=(argdict['Image'].filename), folder='SSI', width=400, height=500, crop="limit")
 	imglink = result['secure_url']
 
 	if remaining:

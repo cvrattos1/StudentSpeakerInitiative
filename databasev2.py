@@ -13,8 +13,14 @@ from speaker import Speaker
 from cycle import Cycle
 from report import Report
 from conversation import Conversation
+import cloudinary as Cloud
+import cloudinary.uploader
 
 UNLIMITED_VALUE = 2147483647
+
+cloudinary.config(cloud_name='dqp1yoed2',
+                  api_key='129874246392789',
+                  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
 
 class Database:
 
