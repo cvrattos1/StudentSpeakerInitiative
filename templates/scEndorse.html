@@ -45,7 +45,7 @@
             </div>
         </nav>
         <div class="container-fluid">
-                {% if cycle %}
+                {% if cycle.getName() %}
                     {% if validation['voting'] %}
                         <br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p>
                     {% elif validation['nominating'] %}
@@ -128,39 +128,41 @@
               </div>
         </div>
         <script type="text/javascript">
-                        //triggered when modal is about to be shown
-            $(document).on("click", ".reportButton", function() {
-                //get data-id attribute of the clicked element
-                var speakerid = $(this).data('speakerid');
-                $(".modal-body #reportSpeaker").val(speakerid);
-            });
-            let endorseForm = document.getElementById("ccendorse_form");
-            if (endorseForm) {
-                let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
-                $(endorseForm).submit(function(event) {
-                    
-                    let checkedcount=0;
-                    for (let i=0; i<checkgroup.length; i++)
-                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                    if (checkedcount==0){
-                        alert("You have not endorsed any conversations.");
-                        event.preventDefault();
-                    }
+            if(cycle.getName()){
+                            //triggered when modal is about to be shown
+                $(document).on("click", ".reportButton", function() {
+                    //get data-id attribute of the clicked element
+                    var speakerid = $(this).data('speakerid');
+                    $(".modal-body #reportSpeaker").val(speakerid);
                 });
-
-                let limit={{cycle.getEndorseNum()}};
-                for (let i=0; i<checkgroup.length; i++){
-                    checkgroup[i].onclick=function(){
-                    let checkedcount=0
-                    for (let i=0; i<checkgroup.length; i++)
-                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                    if (checkedcount>limit){
-                        alert("You can only endorse a maximum of "+limit+" conversation(s).")
-                        this.checked=false
+                let endorseForm = document.getElementById("ccendorse_form");
+                if (endorseForm) {
+                    let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
+                    $(endorseForm).submit(function(event) {
+                        
+                        let checkedcount=0;
+                        for (let i=0; i<checkgroup.length; i++)
+                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                        if (checkedcount==0){
+                            alert("You have not endorsed any conversations.");
+                            event.preventDefault();
                         }
-                    }
-                };
-            }   
+                    });
+
+                    let limit={{cycle.getEndorseNum()}};
+                    for (let i=0; i<checkgroup.length; i++){
+                        checkgroup[i].onclick=function(){
+                        let checkedcount=0
+                        for (let i=0; i<checkgroup.length; i++)
+                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                        if (checkedcount>limit){
+                            alert("You can only endorse a maximum of "+limit+" conversation(s).")
+                            this.checked=false
+                            }
+                        }
+                    };
+                }
+            }
         </script>
     </body>
 </html>

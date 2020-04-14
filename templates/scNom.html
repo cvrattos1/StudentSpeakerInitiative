@@ -45,9 +45,7 @@
         </nav>
         <div class="container">
             <br>
-            {% if not cycle %}
-                <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p>
-            {% else %}
+            {% if cycle.getName() %}
                 {% if validation['voting'] %}
                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p>
                 {% elif validation['endorsing']%}                
@@ -90,6 +88,8 @@
                         <p class="misc">You have already nominated your allowed amount of conversations.</p>
                      {% endif %}
                 {% endif %}
+            {% else %}
+                <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
             {% endif %}
         </div>
     </body>

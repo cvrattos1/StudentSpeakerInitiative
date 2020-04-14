@@ -40,7 +40,7 @@ def filllist(username, database, request):
 	return finallist
 
 def cyclevalidation(cycle):
-	if cycle:
+	if cycle.getName():
 		nominating = cycle.getDateNom() >= datetime.date.today()
 		if nominating:
 			endorsing = False
@@ -92,7 +92,7 @@ def student():
 	uservalidation(username, database)
 
 	cycle = database.getCycle()
-	if cycle is None:
+	if cycle.getName() is None:
 		exists = 0
 	else:
 		exists = 1
@@ -112,8 +112,11 @@ def sNom():
 	database = Database()
 	uservalidation(username, database)
 
-	remaining = database.remainingNominations(username)
 	cycle = database.getCycle()
+	if cycle.getName():
+		remaining = database.remainingNominations(username)
+	else:
+		remaining=None;
 	validation = cyclevalidation(cycle)
 	errorMsg = request.args.get('errorMsg')
 	if errorMsg is None:
@@ -403,7 +406,7 @@ def sVote():
 	student = database.getStudent(username)
 	validation = cyclevalidation(cycle)
 	
-	if cycle:
+	if cycle.getName():
 		speakers = database.getEndorsed(cycle.getThreshold())
 		if student:
 			hasvoted = student.getVotes()
@@ -431,8 +434,11 @@ def scNom():
 	database = Database()
 	uservalidation(username, database)
 
-	remaining = database.remainingccNominations(username)
 	cycle = database.getCycle()
+	if cycle.getName():
+		remaining = database.remainingNominations(username)
+	else:
+		remaining=None;
 	validation = cyclevalidation(cycle)
 	print(remaining)
 	errorMsg = request.args.get('errorMsg')
@@ -592,7 +598,7 @@ def scVote():
 	student = database.getStudent(username)
 	validation = cyclevalidation(cycle)
 	
-	if cycle:
+	if cycle.getName():
 		speakers = database.getEndorsed(cycle.getThreshold())
 		if student:
 			hasvoted = student.getVotes()
@@ -628,7 +634,7 @@ def admin():
 		return response
 
 	cycle = database.getCycle()
-	if cycle is None:
+	if cycle.getName() is None:
 		exists = 0
 	else:
 		exists = 1
@@ -649,7 +655,7 @@ def aNoms():
 	database = Database()
 
 	cycle = database.getCycle()
-	if cycle is None:
+	if cycle.getName() is None:
 		exists = 0
 	else:
 		exists = 1
@@ -678,7 +684,7 @@ def aVotes():
 		return response
 
 	cycle = database.getCycle()
-	if cycle is None:
+	if cycle.getName() is None:
 		exists = 0
 		speakers = []
 	else:
@@ -709,7 +715,7 @@ def aReports():
 		return response
 
 	cycle = database.getCycle()
-	if cycle is None:
+	if cycle.getName() is None:
 		exists = 0
 	else:
 		exists = 1

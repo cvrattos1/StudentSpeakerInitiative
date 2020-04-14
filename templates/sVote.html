@@ -46,7 +46,7 @@
             </div>
         </nav>
         <div class="container-fluid">
-                {% if cycle %}
+                {% if cycle.getName() %}
                     {% if validation['voting'] %}
                         {% if hasvoted %}
                             <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
@@ -85,33 +85,35 @@
                 {% endif %}
         </div>
         <script type="text/javascript">
-            let voteForm = document.getElementById("vote_form");
-            if (voteForm) {
-                let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
-                $(voteForm).submit(function(event) {
-                    
-                    let checkedcount=0;
-                    for (let i=0; i<checkgroup.length; i++)
-                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                    if (checkedcount==0){
-                        alert("You have not voted for any speakers.");
-                        event.preventDefault();
-                    }
-                });
-
-                let limit={{cycle.getVoteNum()}};
-                for (let i=0; i<checkgroup.length; i++){
-                    checkgroup[i].onclick=function(){
-                    let checkedcount=0
-                    for (let i=0; i<checkgroup.length; i++)
-                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                    if (checkedcount>limit){
-                        alert("You can only vote for a maximum of "+limit+" candidate(s).")
-                        this.checked=false
+            if (cycle.getName() != null){
+                let voteForm = document.getElementById("vote_form");
+                if (voteForm) {
+                    let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
+                    $(voteForm).submit(function(event) {
+                        
+                        let checkedcount=0;
+                        for (let i=0; i<checkgroup.length; i++)
+                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                        if (checkedcount==0){
+                            alert("You have not voted for any speakers.");
+                            event.preventDefault();
                         }
-                    }
-                };
+                    });
+                    let limit={{cycle.getVoteNum()}};
+                    for (let i=0; i<checkgroup.length; i++){
+                        checkgroup[i].onclick=function(){
+                        let checkedcount=0
+                        for (let i=0; i<checkgroup.length; i++)
+                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                        if (checkedcount>limit){
+                            alert("You can only vote for a maximum of "+limit+" candidate(s).")
+                            this.checked=false
+                            }
+                        }
+                    };
+                }
             }
+            
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
             // Call
             cl.responsive();

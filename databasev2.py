@@ -78,7 +78,7 @@ class Database:
         result = Database.connectDB(self, query)
 
         if not result:
-            return None
+            return Cycle(None, None, None, None, None, None, None, None, None, None, None, None)
         else:
             return Cycle(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5],
                          result[0][6], result[0][7], result[0][8], result[0][9],result[0][10],result[0][11])
