@@ -16,8 +16,6 @@ from cycle import Cycle
 from report import Report
 from conversation import Conversation
 
-
-
 import pustatus
 
 from flask_login import login_user, logout_user, login_required, LoginManager, current_user
