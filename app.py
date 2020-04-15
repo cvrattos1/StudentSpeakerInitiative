@@ -420,7 +420,7 @@ def flag_flask():
 
 	database.flag(username, speakerid, reason)
 	try:
-		recipient = username + "@princeton.edu"
+		recipient = username[:-1] + "@princeton.edu"
 		msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
 		msg.body = "Dear Student,\n\nYour flag request has been submitted to the Students' Speakers Initiative comittee for review. Thank you for your feedback.\n\nSincerely,\nThe Students' Speakers Initiative"
 		msg.subject = "Students' Speakers Initiative Flag"
@@ -428,6 +428,8 @@ def flag_flask():
 		print('Mail sent to ' + recipient)
 	except Exception as e:
 		print(str(e))
+		print("NOOOOOO")
+		print(username[:-1] + "@princeton.edu")
 
 	return redirect('sEndorse')
 
