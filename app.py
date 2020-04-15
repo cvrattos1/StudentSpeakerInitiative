@@ -9,6 +9,7 @@ import cloudinary as Cloud
 import cloudinary.uploader
 import datetime
 import json
+from flask_mail import Mail, Message
 
 from student import Student
 from speaker import Speaker
@@ -36,6 +37,17 @@ app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 cloudinary.config(cloud_name='dqp1yoed2',
 				  api_key='129874246392789',
 				  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
+
+app.config.update(
+	#465
+	DEBUG=True,
+	MAIL_USE_TLS=True,
+	MAIL_SERVER='smtp.princeton.edu',
+	MAIL_PORT=587,
+	MAIL_USERNAME='ssidev@princeton.edu',
+	MAIL_PASSWORD='Ssidev333:)'
+	)
+mail = Mail(app)
 
 ldapserver = pustatus.ServerConnection("ssidev", "Ssidev333:)")
 
@@ -407,6 +419,15 @@ def flag_flask():
 	speakerid = request.args.get('speakerid')
 
 	database.flag(username, speakerid, reason)
+	try:
+		recipient = username + "@princeton.edu"
+		msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
+		msg.body = "Dear Student,\n\nYour flag request has been submitted to the Students' Speakers Initiative comittee for review. Thank you for your feedback.\n\nSincerely,\nThe Students' Speakers Initiative"
+		msg.subject = "Students' Speakers Initiative Flag"
+		mail.send(msg)
+		print('Mail sent to ' + recipient)
+	except Exception as e:
+		print(str(e))
 
 	return redirect('sEndorse')
 
