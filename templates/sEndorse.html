@@ -46,11 +46,12 @@
             </div>
         </nav>
         <div class="container-fluid">
+                <br>
                 {% if cycle.getName() %}
                     {% if validation['voting'] %}
-                        <br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p>
+                        <p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p>
                     {% elif validation['nominating'] %}
-                        <br><p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
+                        <p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
                         <div class="card-columns">
                             {%for speaker in speakers: %}
                                 <div class="card">
@@ -58,8 +59,8 @@
                                         <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal">
                                         Report</button>
                                         
-                                        <h4 class="card-title"> Speaker: {{speaker.getName()}}</h4>
-                                        <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                        <h4 class="card-title">{{speaker.getName()}}</h4>
+                                        <a class="card-link" href=" {{speaker.getLinks()}}"> Link to Works/Biography</a>
                                         </div>
                                     </div>
                                 <br>
@@ -68,18 +69,18 @@
                         </div>
                     {% else %}
                         {% if hasendorsed %}
-                            <br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
-                        {% else %}
-                            <br><p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsement(s). You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><br>
+                            <p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
+                        {% elif speakers|length > 0 %}
+                            <p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsement(s). You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><br>
                                     <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
-                                        <div class="card-columns">
+                                        <div class="card-deck">
                                         {%for speaker in speakers: %}
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h4 class="card-title">{{speaker.getName()}}</h4>
-                                                    <p class="card-text"> Link:<a href=" {{speaker.getLinks()}}"> {{speaker.getLinks()}} </a></p>
+                                                    <a class="card-link" href=" {{speaker.getLinks()}}"> Link to Works/Biography</a>
                                                     <p class="card-text"> Endorsement Count: {{speaker.getEndorsements()}}</p>
-                                                    <div class="text-center font-weight-bolder custom-control custom-checkbox">
+                                                    <div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
                                                         <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
                                                         <label class="custom-control-label" for={{speaker.getSpeakid()}}>Endorse</label>
                                                     </div>
@@ -89,18 +90,17 @@
                                          {% endfor %}
                                         </div>
                                          <br>
-                                         {% if speakers|length > 0 %}
+                                         
                                          <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Endorsements">
-                                         {% else %}
-                                         <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><br>
-                                         {% endif %}
                                     </form>
-                                <br>                           
+                                <br>
+                        {% else %}
+                            <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><br>                          
                         {% endif %}
                         
                     {% endif %}
                 {% else %}
-                      <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
+                      <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
                 {% endif %}
             </div>
 
@@ -134,7 +134,8 @@
 
         </div>
         <script type="text/javascript">
-            if (cycle.getName()) {
+            let cycleName = '{{cycle.getName()}}';
+            if (cycleName != '') {
                 //triggered when modal is about to be shown
                 $(document).on("click", ".reportButton", function() {
                     //get data-id attribute of the clicked element

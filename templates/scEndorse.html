@@ -76,7 +76,7 @@
                         {% else %}
                             <br><p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr>
                             <form action="ccendorse_flask" method= "post" name= "ccendorse_form" id="ccendorse_form">
-                                        <div class="card-columns">
+                                        <div class="card-deck">
                                         {%for conversation in conversations: %}
                                             <div class="card">
                                                 <div class="card-body">
@@ -140,7 +140,8 @@
               </div>
         </div>
         <script type="text/javascript">
-            if(cycle.getName()){
+            let cycleName = '{{cycle.getName()}}';
+            if (cycleName != '') {
                             //triggered when modal is about to be shown
                 $(document).on("click", ".reportButton", function() {
                     //get data-id attribute of the clicked element

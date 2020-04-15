@@ -49,10 +49,10 @@
                 <br><p class="lead text-center font-weight-bold"> There is no current cycle. Please start a cycle. </p>
             {% else: %}
                 <br><p class="lead text-center font-weight-bold">These are the current standings of the candidates in the voting block.</p><hr>
-                <div class="card-columns">
+                <div class="card-deck">
                   {%for speaker in speakers: %}
                       <div class="card">
-                      <img data-src={{speaker.getImgLinks}} alt="" class="card-img-top cld-responsive">
+                      <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
                       <div class="card-body">
                         <h4 class="card-title">{{speaker.getName()}}</h4>
                         <p class="card-text"> Description: {{speaker.getDescrip()}}</p>

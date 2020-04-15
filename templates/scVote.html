@@ -51,7 +51,7 @@
                         {% else %}
                             <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
-                                        <div class="card-columns">
+                                        <div class="card-deck">
                                         {%for conversation in conversations: %}
                                             <div class="card">
                                                 <div class="card-body">
@@ -91,7 +91,8 @@
                 
         </div>
         <script type="text/javascript">
-        	if (cycle.getName()){
+        	let cycleName = '{{cycle.getName()}}';
+            if (cycleName != '') {
 	            let voteForm = document.getElementById("ccvote_form");
 	            if (voteForm) {
 	                let checkgroup = document.getElementById("ccvote_form").elements.namedItem("check");
