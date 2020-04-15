@@ -527,7 +527,7 @@ def scNom():
 	database = Database()
 	cycle = database.getCycle()
 	if cycle.getName():
-		remaining = database.remainingNominations(username)
+		remaining = database.remainingccNominations(username)
 	else:
 		remaining=None;
 	validation = cyclevalidation(cycle)
