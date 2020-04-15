@@ -73,7 +73,11 @@
                                          {% endfor %}
                                         </div>
                                          <br>
-                                         <input type="submit" class="btn btn-primary" id="status" name="submit" value="Submit Votes">
+                                         {% if speakers|length > 0 %}
+                                         <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Endorsements">
+                                         {% else %}
+                                         <p class="lead text-center font-weight-bold"> There are no candidates to vote for!</p><br>
+                                         {% endif %}
                                     </form>
                                 <br>
                         {% endif %}

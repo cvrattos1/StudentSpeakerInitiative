@@ -77,7 +77,7 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h4 class="card-title">{{speaker.getName()}}</h4>
-                                                    <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                                    <p class="card-text"> Link:<a href=" {{speaker.getLinks()}}"> {{speaker.getLinks()}}</p>
                                                     <p class="card-text"> Endorsement Count: {{speaker.getEndorsements()}}</p>
                                                     <div class="text-center font-weight-bolder custom-control custom-checkbox">
                                                         <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
@@ -89,7 +89,11 @@
                                          {% endfor %}
                                         </div>
                                          <br>
-                                         <input type="submit" class="btn btn-primary" id="status" name="submit" value="Submit Endorsements">
+                                         {% if speakers|length > 0 %}
+                                         <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Endorsements">
+                                         {% else %}
+                                         <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><br>
+                                         {% endif %}
                                     </form>
                                 <br>                           
                         {% endif %}

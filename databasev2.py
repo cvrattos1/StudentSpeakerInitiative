@@ -15,6 +15,7 @@ from report import Report
 from conversation import Conversation
 import cloudinary as Cloud
 import cloudinary.uploader
+import json
 
 UNLIMITED_VALUE = 2147483647
 
@@ -45,6 +46,7 @@ class Database:
             return elements
 
         except Exception as e:
+            print(e)
             return []
 
     # ---------------------------------------------------------------------
@@ -52,18 +54,17 @@ class Database:
     # returns the information about the student with netid as a Student object, or None if does not exist
     def getStudent(self, netid):
         query = "SELECT * from students WHERE netid = '" + netid.strip() + "'"
-        print(query)
+        
         result = Database.connectDB(self, query)
 
         if not result:
             return None
-        student = Student(netid, result[0][1], result[0][2], result[0][3])
+        student = Student(netid, result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6] )
         return student
     
     def makeStudent(self, netid):
-        query = "INSERT INTO students VALUES('" + netid.strip() + "', 0, 0, 0)"
-        print(query)
-        result = Database.connectDB(self, query)
+        query = "INSERT INTO students VALUES('" + netid.strip() + "', 0, 0, 0, 0, 0, 0)"
+        Database.connectDB(self, query)
 
     # ---------------------------------------------------------------------
 
@@ -195,6 +196,25 @@ class Database:
             speaker_list.append(Speaker(speakers[i][0], speakers[i][1], speakers[i][2], speakers[i][3], speakers[i][4],
                                         speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
         return speaker_list
+    
+    def getConversations(self):
+        query = 'SELECT * FROM conversation'
+        conversations = Database.connectDB(self, query)
+        
+        
+        
+        conversation_list = []
+        
+        
+        for i, conversation in enumerate(conversations):
+            
+            conzip = json.loads(conversation[3])
+                              
+            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], [conzip["1"][0], conzip["2"][0]], [conzip["1"][1], conzip["2"][1]],
+                                        [conzip["1"][2], conzip["2"][2]], [conzip["1"][3], conzip["2"][3]], conversation[4], conversation[5],conversation[6]))
+        
+        
+        return conversation_list
 
     # ---------------------------------------------------------------------
 
@@ -208,6 +228,25 @@ class Database:
                 endorsed_list.append(Speaker(result[i][0], result[i][1], result[i][2], result[i][3], result[i][4], result[i][5], result[i][6], result[i][7], result[i][8]))
 
         return endorsed_list
+    
+    def getccEndorsed(self, threshold):
+        query = 'SELECT * FROM conversation WHERE endorsements >= ' + str(threshold)
+        conversations = Database.connectDB(self, query)
+        
+        
+        
+        conversation_list = []
+        
+        
+        for i, conversation in enumerate(conversations):
+            
+            conzip = json.loads(conversation[3])
+                              
+            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], [conzip["1"][0], conzip["2"][0]], [conzip["1"][1], conzip["2"][1]],
+                                        [conzip["1"][2], conzip["2"][2]], [conzip["1"][3], conzip["2"][3]], conversation[4], conversation[5],conversation[6]))
+        
+        
+        return conversation_list
 
     # ---------------------------------------------------------------------
 
@@ -218,6 +257,15 @@ class Database:
         Database.connectDB(self, query)
 
         query = "UPDATE speakers SET endorsements = endorsements + " + str(count) + " WHERE speakid = '" + speakid + "'"
+        Database.connectDB(self, query)
+        
+    # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
+    def ccendorse(self, netid, converseid, count):
+        query = "UPDATE students SET ccendorsements = ccendorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
+        print(query)
+        Database.connectDB(self, query)
+
+        query = "UPDATE conversation SET endorsements = endorsements + " + str(count) + " WHERE converseid = '" + converseid + "'"
         Database.connectDB(self, query)
 
     # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
@@ -246,6 +294,13 @@ class Database:
 
         query = 'UPDATE students SET votes = votes + 1 WHERE netid = ' + '\'' + netid.strip() + '\''
         Database.connectDB(self, query)
+        
+    def ccvote(self, netid, converseid):
+        query = 'UPDATE conversation SET votes = votes + 1 WHERE converseid = ' + '\'' + converseid + '\''
+        Database.connectDB(self, query)
+
+        query = 'UPDATE students SET ccvotes = ccvotes + 1 WHERE netid = ' + '\'' + netid.strip() + '\''
+        Database.connectDB(self, query)
 
     # allows access of an image for a particular speakid
     def getImage(self, speakid):
@@ -270,14 +325,14 @@ class Database:
         print(query)
         Database.connectDB(self, query)
         
-    def ccnominate(self, netid, cycle, names, descrips, links, imglinks):
+    def ccnominate(self, netid, cycle, conzip):
         query = 'SELECT ccids FROM cycle'
         new_ccid = int(Database.connectDB(self, query)[0][0])
         query = "UPDATE cycle SET ccids = ccids + 1"
         Database.connectDB(self, query)
 
         query = 'INSERT INTO conversation VALUES (\'' + str(new_ccid) + '\', \'' + str(netid).strip() + '\', \'' + str(cycle) + '\', \'' \
-                + str(names) + '\', \'' + str(descrips) + '\', \'' + str(links) + '\', \'' + str(imglinks) + '\', 0, 0, 0)'
+                + conzip + '\', 0, 0, 0)'
         print (query)        
         Database.connectDB(self, query)
         
@@ -311,7 +366,96 @@ class Database:
                 str(votenum) + '\', \'' + str(threshold) + '\', \'' + str(nomdate) + '\', \'' + str(endorsedate) + '\', \'' + str(datevoting) + '\', \'' +  str(dateend) + '\', \''+ str(ccids) + '\')'
         print (query)
         Database.connectDB(self, query)
-
+    
+    def adjustDatabase(self, rolloverNom, rolloverEnd, rolloverVot, rolloverThresh):
+        
+        if rolloverNom:
+            if rolloverEnd:
+                if rolloverThresh:
+                     query='UPDATE speakers SET endorsements = 0 WHERE endorsements < ' + str(rolloverThresh)
+                     Database.connectDB(self, query)
+                     
+                     query='UPDATE conversation SET endorsements = 0 WHERE endorsements < ' + str(rolloverThresh)
+                     Database.connectDB(self, query)
+            else:
+                 query='UPDATE speakers SET endorsements = 0'
+                 Database.connectDB(self, query)
+                 
+                 query='UPDATE conversation SET endorsements = 0'
+                 Database.connectDB(self, query)
+            if rolloverVot:
+                if rolloverThresh:
+                    query='UPDATE speakers SET votes = 0 WHERE votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='UPDATE conversation SET votes = 0 WHERE votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+            else:
+                 query='UPDATE speakers SET votes = 0'
+                 Database.connectDB(self, query)
+                 
+                 query='UPDATE conversation SET votes = 0'
+                 Database.connectDB(self, query)
+        
+        elif rolloverEnd:
+            if rolloverVot:
+                if rolloverThresh:
+                    query='DELETE FROM speakers WHERE endorsements < ' + str(rolloverThresh) + ' AND votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='UPDATE speakers SET endorsements = 0 WHERE endorsements < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='UPDATE speakers SET votes = 0 WHERE votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='DELETE FROM conversation WHERE endorsements < ' + str(rolloverThresh) + ' AND votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='UPDATE conversation SET endorsements = 0 WHERE endorsements < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='UPDATE conversation SET votes = 0 WHERE votes < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                 
+            else:
+                if rolloverThresh:
+                    query='DELETE FROM speakers WHERE endorsements < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                    query='DELETE FROM conversation WHERE endorsements < ' + str(rolloverThresh)
+                    Database.connectDB(self, query)
+                    
+                query='UPDATE speakers SET votes = 0'
+                Database.connectDB(self, query)
+                
+                query='UPDATE conversation SET votes = 0'
+                Database.connectDB(self, query)
+                
+        elif rolloverVot:
+             if rolloverThresh:
+                 query='DELETE FROM speakers WHERE votes < ' + str(rolloverThresh)
+                 Database.connectDB(self, query)
+                 
+                 query='DELETE FROM conversation WHERE votes < ' + str(rolloverThresh)
+                 Database.connectDB(self, query)
+             
+             query='UPDATE speakers SET endorsements = 0'
+             Database.connectDB(self, query)
+             
+             query='UPDATE conversation SET endorsements = 0'
+             Database.connectDB(self, query)
+             
+        else:
+            query='DELETE FROM speakers'
+            Database.connectDB(self, query)
+            
+            query='DELETE FROM conversation'
+            Database.connectDB(self, query)
+            
+           
+       
+    
     def adminAuthenticate(self, username):
         query = 'SELECT  * FROM admin WHERE netid = ' + '\'' + username.strip() + '\''
         exists = Database.connectDB(self, query)

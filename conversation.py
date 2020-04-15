@@ -1,26 +1,43 @@
 class Conversation:
-    def __init__(self,  converseid, netid, faculty, speakers, endorsements, votes):
+    def __init__(self,  converseid, netid, cycle, names, descrips, links, imglinks, endorsements, votes, faculty):
         self._converseid = converseid
         self._netid = netid
-        self._faculty = faculty
-        self._speakers = speakers
+        self._cycle = cycle
+        self._names = names
+        self._descrips = descrips
+        self._links = links
+        self._imglinks = imglinks
         self._endorsements = endorsements
         self._votes = votes
+        self._faculty = faculty
 
-    def getConverseid(self):
+    def getConverseId(self):
         return self._converseid
 
     def getNetid(self):
         return self._netid
 
-    def getFaculty(self):
-        return self._faculty
+    def getCycle(self):
+        return self._cycle
 
-    def getSpeakers(self):
-        return self._speakers
+    def getNames(self):
+        return self._names
+
+    def getDescrips(self):
+        return self._descrips
+
+    def getLinks(self):
+        return self._links
+
+    def getImgLinks(self):
+        print(self._imglink)
+        return self._imglinks
 
     def getEndorsements(self):
         return self._endorsements
 
     def getVotes(self):
         return self._votes
+    
+    def getFaculty(self):
+        return self._faculty
