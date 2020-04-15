@@ -252,31 +252,17 @@ class Database:
 
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def endorse(self, netid, speakid, count):
-        query = "SELECT endorsements FROM students WHERE netid = '" + netid.strip() + "'"
-        exists = Database.connectDB(self, query)
-        if exists:
-            query = "UPDATE students SET endorsements = endorsements + " + str(
-                count) + " WHERE netid = '" + netid.strip() + "'"
-            print(query)
-            Database.connectDB(self, query)
-        else:
-            Database.makeStudent(self, netid)
+
+        query = "UPDATE students SET endorsements = endorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
+        Database.connectDB(self, query)
+        
 
         query = "UPDATE speakers SET endorsements = endorsements + " + str(count) + " WHERE speakid = '" + speakid + "'"
         Database.connectDB(self, query)
         
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def ccendorse(self, netid, converseid, count):
-        query = "SELECT ccendorsements FROM students WHERE netid = '" + netid.strip() + "'"
-        exists = Database.connectDB(self, query)
-        if exists:
-            query = "UPDATE students SET ccendorsements = ccendorsements + " + str(
-                count) + " WHERE netid = '" + netid.strip() + "'"
-            print(query)
-            Database.connectDB(self, query)
-        else:
-            Database.makeStudent(self, netid)
-
+        
         query = "UPDATE students SET ccendorsements = ccendorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
         print(query)
         Database.connectDB(self, query)

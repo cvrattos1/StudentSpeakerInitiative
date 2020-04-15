@@ -82,6 +82,8 @@ def uservalidation(username, database):
 
 @login_manager.user_loader
 def load_user(user_id):
+    database = Database()
+    uservalidation(user_id, database)
     return studentAccount(user_id)
 		
 # @app.route('/', methods=['GET'])
@@ -347,7 +349,7 @@ def endorse_flask():
 	cycle = database.getCycle()
 	endorsed = request.form.getlist('check')
 	student = database.getStudent(username)
-	if student:
+	if student.getEndorsements():
 		return redirect('sHome')
 	if cycle.getEndorseNum() != 'unlimited':
 		if len(endorsed) > int(cycle.getEndorseNum()):
@@ -362,23 +364,22 @@ def endorse_flask():
 @app.route('/vote_flask', methods=['POST'])
 @login_required
 def vote_flask():
-	username = current_user.id
-	database = Database()
+    username = current_user.id
+    database = Database()
+    cycle = database.getCycle()
+    voted = request.form.getlist('check')
+    student = database.getStudent(username)
+    if student.getVotes():
+        return redirect('sHome')
 	
-	cycle = database.getCycle()
-	voted = request.form.getlist('check')
-	student = database.getStudent(username)
-	if student.getVotes():
-		return redirect('sHome')
-	print(voted)
-	if cycle.getEndorseNum() != 'unlimited':
-		if len(voted) > int(cycle.getVoteNum()):
+    if cycle.getEndorseNum() != 'unlimited':
+        if len(voted) > int(cycle.getVoteNum()):
 			#some error
-			return redirect('sVote')
+            return redirect('sVote')
 
-	for speakid in voted:
-		database.vote(username,speakid)
-	return redirect('sVote')
+    for speakid in voted:
+        database.vote(username,speakid)
+    return redirect('sVote')
 
 
 @app.route('/reset_flask')
