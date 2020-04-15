@@ -347,7 +347,7 @@ def endorse_flask():
 	cycle = database.getCycle()
 	endorsed = request.form.getlist('check')
 	student = database.getStudent(username)
-	if student.getEndorsements():
+	if student:
 		return redirect('sHome')
 	if cycle.getEndorseNum() != 'unlimited':
 		if len(endorsed) > int(cycle.getEndorseNum()):

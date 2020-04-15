@@ -108,7 +108,7 @@ class Database:
         query = "SELECT nominations FROM students WHERE netid = '" + netid.strip() + "'"
         print(query)
         noms = Database.connectDB(self, query)
-        if noms[0][0]:
+        if noms:
             nominations=noms[0][0]
         else:
             nominations=0
@@ -252,15 +252,31 @@ class Database:
 
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def endorse(self, netid, speakid, count):
-        query = "UPDATE students SET endorsements = endorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
-        print(query)
-        Database.connectDB(self, query)
+        query = "SELECT endorsements FROM students WHERE netid = '" + netid.strip() + "'"
+        exists = Database.connectDB(self, query)
+        if exists:
+            query = "UPDATE students SET endorsements = endorsements + " + str(
+                count) + " WHERE netid = '" + netid.strip() + "'"
+            print(query)
+            Database.connectDB(self, query)
+        else:
+            Database.makeStudent(self, netid)
 
         query = "UPDATE speakers SET endorsements = endorsements + " + str(count) + " WHERE speakid = '" + speakid + "'"
         Database.connectDB(self, query)
         
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
     def ccendorse(self, netid, converseid, count):
+        query = "SELECT ccendorsements FROM students WHERE netid = '" + netid.strip() + "'"
+        exists = Database.connectDB(self, query)
+        if exists:
+            query = "UPDATE students SET ccendorsements = ccendorsements + " + str(
+                count) + " WHERE netid = '" + netid.strip() + "'"
+            print(query)
+            Database.connectDB(self, query)
+        else:
+            Database.makeStudent(self, netid)
+
         query = "UPDATE students SET ccendorsements = ccendorsements + " + str(count) + " WHERE netid = '" + netid.strip() + "'"
         print(query)
         Database.connectDB(self, query)
@@ -368,7 +384,6 @@ class Database:
         Database.connectDB(self, query)
     
     def adjustDatabase(self, rolloverNom, rolloverEnd, rolloverVot, rolloverThresh):
-        
         if rolloverNom:
             if rolloverEnd:
                 if rolloverThresh:
