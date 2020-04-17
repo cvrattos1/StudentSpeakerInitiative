@@ -49,7 +49,7 @@ app.config.update(
 	)
 mail = Mail(app)
 
-ldapserver = pustatus.ServerConnection(os.environ['USERNAME'], os.environ['MAIL_PASSWORD'])
+ldapserver = pustatus.ServerConnection(os.environ['LDAP_USERNAME'], os.environ['MAIL_PASSWORD'])
 
 
 def filllist(username, database, request):
@@ -94,9 +94,9 @@ def uservalidation(username, database):
 
 @login_manager.user_loader
 def load_user(user_id):
-    database = Database()
-    uservalidation(user_id, database)
-    return studentAccount(user_id)
+	database = Database()
+	uservalidation(user_id, database)
+	return studentAccount(user_id)
 		
 # @app.route('/', methods=['GET'])
 # @app.route('/index', methods=['GET'])
@@ -116,62 +116,62 @@ def logout():
    casClient.logout()
    return redirect('/')
 
-    
+	
 
 @app.route('/sHome', methods=['GET', 'POST'])
 def student():
-     
-    username = CASClient().authenticate()
-    undergrad = pustatus.isUndergraduate(ldapserver, username)
-    if not undergrad:
-        database = Database()
-        if (database.adminAuthenticate(username) == 0):
-            
-            html = render_template('loginfail.html',
-        						   username=username)
-            response = make_response(html)
-        	   
-            return response
-        else:
-            uservalidation(username, database)
-            
-            useraccount = studentAccount(username)
-            login_user(useraccount)
-        
-            cycle = database.getCycle()
-            if cycle.getName() is None:
-                exists = 0
-            else:
-                exists = 1
-            html = render_template('sHome.html',
-        						   username=username,
-        						   exists=exists,
-        						   cycle=cycle
-        						   )
-            response = make_response(html)
-        	   
-            return response    
-       
-    else:
-        database = Database()
-        uservalidation(username, database)
-        
-        useraccount = studentAccount(username)
-        login_user(useraccount)
-    
-        cycle = database.getCycle()
-        if cycle.getName() is None:
-            exists = 0
-        else:
-            exists = 1
-        html = render_template('sHome.html',
-    						   username=username,
-    						   exists=exists,
-    						   cycle=cycle
-    						   )
-        response = make_response(html)
-    	   
-        return response
+	 
+	username = CASClient().authenticate()
+	undergrad = pustatus.isUndergraduate(ldapserver, username)
+	if not undergrad:
+		database = Database()
+		if (database.adminAuthenticate(username) == 0):
+			
+			html = render_template('loginfail.html',
+								   username=username)
+			response = make_response(html)
+			   
+			return response
+		else:
+			uservalidation(username, database)
+			
+			useraccount = studentAccount(username)
+			login_user(useraccount)
+		
+			cycle = database.getCycle()
+			if cycle.getName() is None:
+				exists = 0
+			else:
+				exists = 1
+			html = render_template('sHome.html',
+								   username=username,
+								   exists=exists,
+								   cycle=cycle
+								   )
+			response = make_response(html)
+			   
+			return response    
+	   
+	else:
+		database = Database()
+		uservalidation(username, database)
+		
+		useraccount = studentAccount(username)
+		login_user(useraccount)
+	
+		cycle = database.getCycle()
+		if cycle.getName() is None:
+			exists = 0
+		else:
+			exists = 1
+		html = render_template('sHome.html',
+							   username=username,
+							   exists=exists,
+							   cycle=cycle
+							   )
+		response = make_response(html)
+		   
+		return response
 
 
 @app.route('/sNom')
@@ -259,11 +259,11 @@ def nominate_flask():
 @app.route('/new_cycle')
 @login_required
 def new_cycle():
-    username = current_user.id
-    database = Database()
-    
+	username = current_user.id
+	database = Database()
 	
-    argdict = {"Name of Voting Cycle":request.args.get('cname'),
+	
+	argdict = {"Name of Voting Cycle":request.args.get('cname'),
 			   "Number of Nominations":request.args.get('nominatenum'),
 			   "Number of Endorsements":request.args.get('endorsenum'),
 			   "Number of Votes":request.args.get('votenum'),
@@ -273,28 +273,28 @@ def new_cycle():
 			   "Voting Date Begins":request.args.get('votingdate')
 			   }
 
-    enddate = request.args.get('enddate')
-    datecreated = datetime.datetime.now().strftime("%x")
-    admin = request.args.get('admin')
+	enddate = request.args.get('enddate')
+	datecreated = datetime.datetime.now().strftime("%x")
+	admin = request.args.get('admin')
 	
-    argerror = False
-    wrongarg = []
-    for key, value in argdict.items():
-        if not value :
-            wrongarg.append(key)
-            argerror = True
+	argerror = False
+	wrongarg = []
+	for key, value in argdict.items():
+		if not value :
+			wrongarg.append(key)
+			argerror = True
 	
 
-    if (argerror):
-        errorMsg = None
-        for error in wrongarg:
-            error = error + " can't be empty.\n"
-            if not errorMsg:
-                errorMsg = error
-            else:
-                errorMsg = errorMsg + error
-                
-        html = render_template('aCreateCycle.html',
+	if (argerror):
+		errorMsg = None
+		for error in wrongarg:
+			error = error + " can't be empty.\n"
+			if not errorMsg:
+				errorMsg = error
+			else:
+				errorMsg = errorMsg + error
+				
+		html = render_template('aCreateCycle.html',
 						   username=username,
 						   errorMsg = errorMsg,
 						   cname = argdict["Name of Voting Cycle"],
@@ -307,35 +307,35 @@ def new_cycle():
 						   votingdate = argdict["Voting Date Begins"],
 						   enddate = enddate
 						   )
-        response = make_response(html)
+		response = make_response(html)
 		   
-        return response
+		return response
 
-    admin = request.args.get('admin')
+	admin = request.args.get('admin')
 
-    if (argdict['Number of Nominations'] == "limited"):
-        nomination_count = request.args.get('nominatetext')
-    else:
-        nomination_count = UNLIMITED_VALUE
+	if (argdict['Number of Nominations'] == "limited"):
+		nomination_count = request.args.get('nominatetext')
+	else:
+		nomination_count = UNLIMITED_VALUE
 
-    if (argdict['Number of Endorsements'] == "limited"):
-        endorse_count = request.args.get('endorsetext')
-    else:
-        endorse_count = UNLIMITED_VALUE
+	if (argdict['Number of Endorsements'] == "limited"):
+		endorse_count = request.args.get('endorsetext')
+	else:
+		endorse_count = UNLIMITED_VALUE
 
-    if (argdict['Number of Votes'] == "limited"):
-        vote_count = request.args.get('votetext')
-    else:
-        vote_count = UNLIMITED_VALUE
-    
-    rolloverThresh = request.args.get('rolloverthresh')
-    rolloverNom = request.args.get('rollovernom')
-    rolloverEnd = request.args.get('rolloverend')
-    rolloverVot = request.args.get('rollovervot')
-    
-    database.adjustDatabase(rolloverNom, rolloverEnd, rolloverVot, rolloverThresh)
-    
-    database.createCycle(argdict["Name of Voting Cycle"], 
+	if (argdict['Number of Votes'] == "limited"):
+		vote_count = request.args.get('votetext')
+	else:
+		vote_count = UNLIMITED_VALUE
+	
+	rolloverThresh = request.args.get('rolloverthresh')
+	rolloverNom = request.args.get('rollovernom')
+	rolloverEnd = request.args.get('rolloverend')
+	rolloverVot = request.args.get('rollovervot')
+	
+	database.adjustDatabase(rolloverNom, rolloverEnd, rolloverVot, rolloverThresh)
+	
+	database.createCycle(argdict["Name of Voting Cycle"], 
 						 datecreated, 
 						 admin, 
 						 nomination_count, 
@@ -346,10 +346,10 @@ def new_cycle():
 						 argdict["Enosorsement Date Begins"],
 						 argdict["Voting Date Begins"],
 						 enddate)
-    
-    
-    
-    return redirect('aHome')
+	
+	
+	
+	return redirect('aHome')
 
 
 @app.route('/endorse_flask', methods=['POST'])
@@ -376,22 +376,22 @@ def endorse_flask():
 @app.route('/vote_flask', methods=['POST'])
 @login_required
 def vote_flask():
-    username = current_user.id
-    database = Database()
-    cycle = database.getCycle()
-    voted = request.form.getlist('check')
-    student = database.getStudent(username)
-    if student.getVotes():
-        return redirect('sHome')
+	username = current_user.id
+	database = Database()
+	cycle = database.getCycle()
+	voted = request.form.getlist('check')
+	student = database.getStudent(username)
+	if student.getVotes():
+		return redirect('sHome')
 	
-    if cycle.getEndorseNum() != 'unlimited':
-        if len(voted) > int(cycle.getVoteNum()):
+	if cycle.getEndorseNum() != 'unlimited':
+		if len(voted) > int(cycle.getVoteNum()):
 			#some error
-            return redirect('sVote')
+			return redirect('sVote')
 
-    for speakid in voted:
-        database.vote(username,speakid)
-    return redirect('sVote')
+	for speakid in voted:
+		database.vote(username,speakid)
+	return redirect('sVote')
 
 
 @app.route('/reset_flask')
@@ -549,118 +549,151 @@ def scNom():
 @app.route('/ccnominate_flask', methods=['POST'])
 @login_required
 def ccnominate_flask():
-    username = current_user.id
-    database = Database()
+	username = current_user.id
+	database = Database()
 	
-    cycle = database.getCycle()
-    validation = cyclevalidation(cycle)
-    remaining = database.remainingccNominations(username)
+	cycle = database.getCycle()
+	validation = cyclevalidation(cycle)
+	remaining = database.remainingccNominations(username)
+
+	names = request.form.getlist('name')
+	descrips = request.form.getlist('descrip')
+	links = request.form.getlist('links')
+	files = request.files.getlist("file")
+
+
+	spkrCount = len(names)
+	argerror = False
+	# Checks that there is an equal number of inputs for each of the fields
+	if spkrCount != len(descrips) or spkrCount != len(links) or spkrCount != len(files):
+		print("Failed ccnomination: inconsistent number of fields filled out")
+		return redirect('scNom')
+	# Checks that the number of inputs is not less than two or more than four.
+	if not argerror:
+		if spkrCount < 2 or spkrCount > 4:
+			print("Failed ccnomination: unacceptable number of speakers")
+			return redirect('scNom')
+
+	# Checks that none of the files are empty; if not empty, uploads the image to cloudinary and appends it to images.
+	images = []
+	for file in files:
+		if file.filename == '':
+			print("Failed ccnomination: empty file")
+			return redirect('scNom')
+
+		result = Cloud.uploader.upload(file, use_filename='true', filename=(file.filename), folder='SSI')
+		images.append(result['secure_url'])
+
+	conversation = {}
+	for i in range(spkrCount):
+		if names[i] == '' or descrips[i] == '' or links[i] == '':
+			print("Failed ccnomination: empty field")
+			return redirect('scNom')
+		spkr = [ names[i], descrips[i], links[i], images[i] ]
+		conversation.update({str(i):spkr})
+
+
+	conzip = json.dumps(conversation)
 	
-    argdict = {"Name of First Speaker":request.form['name1'],
-			   "Description of First Speaker":request.form['descrip1'],
-			   "Link to works of First Speaker":request.form['links1'],
-			   "Image of First Speaker":request.files['file1'],
-			   "Name of Second Speaker":request.form['name2'],
-			   "Description of Second Speaker":request.form['descrip2'],
-			   "Link to works of Second Speaker":request.form['links2'],
-			   "Image of Second Speaker":request.files['file2']
-			   }
-    
-    argerror = False
-    wrongarg = []
-    for key, value in argdict.items():
-        if not value :
-            wrongarg.append(key)
-            argerror = True
+	if remaining:
+	    database.ccnominate(username, 
+				        cycle.getName(), 
+				        conzip)
 	
-    if (argerror):
-        errorMsg = None
-        for error in wrongarg:
-            error = error + " can't be empty.\n"
-            if not errorMsg:
-                errorMsg = error
-            else:
-                errorMsg = errorMsg + error
-        html = render_template('scNom.html',
-								username=username,
-								errorMsg=errorMsg,
-								cycle=cycle,
-								remaining = remaining,
-								validation = validation,
-								name1 = argdict['Name of First Speaker'], 
-								descrip1 = argdict['Description of First Speaker'], 
-								links1 = argdict['Link to works of First Speaker'],
-								name2 = argdict['Name of Second Speaker'], 
-								descrip2 = argdict['Description of Second Speaker'], 
-								links2 = argdict['Link to works of Second Speaker'])
-        response = make_response(html)
-		
-        return response
-		
-    result = Cloud.uploader.upload(argdict['Image of First Speaker'], use_filename='true', filename=(argdict['Image of First Speaker'].filename), folder='SSI')
-    result2 = Cloud.uploader.upload(argdict['Image of Second Speaker'], use_filename='true', filename=(argdict['Image of Second Speaker'].filename), folder='SSI')
-    imglink1 = result['secure_url']
-    imglink2 = result2['secure_url']
+	return redirect('scEndorse')
+	#-------------------------------------------------------------------------
+	# CODE BELOW IS OLD; DO NOT USE PLEASE
+	# argdict = {"Name of First Speaker":request.form['name1'],
+			 #   "Description of First Speaker":request.form['descrip1'],
+			 #   "Link to works of First Speaker":request.form['links1'],
+			 #   "Image of First Speaker":request.files['file1'],
+			 #   "Name of Second Speaker":request.form['name2'],
+			 #   "Description of Second Speaker":request.form['descrip2'],
+			 #   "Link to works of Second Speaker":request.form['links2'],
+			 #   "Image of Second Speaker":request.files['file2']
+			 #   }
+	# argerror = False
+	# wrongarg = []
+	# for key, value in argdict.items():
+	#     if not value :
+	#         wrongarg.append(key)
+	#         argerror = True
+	# if (argerror):
+	#     errorMsg = None
+	#     for error in wrongarg:
+	#         error = error + " can't be empty.\n"
+	#         if not errorMsg:
+	#             errorMsg = error
+	#         else:
+	#             errorMsg = errorMsg + error
+	#     html = render_template('scNom.html',
+				#               username=username,
+				#               errorMsg=errorMsg,
+				#               cycle=cycle,
+				#               remaining = remaining,
+				#               validation = validation,
+				#               name1 = argdict['Name of First Speaker'], 
+				#               descrip1 = argdict['Description of First Speaker'], 
+				#               links1 = argdict['Link to works of First Speaker'],
+				#               name2 = argdict['Name of Second Speaker'], 
+				#               descrip2 = argdict['Description of Second Speaker'], 
+				#               links2 = argdict['Link to works of Second Speaker'])
+	#     response = make_response(html)
+	#     return response
+	# result = Cloud.uploader.upload(argdict['Image of First Speaker'], use_filename='true', filename=(argdict['Image of First Speaker'].filename), folder='SSI')
+	# result2 = Cloud.uploader.upload(argdict['Image of Second Speaker'], use_filename='true', filename=(argdict['Image of Second Speaker'].filename), folder='SSI')
+	# imglink1 = result['secure_url']
+	# imglink2 = result2['secure_url']
+
+	# conversation = {"1":[argdict['Name of First Speaker'], argdict['Description of First Speaker'], argdict['Link to works of First Speaker'],imglink1],
+	#                 "2":[argdict['Name of Second Speaker'], argdict['Description of Second Speaker'], argdict['Link to works of Second Speaker'],imglink2]}
 	
-    
-    conversation = {"1":[argdict['Name of First Speaker'], argdict['Description of First Speaker'], argdict['Link to works of First Speaker'],imglink1],
-                    "2":[argdict['Name of Second Speaker'], argdict['Description of Second Speaker'], argdict['Link to works of Second Speaker'],imglink2]}
-    
-    conzip = json.dumps(conversation)
-    
-    if remaining:
-        database.ccnominate(username, 
-						  cycle.getName(), 
-						  conzip)
-	
-    return redirect('scEndorse')
 
 
 @app.route('/ccendorse_flask', methods=['POST'])
 @login_required
 def ccendorse_flask():
-    username = current_user.id
-    database = Database()
-    cycle = database.getCycle()
-    cyclevalidation(cycle)
-    endorsed = request.form.getlist('check')
-    student = database.getStudent(username)
-    print(student)
-    print(student.getccEndorsements())
-    if student.getccEndorsements():
-        return redirect('sHome')
-    if cycle.getEndorseNum() != 'unlimited':
-        if len(endorsed) > int(cycle.getEndorseNum()):
+	username = current_user.id
+	database = Database()
+	cycle = database.getCycle()
+	cyclevalidation(cycle)
+	endorsed = request.form.getlist('check')
+	student = database.getStudent(username)
+	print(student)
+	print(student.getccEndorsements())
+	if student.getccEndorsements():
+		return redirect('sHome')
+	if cycle.getEndorseNum() != 'unlimited':
+		if len(endorsed) > int(cycle.getEndorseNum()):
 			#some error
-            return redirect('scEndorse')
+			return redirect('scEndorse')
 
-    for converseid in endorsed:
-        database.ccendorse(username,converseid, 1)
+	for converseid in endorsed:
+		database.ccendorse(username,converseid, 1)
 
-    return redirect('scEndorse')
+	return redirect('scEndorse')
 
 
 
 @app.route('/ccvote_flask' , methods=['POST'])
 @login_required
 def ccvote_flask():
-   username = current_user.id
-   database = Database()
-   cycle = database.getCycle()
-   cyclevalidation(cycle)
-   voted = request.form.getlist('check')
-   student = database.getStudent(username)
-   if student.getccVotes():
-       return redirect('sHome')
+	username = current_user.id
+	database = Database()
+	cycle = database.getCycle()
+	cyclevalidation(cycle)
+	voted = request.form.getlist('check')
+	student = database.getStudent(username)
+	if student.getccVotes():
+	    return redirect('sHome')
 
-   if cycle.getEndorseNum() != 'unlimited':
-       if len(voted) > int(cycle.getVoteNum()):
-			#some error
-            return redirect('sVote')
+	if cycle.getEndorseNum() != 'unlimited':
+		if len(voted) > int(cycle.getVoteNum()):
+			return redirect('sVote')
 
-   for converseid in voted:
-        database.ccvote(username,converseid)
-   return redirect('scVote')
+	for converseid in voted:
+		database.ccvote(username,converseid)
+	return redirect('scVote')
 
 
 @app.route('/scEndorse', methods=['GET'])
