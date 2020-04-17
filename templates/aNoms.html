@@ -14,59 +14,33 @@
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <a class="navbar-brand font-weight-bold" href="aHome">Students' Speaker Initiative</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item dropdown active">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Speaker Information
-                          </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item active" href="aNoms">View Nominations</a>
-                            <a class="dropdown-item" href="aVotes">Check Standings</a>
-                            <a class="dropdown-item" href="aReports">Review Reports</a>
-                          </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Conversation Information
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" href="acNoms">View Nominations</a>
-                        <a class="dropdown-item" href="acVotes">Check Standings</a>
-                        <a class="dropdown-item" href="acReports">Review Reports</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'aHeader.html' %}
         <div class="container-fluid">
             {% if exists == 0: %}
                 <br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p>
             {% else: %}
                 <br><p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
-                <div class="card-deck">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                             {%for speaker in speakers: %}
-                                <div class="card">
-                                    <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{speaker.getName()}}</h4>
-                                        <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
-                                        <p class="card-text"> Link: {{speaker.getLinks()}}</p>
-                                        <p class="card-text"> Endorsment Count: {{speaker.getEndorsements()}}</p>
+                                <div class="col-auto mb-3">
+                                    <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+                                        <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
+                                        <div class="card-body">
+                                            <h4 class="card-title">{{speaker.getName()}}</h4>
+                                            <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+                                            <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                            <p class="card-text"> Endorsment Count: {{speaker.getEndorsements()}}</p>
                                         </div>
                                     </div>
-                                <br>
+                                </div>
                             {% endfor %}
-                            </div>
+                </div>
             {% endif %}
             </div>
         </div>
         <script>
+            $(document.getElementById("aNoms")).addClass("active");
+            $(document.getElementById("navSpeaker")).addClass("active");
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
             // Call
             cl.responsive();

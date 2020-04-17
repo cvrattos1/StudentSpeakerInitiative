@@ -13,36 +13,7 @@
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <a class="navbar-brand font-weight-bold" href="sHome">Students' Speaker Initiative</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker
-                          </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
-                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
-                            <a class="dropdown-item" href="sVote">Vote for Speakers</a>
-                          </div>
-                    </li>
-                    <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
-                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
-                        <a class="dropdown-item active" href="scVote">Vote for Panels</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'sHeader.html' %}
         <div class="container-fluid">
                 {% if cycle.getName() %}
                     {% if validation['voting'] %}
@@ -91,6 +62,9 @@
                 
         </div>
         <script type="text/javascript">
+            $(document.getElementById("scVote")).addClass("active");
+            $(document.getElementById("navConvo")).addClass("active");
+
         	let cycleName = '{{cycle.getName()}}';
             if (cycleName != '') {
 	            let voteForm = document.getElementById("ccvote_form");

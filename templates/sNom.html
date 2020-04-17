@@ -14,52 +14,23 @@
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <a class="navbar-brand font-weight-bold" href="sHome">Students' Speaker Initiative</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item dropdown active">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker
-                          </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item active" href="sNom">Nominate a Speaker</a>
-                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
-                            <a class="dropdown-item" href="sVote">Vote for Speakers</a>
-                          </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
-                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
-                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'sHeader.html' %}
         <div class="container">
             <br>
             {% if cycle.getName() %}
                 {% if validation['voting'] %}
-                    <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p>
+                    <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p><hr>
                 {% elif validation['endorsing']%}
-                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p>
+                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
                 {% else %}    
                      {% if remaining %}
-                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a speaker you would like to invite to our campus;
-                            fill out the fields below and press submit to nominate a speaker of your choice! </p><hr>
-                        <p class="text-center font-italic">You have these many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a candidate that you have nominated.  </p>
+                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. </p>
+                        <hr>
+                        <p class="lead text-center font-weight-bold font-italic">You have this many nominations left: {{ remaining }}.</p>
                             <!--form-->
-                        <form action="nominate_flask" method = "post" enctype="multipart/form-data">
-                            <div class="container-fluid rounded-lg bg-secondary form-group">
- <!--                            	<p class= "error">{{errorMsg}}</p> -->
+                        <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
+                            <div class="container rounded-lg text-center bg-secondary justify-content-center form-group">
+                                <br>
                                 <h2 class="text-center text-light font-weight-bold">Speaker Information:</h2><br>
                                 <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" value= {{name}}>
                                 <br>
@@ -69,26 +40,47 @@
                                 <br>
                                 <div class="custom-file mb-3">
                                   <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
-                                  <label class="custom-file-label" for="img">Select Image of Speaker</label>
+                                  <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
                                 </div>
                                 <br>
-                                <center><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></center><br>
+                                <input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"><br><br>
                             </div>
                          </form>
+                         <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>
                      {% else %}
-                        <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of speakers.</p>
+                        <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of speakers.</p><hr>
                      {% endif %}
                 {% endif %}
             {% else %}
-                      <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
+                      <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
             {% endif %}
         </div>
         <script>
-<!--         // Add the following code if you want the name of the file appear on select -->
+        // Changes appropriate navBar buttons to active
+        $(document.getElementById("sNom")).addClass("active");
+        $(document.getElementById("navSpeaker")).addClass("active");
+
         $(".custom-file-input").on("change", function() {
           var fileName = $(this).val().split("\\").pop();
           $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
+        // Makes sure that no fields are empty.
+        let nomForm = document.getElementById("nom_form");
+        if (nomForm) {
+            $(nomForm).submit(function(event) {
+                let formElements = nomForm.elements;
+                let emptyVal = 0;
+                for (let i=0; i<formElements.length; i++){
+                    if (formElements[i].value == ""){
+                        emptyVal = 1;
+                    }
+                }
+                if (emptyVal) {
+                    alert("Please fill out all fields.");
+                    event.preventDefault();
+                }
+            });
+        }
         </script>
     </body>
 </html>

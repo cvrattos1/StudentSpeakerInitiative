@@ -15,47 +15,21 @@
         
 	</head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <a class="navbar-brand font-weight-bold" href="sHome">Students' Speaker Initiative</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item dropdown active">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Bring a Speaker
-                          </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="sNom">Nominate a Speaker</a>
-                            <a class="dropdown-item" href="sEndorse">Endorse Speakers</a>
-                            <a class="dropdown-item active" href="sVote">Vote for Speakers</a>
-                          </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Create a Conversation
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" href="scNom">Nominate a Panel</a>
-                        <a class="dropdown-item" href="scEndorse">Endorse Panels</a>
-                        <a class="dropdown-item" href="scVote">Vote for Panels</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'sHeader.html' %}
         <div class="container-fluid">
-                {% if cycle.getName() %}
+            <br>
+            {% if cycle.getName() %}
                     {% if validation['voting'] %}
                         {% if hasvoted %}
-                            <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
-                        {% else %}
-                            <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
+                            <p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p><hr>
+                        {% elif speakers|length > 0 %}
+                            <p class="lead text-center font-weight-bold">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateVoting()}}. </p>
+                            <hr><p class="lead text-center font-weight-bold font-italic">You have {{cycle.getVoteNum()}} vote(s).</p>
                             <form action="vote_flask" method= "post" name="vote_form" id="vote_form">
-                                        <div class="card-deck">
+                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                                         {%for speaker in speakers: %}
-                                            <div class="card">
+                                        <div class="col-auto mb-3">
+                                            <div class="card card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
                                                 <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
                                                 <div class="card-body">
                                                     <h4 class="card-title">{{speaker.getName()}}</h4>
@@ -68,28 +42,29 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br>
+                                        </div>
                                          {% endfor %}
                                         </div>
-                                         <br>
-                                         {% if speakers|length > 0 %}
-                                         <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Endorsements">
-                                         {% else %}
-                                         <p class="lead text-center font-weight-bold"> There are no candidates to vote for!</p><br>
-                                         {% endif %}
+                                        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
+                                        <input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Votes">
+                                        </nav>   
                                     </form>
-                                <br>
+                                    <hr><br><br>
+                        {% else %}
+                            <p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p><hr>
                         {% endif %}
-                     {% else %}
-                         <br><p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p>
-                    
-                     {% endif %}
-                {% else %}
-                    <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p>
-                {% endif %}
+                    {% else %}
+                        <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p><hr>
+                    {% endif %}     
+            {% endif %}
+
         </div>
         <script type="text/javascript">
-            ilet cycleName = '{{cycle.getName()}}';
+            // Changes appropriate navBar buttons to active
+            $(document.getElementById("sVote")).addClass("active");
+            $(document.getElementById("navSpeaker")).addClass("active");
+
+            let cycleName = '{{cycle.getName()}}';
             if (cycleName != '') {
                 let voteForm = document.getElementById("vote_form");
                 if (voteForm) {
@@ -104,18 +79,20 @@
                             event.preventDefault();
                         }
                     });
-                    let limit={{cycle.getVoteNum()}};
-                    for (let i=0; i<checkgroup.length; i++){
-                        checkgroup[i].onclick=function(){
-                        let checkedcount=0
-                        for (let i=0; i<checkgroup.length; i++)
-                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                        if (checkedcount>limit){
-                            alert("You can only vote for a maximum of "+limit+" candidate(s).")
-                            this.checked=false
+                    let limit='{{cycle.getEndorseNum()}}';
+                    if (limit != 'unlimited'){
+                        for (let i=0; i<checkgroup.length; i++){
+                            checkgroup[i].onclick=function(){
+                            let checkedcount=0
+                            for (let i=0; i<checkgroup.length; i++)
+                                checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                            if (checkedcount>limit){
+                                alert("You can only vote for a maximum of "+limit+" candidate(s).")
+                                this.checked=false
+                                }
                             }
-                        }
-                    };
+                        };
+                    }
                 }
             }
             
