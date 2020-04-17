@@ -17,8 +17,7 @@ class Database:
     def connectDB(self, query):
 
         try:
-            # DATABASE_URL = os.environ['DATABASE_URL']
-            DATABASE_URL = 'postgres://fhfqbhbbxmzxjr:4258130a81cde0e835e3bb78d4e93e5660840682f5a140975f26a900a42a6067@ec2-23-22-156-110.compute-1.amazonaws.com:5432/dtc2bl3kqgkv'
+            DATABASE_URL = os.environ['DATABASE_URL']
 
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()

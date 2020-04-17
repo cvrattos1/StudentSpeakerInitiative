@@ -10,6 +10,7 @@ import cloudinary.uploader
 import datetime
 import json
 from flask_mail import Mail, Message
+import os
 
 from student import Student
 from speaker import Speaker
@@ -34,22 +35,21 @@ login_manager.login_view = "/sHome"
 
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
-cloudinary.config(cloud_name='dqp1yoed2',
-				  api_key='129874246392789',
-				  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
+cloudinary.config(cloud_name=os.environ['CLOUD_NAME'],
+				  api_key=os.environ['API_KEY'],
+				  api_secret=os.environ['API_SECRET'])
 
 app.config.update(
-	#465
 	DEBUG=True,
 	MAIL_USE_TLS=True,
-	MAIL_SERVER='smtp.princeton.edu',
+	MAIL_SERVER=os.environ['MAIL_SERVER'],
 	MAIL_PORT=587,
-	MAIL_USERNAME='ssidev@princeton.edu',
-	MAIL_PASSWORD='Ssidev333:)'
+	MAIL_USERNAME=os.environ['MAIL_USERNAME'],
+	MAIL_PASSWORD=os.environ['MAIL_PASSWORD']
 	)
 mail = Mail(app)
 
-ldapserver = pustatus.ServerConnection("ssidev", "Ssidev333:)")
+ldapserver = pustatus.ServerConnection(os.environ['USERNAME'], os.environ['MAIL_PASSWORD'])
 
 
 def filllist(username, database, request):
