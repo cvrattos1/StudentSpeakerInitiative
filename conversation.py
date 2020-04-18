@@ -41,3 +41,12 @@ class Conversation:
     
     def getFaculty(self):
         return self._faculty
+
+
+    def getSpeakers(self):
+        spkrCount = len(self._names)
+        spkrList=[]
+        for i in range(spkrCount):
+            spkr=[self._names[i], self._descrips[i], self._links[i], self._imglinks[i]]
+            spkrList.append(spkr)
+        return spkrList 

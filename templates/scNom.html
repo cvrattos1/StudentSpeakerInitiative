@@ -94,6 +94,11 @@
                 for (let i=0;i<inputs.length;i++) {
                     $(inputs[i]).val("")
                 }
+                let fileInput = $(newSpeaker).find("input.custom-file-input");
+                $(fileInput).on("change", function() {
+		          var fileName = $(this).val().split("\\").pop();
+		          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		        });
                 // Sets function for remove button
                 let remove = $(newSpeaker).find("button.removeButton");
                 $(remove).on('click', function () {
@@ -108,6 +113,15 @@
             }
             
         });
+
+        let fileInputs = document.getElementsByClassName("custom-file-input");
+        for (let i=0; i<fileInputs.length; i++){
+	        $(fileInputs[i]).on("change", function() {
+	          var fileName = $(this).val().split("\\").pop();
+	          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+	        });
+    	}
+
         let removeButtons = document.getElementsByClassName("removeButton");
         for (let i=0; i<removeButtons.length; i++){
             $(removeButtons[i]).on('click', function () {

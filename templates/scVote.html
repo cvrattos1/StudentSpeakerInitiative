@@ -10,6 +10,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
@@ -22,28 +23,35 @@
                         {% else %}
                             <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
-                                        <div class="card-deck">
                                         {%for conversation in conversations: %}
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    {% for name in conversation.getNames() %}
-                                                    <h4 class="card-title">{{ name }}</h4>
-                                                    {% endfor %}
-                                                    {% for descrip in conversation.getDescrips() %}
-                                                    <p class="card-text"> Descripition: {{descrip}}</a> </p>
-                                                    {% endfor %}
-                                                    {% for link in conversation.getLinks() %}
-                                                    <p class="card-text"> Link: <a href="{{link}}">{{link}}</a> </p>
-                                                    {% endfor %}
-                                                    <div class="text-center font-weight-bolder custom-control custom-checkbox">
+                                            <div class="container">
+                                            	<div class="card text-center" style="border-width: thin; border-color: #F58025">
+                                            		<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
+                                                	<div class="card-body">
+                                                		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 text-center justify-content-around">
+                                                    	{% for speaker in conversation.getSpeakers() %}
+                                                    	<div class="col-auto mb-3">
+	                                                    	<div class="card h-100" style="width: 18rem;">
+	                                                    		<img data-src={{speaker[3]}} alt="" class="card-img-top cld-responsive">
+		                                                    	<div class="card-body">
+			                                                    	<h4 class="card-title font-weight-bold">{{speaker[0]}}</h4>
+			                                                    	<p class="card-text"> Descripition: {{speaker[1]}} </p>
+			                                                    	<a class="card-link" href=" {{speaker[2]}}"> Link to Works/Biography</a>
+		                                                		</div>
+		                                            		</div>
+		                                            	</div>
+                                                    	{% endfor %}
+                                                		</div>
+                                                	</div>
+                                                <div class="card-footer font-weight-bolder custom-control custom-checkbox">
                                                         <input type="checkbox" class="custom-control-input" name="check" id={{conversation.getConverseId()}} value={{conversation.getConverseId()}}>
-                                                        <label class="custom-control-label" for={{conversation.getConverseId()}}>Vote</label>
-                                                    </div>
+                                                <label class="custom-control-label" for={{conversation.getConverseId()}}>Vote</label>
+                                                </div>
+
                                                 </div>
                                             </div>
                                             <br>
                                          {% endfor %}
-                                        </div>
                                          <br>
                                          {% if conversations|length > 0 %}
                                          <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Votes">
@@ -51,6 +59,7 @@
                                          <p class="lead text-center font-weight-bold"> There are no candidates to vote for!</p><br>
                                          {% endif %}
                                     </form>
+                                    </div>
                                 <br>
                         {% endif %}
                      {% else %}
@@ -81,7 +90,8 @@
 	                    }
 	                });
 
-	                let limit={{cycle.getVoteNum()}};
+	               let limit='{{cycle.getEndorseNum()}}';
+                    if (limit != 'unlimited'){
 	                for (let i=0; i<checkgroup.length; i++){
 	                    checkgroup[i].onclick=function(){
 	                    let checkedcount=0
@@ -92,9 +102,10 @@
 	                        this.checked=false
 	                        }
 	                    }
-	                };
+	                }
 	            }
 	        }
+            }
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
             // Call
             cl.responsive();

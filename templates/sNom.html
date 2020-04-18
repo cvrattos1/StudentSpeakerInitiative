@@ -24,26 +24,24 @@
                      <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
                 {% else %}    
                      {% if remaining %}
-                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. </p>
-                        <hr>
-                        <p class="lead text-center font-weight-bold font-italic">You have this many nominations left: {{ remaining }}.</p>
+                        <p class="lead text-center font-italic">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</p><hr>
                             <!--form-->
                         <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
-                            <div class="container rounded-lg text-center bg-secondary justify-content-center form-group">
-                                <br>
-                                <h2 class="text-center text-light font-weight-bold">Speaker Information:</h2><br>
-                                <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" value= {{name}}>
-                                <br>
-                                <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" value= {{descrip}}>
-                                <br>
-                                <input type="text" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" value= {{links}}>
-                                <br>
-                                <div class="custom-file mb-3">
-                                  <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
-                                  <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
+                            <div class="card text-center " style="border-width: thin; border-color: #F58025">
+                                <div class="justify-content-center card-body form-group">
+                                    <h2 class="text-center font-weight-bold">Speaker Information:</h2><br>
+                                    <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" value= {{name}}>
+                                    <br>
+                                    <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" value= {{descrip}}>
+                                    <br>
+                                    <input type="text" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" value= {{links}}>
+                                    <br>
+                                    <div class="custom-file mb-3">
+                                      <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
+                                      <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
+                                    </div>
                                 </div>
-                                <br>
-                                <input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"><br><br>
+                                <div class="card-footer"><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></div>
                             </div>
                          </form>
                          <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>

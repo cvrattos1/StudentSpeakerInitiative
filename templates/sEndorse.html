@@ -26,8 +26,8 @@
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                             {%for speaker in speakers: %}
                             <div class="col-auto mb-3">
-                                <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
-                                    <div class="card-header bg-secondary"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal">
+                                <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
+                                    <div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal">
                                         Report</button></div>
                                     <div class="card-body">
                                         <h4 class="card-title">{{speaker.getName()}}</h4>
@@ -50,7 +50,7 @@
                                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                                         {%for speaker in speakers: %}
                                         <div class="col-auto mb-3">
-                                                    <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+                                                    <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
                                                         <div class="card-body">
                                                             <h4 class="card-title">{{speaker.getName()}}</h4>
                                                             <a class="card-link" href=" {{speaker.getLinks()}}"> Link to Works/Biography</a>
@@ -69,8 +69,7 @@
                                         <input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Endorsements">
                                         </nav>
                                     </form>
-                                    <br><hr><br>
-                                <br>
+                                    <hr><br>
                         {% else %}
                             <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><hr>                         
                         {% endif %}
