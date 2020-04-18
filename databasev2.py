@@ -209,9 +209,20 @@ class Database:
         for i, conversation in enumerate(conversations):
             
             conzip = json.loads(conversation[3])
-                              
-            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], [conzip["1"][0], conzip["2"][0]], [conzip["1"][1], conzip["2"][1]],
-                                        [conzip["1"][2], conzip["2"][2]], [conzip["1"][3], conzip["2"][3]], conversation[4], conversation[5],conversation[6]))
+            speakers = []
+            descrips = []
+            links = []
+            images = []
+            
+            for converse in conzip:
+                speakers.append[converse[0]]
+                descrips = [converse[1]]
+                links = [converse[2]]
+                images = [converse[3]]
+                
+                
+            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], speakers, descrips,
+                                        links, images, conversation[5],conversation[6]))
         
         
         return conversation_list
