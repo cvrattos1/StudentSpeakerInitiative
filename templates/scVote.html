@@ -21,35 +21,33 @@
                         {% if hasvoted %}
                             <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
                         {% else %}
-                            <br><p class="lead text-center font-weight-bold">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr>
+                            <br><p class="lead text-center font-italic">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr><br>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
                                         {%for conversation in conversations: %}
-                                            <div class="container">
                                             	<div class="card text-center" style="border-width: thin; border-color: #F58025">
                                             		<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
                                                 	<div class="card-body">
-                                                		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 text-center justify-content-around">
+                                                		<div class="row text-center mx-auto justify-content-center">
                                                     	{% for speaker in conversation.getSpeakers() %}
-                                                    	<div class="col-auto mb-3">
+                                                    	<div class="col-auto mx-auto mb-3">
 	                                                    	<div class="card h-100" style="width: 18rem;">
 	                                                    		<img data-src={{speaker[3]}} alt="" class="card-img-top cld-responsive">
 		                                                    	<div class="card-body">
 			                                                    	<h4 class="card-title font-weight-bold">{{speaker[0]}}</h4>
 			                                                    	<p class="card-text"> Descripition: {{speaker[1]}} </p>
-			                                                    	<a class="card-link" href=" {{speaker[2]}}"> Link to Works/Biography</a>
+			                                                    	<a class="card-link" href=" {{speaker[2]}}" target="_blank"> Link to Works/Biography</a>
 		                                                		</div>
 		                                            		</div>
 		                                            	</div>
                                                     	{% endfor %}
+                                                        <p class="card-text font-italic"> This conversation currently has {{conversation.getVotes()}} vote(s).</p>
                                                 		</div>
                                                 	</div>
                                                 <div class="card-footer font-weight-bolder custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" name="check" id={{conversation.getConverseId()}} value={{conversation.getConverseId()}}>
-                                                <label class="custom-control-label" for={{conversation.getConverseId()}}>Vote</label>
+                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}}>
                                                 </div>
 
                                                 </div>
-                                            </div>
                                             <br>
                                          {% endfor %}
                                          <br>

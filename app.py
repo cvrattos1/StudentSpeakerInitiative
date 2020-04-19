@@ -139,6 +139,7 @@ def student():
 			login_user(useraccount)
 		
 			cycle = database.getCycle()
+			validation = cyclevalidation(cycle)
 			if cycle.getName() is None:
 				exists = 0
 			else:
@@ -146,7 +147,8 @@ def student():
 			html = render_template('sHome.html',
 								   username=username,
 								   exists=exists,
-								   cycle=cycle
+								   cycle=cycle,
+								   validation=validation
 								   )
 			response = make_response(html)
 			   
@@ -160,6 +162,7 @@ def student():
 		login_user(useraccount)
 	
 		cycle = database.getCycle()
+		validation = cyclevalidation(cycle)
 		if cycle.getName() is None:
 			exists = 0
 		else:
@@ -167,7 +170,8 @@ def student():
 		html = render_template('sHome.html',
 							   username=username,
 							   exists=exists,
-							   cycle=cycle
+							   cycle=cycle,
+							   validation=validation
 							   )
 		response = make_response(html)
 		   

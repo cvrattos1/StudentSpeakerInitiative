@@ -19,14 +19,25 @@
             <div>
                 <br><h2 class="font-weight-bold">Welcome to the student homepage!</h2>
                 <br><hr>
-                <p class="lead">
-                    {% if exists == 0: %}
-                    There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!
-                    {% else: %}
-                    You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
-                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).
-                    {% endif %}
-                </p>
+               {% if exists == 0: %}
+                     <p class="lead font-weight-bold"> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus! </p>
+                {% else: %}
+                     <p class="lead"> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
+                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</p><hr><br>
+                     {% if validation['voting'] %}
+                        <p class="lead text-center font-weight-bold"> Currently voting is underway. Click one of the buttons below to vote.</p>
+                        <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Vote for Speaker(s)</a>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Vote for Conversation(s)</a><hr>
+                    {% elif validation['endorsing']%}
+                        <p class="lead text-center font-weight-bold"> Currently endorsements are underway. Click one of the buttons below to endorse.</p>
+                        <a type='button' class="btn btn-lg btn-outline-dark" href="sEndorse">Endorse Speaker(s)</a>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scEndorse">Endorse Conversation(s)</a><hr>
+                    {% else %}
+                        <p class="lead text-center font-weight-bold"> Currently nominations are underway. Click one of the buttons below to nominate.</p>
+                        <a type='button' class="btn btn-lg btn-outline-dark" href="sNom">Nominate Speaker(s)</a>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scNom">Nomite Conversation(s)</a><hr>
+                    {% endif %} 
+                {% endif %}
             </div>
         </div>
     </body>
