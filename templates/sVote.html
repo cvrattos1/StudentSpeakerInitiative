@@ -48,12 +48,14 @@
                                         </nav>   
                                     </form>
                                     <hr><br><br>
+                        {% endif %}
                         {% else %}
                             <p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p><hr>
-                        {% endif %}
-                    {% else %}
-                        <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p><hr>
-                    {% endif %}     
+                        
+                    {% endif %}   
+            {% else %}
+                <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p><hr>
+                      
             {% endif %}
 
         </div>
