@@ -1,0 +1,16 @@
+{%for speaker in speakers: %}
+    <div class="col-auto mb-3">
+        <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
+                <div class="card-body">
+                    <h4 class="card-title">{{speaker.getName()}}</h4>
+                    <a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
+                    <p class="card-text"> This speaker has {{speaker.getEndorsements()}} endorsement(s).</p>
+                </div>
+                <div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
+                    <label class="custom-control-label" for={{speaker.getSpeakid()}}>Endorse</label>
+                </div>
+        </div>
+    </div>
+{% endfor %}
+                                        

@@ -40,16 +40,18 @@
                             {% endfor %}
                             </div>
                             <br><hr><br>
-                    {% else %}
+                    {% elif validation['endorsing'] %}
                         {% if hasendorsed %}
                             <p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
                         {% elif speakers|length > 0 %}
-                            <p class="lead text-center font-weight-bold">These are the current nominations for endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p>
-                            <hr><p class="lead text-center font-weight-bold font-italic">You have {{ cycle.getEndorseNum() }} endorsement(s).</p>
-                                    <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
-                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
-                                        {%for speaker in speakers: %}
-                                        <div class="col-auto mb-3">
+                            <p class="lead text-center font-italic">These are the current nominations for endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. You have {{ cycle.getEndorseNum() }} endorsement(s).</p><hr>
+                            <div class="justify-content-center mx-auto text-center">
+                                <input type="text" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search for a Speaker" value="">
+                            </div><br>
+                                <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+                                        <div class="row row-cols-2 justify-content-center" id="resultsSpan">
+                                        <!-- {%for speaker in speakers: %}
+                                            <div class="col-auto mb-3">
                                                     <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
                                                         <div class="card-body">
                                                             <h4 class="card-title">{{speaker.getName()}}</h4>
@@ -62,13 +64,12 @@
                                                         </div>
                                                         </div>
                                                     </div>
-                                                    <br>
-                                         {% endfor %}
+                                         {% endfor %} -->
                                         </div>
+                                        <br>
                                         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
-                                        <input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Endorsements">
-                                        </nav>
-                                    </form>
+                                    <input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Endorsements"></nav>
+                                </form>
                                     <hr><br>
                         {% else %}
                             <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><hr>                         
@@ -110,10 +111,8 @@
 
         </div>
         <script type="text/javascript">
-            // Changes appropriate navBar buttons to active
-            $(document.getElementById("sEndorse")).addClass("active");
-            $(document.getElementById("navSpeaker")).addClass("active");
 
+        function endorseValidation(){
             let cycleName = '{{cycle.getName()}}';
             if (cycleName != '') {
                 //triggered when modal is about to be shown
@@ -122,37 +121,67 @@
                     var speakerid = $(this).data('speakerid');
                     $(".modal-body #reportSpeaker").val(speakerid);
                 });
-                let endorseForm = document.getElementById("endorse_form");
-                if (endorseForm) {
-                    let checkgroup = document.getElementById("endorse_form").elements.namedItem("check");
-                    $(endorseForm).submit(function(event) {
-                        
-                        let checkedcount=0;
+            }
+        }
+        function handleResponse(response)
+         { 
+            $('#resultsSpan').html(response);
+            
+            let endorseForm = document.getElementById("endorse_form");
+            if (endorseForm) {
+                let checkgroup = document.getElementById("endorse_form").elements.namedItem("check");
+                $(endorseForm).submit(function(event) {  
+                    let checkedcount=0;
+                    for (let i=0; i<checkgroup.length; i++)
+                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                    if (checkedcount==0){
+                        alert("You have not endorsed any speakers.");
+                         event.preventDefault();
+                    }
+                });
+                let limit='{{cycle.getEndorseNum()}}';
+                if (limit != 'unlimited'){
+                    for (let i=0; i<checkgroup.length; i++){
+                        checkgroup[i].onclick=function(){
+                        let checkedcount=0
                         for (let i=0; i<checkgroup.length; i++)
                             checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                        if (checkedcount==0){
-                            alert("You have not endorsed any speakers.");
-                            event.preventDefault();
-                        }
-                    });
-
-                    let limit='{{cycle.getEndorseNum()}}';
-                    if (limit != 'unlimited'){
-                        for (let i=0; i<checkgroup.length; i++){
-                            checkgroup[i].onclick=function(){
-                            let checkedcount=0
-                            for (let i=0; i<checkgroup.length; i++)
-                                checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                            if (checkedcount>limit){
-                                alert("You can only endorse a maximum of "+limit+" candidate(s).")
-                                this.checked=false
-                                }
+                        if (checkedcount>limit){
+                            alert("You can only endorse a maximum of "+limit+" candidate(s).")
+                            this.checked=false
                             }
-                        };
-                    }
+                        }
+                    };
                 }
             }
+        }
+         
+        let request = null;
+                       
+        function getResults()
+        {    
+           let search = $('#searchBar').val();
             
+           let url = '/ssearch?name=' + search;
+           if (request != null)
+              request.abort();
+           request = $.ajax(
+           {
+                type: "GET",
+                url: url,
+                success: handleResponse
+            });
+         }
+        function setup()
+        {
+            $('#searchBar').focus();
+            // Changes appropriate navBar buttons to active
+            $(document.getElementById("sEndorse")).addClass("active");
+            $(document.getElementById("navSpeaker")).addClass("active");
+            getResults();
+            endorseValidation();
+        }
+        $('document').ready(setup);  
         </script>
     </body>
 </html>

@@ -22,7 +22,7 @@
                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p><hr>
                 {% elif validation['endorsing']%}                
                      <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
-                {% else %}    
+                {% elif validation['nominating'] %}    
                      {% if remaining %}
                         <p class="lead text-center font-italic font-weight-regular">This is your opportunity to nominate a conversation that you would like to create on our campus; fill out the fields below and press "submit" to nominate a conversation! You have this many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a conversation that you have nominated. </p><hr>
                             <!--form-->

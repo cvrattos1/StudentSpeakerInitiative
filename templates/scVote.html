@@ -21,7 +21,7 @@
                         {% if hasvoted %}
                             <br><p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p>
                         {% else %}
-                            <br><p class="lead text-center font-italic">These are the current candidates. You have this many votes: {{cycle.getVoteNum()}}. </p><hr><br>
+                            <br><p class="lead text-center font-italic">These are the current candidates. The voting period ends on {{ cycle.getDateEnd()}}. You have this many votes: {{cycle.getVoteNum()}}. </p><hr><br>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
                                         {%for conversation in conversations: %}
                                             	<div class="card text-center" style="border-width: thin; border-color: #F58025">

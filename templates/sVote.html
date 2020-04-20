@@ -23,7 +23,7 @@
                         {% if hasvoted %}
                             <p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p><hr>
                         {% elif speakers|length > 0 %}
-                            <p class="lead text-center font-italic">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateVoting()}}. You have {{cycle.getVoteNum()}} vote(s).</p><hr><br>
+                            <p class="lead text-center font-italic">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd()}}. You have {{cycle.getVoteNum()}} vote(s).</p><hr><br>
                             <form action="vote_flask" method= "post" name="vote_form" id="vote_form">
                                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                                         {%for speaker in speakers: %}

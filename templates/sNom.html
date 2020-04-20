@@ -22,7 +22,7 @@
                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p><hr>
                 {% elif validation['endorsing']%}
                      <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
-                {% else %}    
+                {% elif validation['nominating'] %}    
                      {% if remaining %}
                         <p class="lead text-center font-italic">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</p><hr>
                             <!--form-->

@@ -48,7 +48,7 @@
 								{% endfor %}
 								<hr><br>
 								
-					{% else %}
+					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
 							<br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
 						{% else %}
@@ -125,9 +125,8 @@
 			  </div>
 		</div>
 		<script type="text/javascript">
-			$(document.getElementById("scEndorse")).addClass("active");
-			$(document.getElementById("navConvo")).addClass("active");
 
+		function endorseValidation(){
 			let cycleName = '{{cycle.getName()}}';
 			if (cycleName != '') {
 							//triggered when modal is about to be shown
@@ -165,6 +164,40 @@
 					};
 				}
 			}
+		}                       
+
+        function handleResponse(response)
+         { 
+        	$('#ccendorse_form').html(response);
+        }
+         
+        let request = null;
+                       
+        function getResults()
+        {    
+           let search = $('#searchBar').val();
+            
+           let url = '/ccsearch?name=' + search;
+           if (request != null)
+              request.abort();
+           request = $.ajax(
+           {
+        	    type: "GET",
+                url: url,
+                success: handleResponse
+            });
+         }
+
+        function setup()
+         {
+            $('#searchBar').focus();
+            $(document.getElementById("scEndorse")).addClass("active");
+			$(document.getElementById("navConvo")).addClass("active");
+            getResults();
+            endorseValidation();
+         }
+         
+        $('document').ready(setup);
 		</script>
 	</body>
 </html>

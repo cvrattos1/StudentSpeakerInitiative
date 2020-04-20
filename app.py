@@ -463,6 +463,30 @@ def dismiss_flag():
 
 	return redirect('aReports')
 
+@app.route('/ssearch', methods=['GET'])
+def ssearch():
+	try:
+		# Name is the name that the user types in the search bar
+		name = request.args.get('name')
+		if name is None:
+			name = ''
+		#--------------------------------------------------------
+		# DO SEARCH CODE HERE
+		#
+		# FOR THE CODE BELOW, SPEAKERS MUST BE A LIST OF SPEAKERS
+		#--------------------------------------------------------
+		database = Database() #DELETE THIS WHEN YOU HAVE IMPLEMENTED THE SEARCH
+		speakers = database.getSpeakers() #DELETE THIS WHEN YOU HAVE IMPLEMENTED THE SEARCH
+
+		html = render_template('sresults.html', speakers=speakers)
+		response = make_response(html)
+	except Exception as e:
+		# We can deal with errors later
+		print(e, file=stderr)
+		html = "Oops"
+		response = make_response(html)
+	return response
+
 
 @app.route('/sEndorse', methods=['GET'])
 @login_required
