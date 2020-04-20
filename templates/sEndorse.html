@@ -178,6 +178,7 @@
             // Changes appropriate navBar buttons to active
             $(document.getElementById("sEndorse")).addClass("active");
             $(document.getElementById("navSpeaker")).addClass("active");
+            $('#searchBar').on('input', getResults);
             getResults();
             endorseValidation();
         }

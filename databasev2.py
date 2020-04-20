@@ -183,6 +183,20 @@ class Database:
 
         return reports
 
+    # returns a list of all endorsed speakers with a name fitting the search criteria
+    def searchEndorsements(self, search):
+        search = search.lower()
+        query = "SELECT * FROM speakers WHERE LOWER(name) LIKE '" + search + "%'"
+        speakers = Database.connectDB(self, query)
+
+        speaker_list = []
+
+        for i in range(len(speakers)):
+            speaker_list.append(Speaker(speakers[i][0], speakers[i][1], speakers[i][2], speakers[i][3], speakers[i][4],
+                                        speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
+        return speaker_list
+
+
     # ---------------------------------------------------------------------
 
     # returns a list of all the Speakers that have been nominated

@@ -470,20 +470,15 @@ def ssearch():
 		name = request.args.get('name')
 		if name is None:
 			name = ''
-		#--------------------------------------------------------
-		# DO SEARCH CODE HERE
-		#
-		# FOR THE CODE BELOW, SPEAKERS MUST BE A LIST OF SPEAKERS
-		#--------------------------------------------------------
-		database = Database() #DELETE THIS WHEN YOU HAVE IMPLEMENTED THE SEARCH
-		speakers = database.getSpeakers() #DELETE THIS WHEN YOU HAVE IMPLEMENTED THE SEARCH
+
+		database = Database()
+		speakers = database.searchEndorsements(name)
 
 		html = render_template('sresults.html', speakers=speakers)
 		response = make_response(html)
 	except Exception as e:
-		# We can deal with errors later
 		print(e, file=stderr)
-		html = "Oops"
+		html = "A search related error occurred"
 		response = make_response(html)
 	return response
 
