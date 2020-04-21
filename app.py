@@ -297,6 +297,13 @@ def new_cycle():
 				errorMsg = error
 			else:
 				errorMsg = errorMsg + error
+
+	elif (argdict["Nomination Date Begins"] >= argdict["Enosorsement Date Begins"]
+		  	or argdict["Enosorsement Date Begins"] >= argdict["Voting Date Begins"]
+			or argdict["Voting Date Begins"] >= enddate):
+		errorMsg = "The Nomination, Endorsement and Voting period must be chronological and cannot have the " \
+				   "same starting date. Please check your dates and resubmit."
+
 				
 		html = render_template('aCreateCycle.html',
 						   username=username,
