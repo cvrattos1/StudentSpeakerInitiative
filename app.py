@@ -17,7 +17,7 @@ from speaker import Speaker
 from cycle import Cycle
 from report import Report
 from conversation import Conversation
-
+from datetime import date
 import pustatus
 
 from flask_login import login_user, logout_user, login_required, LoginManager, current_user
@@ -338,6 +338,8 @@ def new_cycle():
 	rolloverVot = request.args.get('rollovervot')
 	
 	database.adjustDatabase(rolloverNom, rolloverEnd, rolloverVot, rolloverThresh)
+	today = date.today()
+	database.addLog(today, username, 2, str(enddate))
 	
 	database.createCycle(argdict["Name of Voting Cycle"], 
 						 datecreated, 
@@ -448,6 +450,10 @@ def remove_nomination():
 
 	database.removeNomination(speakerid)
 
+	today = date.today()
+	speakerinfo = database.getSpeaker(speakid)    # returns Speaker object
+	database.addLog(today, username, 4, speakerinfo.getName())
+
 	return redirect('aReports')
 
 
@@ -456,10 +462,13 @@ def remove_nomination():
 def dismiss_flag():
 	username = current_user.id
 	database = Database()
-	
 
 	speakerid = request.args.get('speakerid')
 	database.dismissFlag(username, speakerid)
+
+	today = date.today()
+	speakerinfo = database.getSpeaker(speakid)
+	database.addLog(today, username, 3, speakerinfo.getName())
 
 	return redirect('aReports')
 
@@ -772,9 +781,23 @@ def scVote():
 						   hasvoted = hasvoted
 						   )
 	response = make_response(html)
-	   
-
 	return response
+
+
+@app.route('/sAdminLogs', methods=['GET'])
+@login_required
+def sAdminLogs(): 
+	username = current_user.id
+	database = Database()
+	info = database.returnAdminLogs()
+	admins = database.returnAdmins()
+
+	html = render_template('sAdminLogs.html',
+							admins=admins, 
+							info=info)
+	response = make_response(html)
+	return response
+	
 
 # Should add another layer of authentication
 @app.route('/aHome', methods=['GET'])
@@ -896,18 +919,25 @@ def aReports():
 @app.route('/addAdmin', methods=['GET'])
 def addAdmin():
 	newAdmin = request.args.get('newAdmin')
+	username = CASClient().authenticate()
 	database = Database()
 	if database.adminAuthenticate(newAdmin) != 1:  # can't double add
 		database.addAdmin(newAdmin)
+		today = date.today()					   # add action to DB
+		database.addLog(today, username, 0, newAdmin)
 	return redirect(url_for('admin'))
 
 @app.route('/removeAdmin', methods=['GET'])
 def removeAdmin():
 	oldAdmin = request.args.get('oldAdmin')
+	username = CASClient().authenticate()
 	database = Database()
 	if database.returnCount('admin') != 1:  # can't delete last admin
 		database.removeAdmin(oldAdmin)
+		today = date.today()					   # add action to DB
+		database.addLog(today, username, 1, oldAdmin)
 	return redirect(url_for('admin'))
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
+

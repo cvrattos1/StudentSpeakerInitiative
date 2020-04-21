@@ -500,8 +500,6 @@ class Database:
         exists = Database.connectDB(self, query)
         return len(exists)
 
-        # returns nothing
-
     def addAdmin(self, newAdmin):
         query = 'INSERT INTO admin VALUES (' + '\'' + newAdmin.strip() + '\')'
         Database.connectDB(self, query)
@@ -513,8 +511,20 @@ class Database:
     def returnCount(self, table):
         query = 'SELECT COUNT(*) FROM ' + '\'' + table.strip() + '\''
         return Database.connectDB(self, query)
+    
+    def returnAdmins(self):
+        query = 'SELECT * FROM admin'
+        return Database.connectDB(self, query)
 
+    def returnAdminLogs(self):
+        query = 'SELECT * FROM adminlogs'
+        info = Database.connectDB(self, query)
+        return Database.connectDB(self, query)
 
+    def addLog(self, date, netid, action, info):
+        query = 'INSERT INTO adminlogs VALUES (' + '\'' + str(date) + '\', ' + '\'' + netid.strip() +  '\', ' + '\'' + str(action) +  '\', ' + '\'' + info.strip() +  '\')'
+        print(query)
+        Database.connectDB(self, query)
 
 # ---------------------------------------------------------------------
 if __name__ == '__main__':
