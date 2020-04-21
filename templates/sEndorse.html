@@ -27,7 +27,7 @@
                             {%for speaker in speakers: %}
                             <div class="col-auto mb-3">
                                 <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
-                                    <div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal">
+                                    <div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal" data={{speaker.getSpeakid()}}>
                                         Report</button></div>
                                     <div class="card-body">
                                         <h4 class="card-title">{{speaker.getName()}}</h4>
@@ -117,9 +117,9 @@
             if (cycleName != '') {
                 //triggered when modal is about to be shown
                 $(document).on("click", ".reportButton", function() {
-                    //get data-id attribute of the clicked element
-                    var speakerid = $(this).data('speakerid');
-                    $(".modal-body #reportSpeaker").val(speakerid);
+                    //get data-speakid attribute of the clicked element
+                    var speakerid = $(this).attr('data-speakid')
+                    $("input[id='speakerid']").val(speakerid);
                 });
             }
         }

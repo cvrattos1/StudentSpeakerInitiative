@@ -879,6 +879,7 @@ def aReports():
 	reports = database.getReports()
 	speakers = []
 	for report in reports:
+		print(report.getSpeakid())
 		speakers.append(database.getSpeaker(report.getSpeakid()))
 
 	html = render_template('aReports.html',

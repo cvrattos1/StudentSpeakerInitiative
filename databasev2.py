@@ -310,7 +310,7 @@ class Database:
 
     # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
     def flag(self, netid, speakid, reason):
-        query = "INSERT INTO reports VALUES('" + netid + "', '" + speakid + "', '" + "', '" + reason + "')"
+        query = 'INSERT INTO reports VALUES (' + '\'' + netid + '\', \'' + speakid + '\', \'' + reason + '\')'
         Database.connectDB(self, query)
 
 
