@@ -372,7 +372,9 @@ def endorse_flask():
 	database = Database()
 	
 	cycle = database.getCycle()
-	endorsed = request.form.getlist('check')
+	endorsed = request.form.get('list')
+	endorsed = endorsed.split(',')
+
 	student = database.getStudent(username)
 	if student.getEndorsements():
 		return redirect('sHome')

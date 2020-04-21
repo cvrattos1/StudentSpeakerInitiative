@@ -30,14 +30,14 @@
                             <div class="card text-center " style="border-width: thin; border-color: #F58025">
                                 <div class="justify-content-center card-body form-group">
                                     <h2 class="text-center font-weight-bold">Speaker Information:</h2><br>
-                                    <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" value= {{name}}>
+                                    <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" required>
                                     <br>
-                                    <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" value= {{descrip}}>
+                                    <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" required>
                                     <br>
-                                    <input type="url" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" value= {{links}}>
+                                    <input type="url" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" required>
                                     <br>
                                     <div class="custom-file mb-3">
-                                      <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
+                                      <input type="file" class="custom-file-input" id="img" name="file" accept="image/*" required>
                                       <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
                                     </div>
                                 </div>

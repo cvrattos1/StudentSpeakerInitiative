@@ -34,11 +34,11 @@
                                 <div class="card" id="copy" style="border-width: thin; border-color: #F58025">
                                     <div class="card-body"> 
                                         <h4 class="card-title text-center">Speaker</h4>
-                                        <input type="text" placeholder="Name" class="form-control" id="name" name="name"><br>
-                                        <input type="text" placeholder="Brief Description" class="form-control" id="descrip" name="descrip"><br>
-                                        <input type="url" placeholder="Links to Works/Biography" class="form-control" id="links" name="links"><br>
+                                        <input type="text" placeholder="Name" class="form-control" id="name" name="name" required><br>
+                                        <input type="text" placeholder="Brief Description" class="form-control" id="descrip" name="descrip" required><br>
+                                        <input type="url" placeholder="Links to Works/Biography" class="form-control" id="links" name="links" required><br>
                                         <div class="custom-file mb-3">
-                                            <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
+                                            <input type="file" class="custom-file-input" id="img" name="file" accept="image/*" required>
                                             <label class="custom-file-label text-left text-secondary" id="imgLabel" for="img">Select an Image</label>
                                         </div>
                                     </div>
@@ -49,11 +49,11 @@
                                 <div class="card" id="copy" style="border-width: thin; border-color: #F58025">
                                     <div class="card-body"> 
                                         <h4 class="card-title text-center">Speaker</h4>
-                                        <input type="text" placeholder="Name" class="form-control" id="name" name="name"><br>
-                                        <input type="text" placeholder="Brief Description" class="form-control" id="descrip" name="descrip"><br>
-                                        <input type="url" placeholder="Links to Works/Biography" class="form-control" id="links" name="links"><br>
+                                        <input type="text" placeholder="Name" class="form-control" id="name" name="name" required><br>
+                                        <input type="text" placeholder="Brief Description" class="form-control" id="descrip" name="descrip" required><br>
+                                        <input type="url" placeholder="Links to Works/Biography" class="form-control" id="links" name="links" required><br>
                                         <div class="custom-file mb-3">
-                                            <input type="file" class="custom-file-input" id="img" name="file" accept="image/*">
+                                            <input type="file" class="custom-file-input" id="img" name="file" accept="image/*" required>
                                             <label class="custom-file-label text-left text-secondary" id="imgLabel" for="img">Select an Image</label>
                                         </div>
                                     </div>
@@ -94,6 +94,10 @@
                 for (let i=0;i<inputs.length;i++) {
                     $(inputs[i]).val("")
                 }
+                let label = $(newSpeaker).find("label");
+                label[0].innerHTML = "Select an Image"
+
+                // Sets function that changes the label of the file input
                 let fileInput = $(newSpeaker).find("input.custom-file-input");
                 $(fileInput).on("change", function() {
 		          var fileName = $(this).val().split("\\").pop();

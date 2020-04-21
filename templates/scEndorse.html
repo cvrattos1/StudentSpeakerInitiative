@@ -151,17 +151,18 @@
 
 					let limit='{{cycle.getEndorseNum()}}';
 					if (limit != 'unlimited'){
-					for (let i=0; i<checkgroup.length; i++){
-						checkgroup[i].onclick=function(){
-						let checkedcount=0
-						for (let i=0; i<checkgroup.length; i++)
-							checkedcount+=(checkgroup[i].checked)? 1 : 0;
-						if (checkedcount>limit){
-							alert("You can only endorse a maximum of "+limit+" conversation(s).")
-							this.checked=false
+						for (let i=0; i<checkgroup.length; i++){
+							checkgroup[i].onclick=function(){
+							let checkedcount=0
+							for (let i=0; i<checkgroup.length; i++)
+								checkedcount+=(checkgroup[i].checked)? 1 : 0;
+							if (checkedcount>limit){
+								alert("You can only endorse a maximum of "+limit+" conversation(s).")
+								this.checked=false
+								}
 							}
-						}
-					};
+						};
+					}
 				}
 			}
 		}                       
