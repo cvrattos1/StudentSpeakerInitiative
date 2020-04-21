@@ -24,27 +24,29 @@
                 
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                     {% for i in range(length): %}
-                        <div class="col-auto mb-3">
-                            <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
-                                <div class="card-body">
-                                    <h4 class="card-title">{{speakers[i].getName()}}</h4>
-                                    <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
-                                    <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
-                                    <div class="form-control">
-                                        <form action="dismiss_flag" method = "put">
-                                            <input type="submit" class="btn btn-primary" id="status" name="dismiss" value="Dismiss">
-                                            <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                        </form>
-                                    </div>
-                                    <div class="form-control">
-                                        <form action="remove_nomination" method = "put">
-                                            <input type="submit" class="btn btn-danger" id="status" name="remove" value="Remove">
-                                            <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                        </form>
+                        {% if speakers[i]: %}
+                            <div class="col-auto mb-3">
+                                <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+                                    <div class="card-body">
+                                        <h4 class="card-title">{{speakers[i].getName()}}</h4>
+                                        <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
+                                        <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
+                                        <div class="form-control">
+                                            <form action="dismiss_flag" method = "put">
+                                                <input type="submit" class="btn btn-primary" id="status" name="dismiss" value="Dismiss">
+                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                            </form>
+                                        </div>
+                                        <div class="form-control">
+                                            <form action="remove_nomination" method = "put">
+                                                <input type="submit" class="btn btn-danger" id="status" name="remove" value="Remove">
+                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                 {% endfor %}
             {% endif %}
         </div>

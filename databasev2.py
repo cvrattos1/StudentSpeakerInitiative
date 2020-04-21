@@ -325,6 +325,8 @@ class Database:
     def removeNomination(self, speakid):
         query = "DELETE FROM speakers WHERE speakid = '" + speakid + "'"
         Database.connectDB(self, query)
+        query = "DELETE FROM reports WHERE speakid = '" + speakid + "'"
+        Database.connectDB(self, query)
 
 
     # allows the student with netid netid to vote for the speaker with speakid speakid
