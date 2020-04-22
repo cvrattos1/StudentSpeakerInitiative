@@ -74,7 +74,10 @@
                         let checkedcount=0;
                         for (let i=0; i<checkgroup.length; i++)
                             if(checkgroup[i].value) {
-                                checkedcount += (checkgroup[i].value);
+                                 if (parseInt(checkgroup[i].value) < 0) {
+                                        alert("A speaker cannot have negative votes.")
+                                    }
+                                checkedcount += parseInt(checkgroup[i].value);
                             }
                         let limit='{{cycle.getVoteNum()}}';
                         if (limit != "unlimited") {
@@ -96,11 +99,14 @@
                             let checkedcount=0
                             for (let i=0; i<checkgroup.length; i++)
                                 if (checkgroup[i].value) {
-                                    checkedcount += (checkgroup[i].value);
+                                    if (parseInt(checkgroup[i].value) < 0) {
+                                        alert("A speaker cannot have negative votes.")
+                                    }
+                                    checkedcount += parseInt((checkgroup[i].value));
                                 }
                             if (parseInt(checkedcount) > parseInt(limit)){
                                 alert("You can only vote for a maximum of "+limit+" candidate(s).")
-                                event.preventDefault();
+
                                 }
                             }
                         }

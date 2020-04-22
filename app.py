@@ -412,15 +412,19 @@ def vote_flask():
 	student = database.getStudent(username)
 	if student.getVotes():
 		return redirect('sHome')
-	
+
+	error = False
 	if cycle.getEndorseNum() != 'unlimited':
-		count = 0;
+		count = 0
 		for vote in voted:
 			if vote != '':
-				count += int(vote)
+				if int(vote) >= 0:
+					count += int(vote)
+				else:
+					error = True
 		print(count)
 
-		if count > int(cycle.getVoteNum()):
+		if count > int(cycle.getVoteNum()) or error == True:
 			return redirect('sVote')
 
 	for i in range(len(voted)):
@@ -551,16 +555,15 @@ def sEndorse():
 def sVote():
 	username = current_user.id
 	database = Database()
-	
-	
+
 	cycle = database.getCycle()
-	student = database.getStudent(username)
+	user = database.getStudent(username)
 	validation = cyclevalidation(cycle)
 	
 	if cycle.getName():
 		speakers = database.getEndorsed(cycle.getThreshold())
-		if student:
-			hasvoted = student.getVotes()
+		if user:
+			hasvoted = user.getVotes()
 		else:
 			hasvoted = 0
 	else:
