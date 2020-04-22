@@ -38,6 +38,7 @@
                                                 </div>
                                                 <div class="card-footer">
                                                     <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{speaker.getSpeakid()}}>
+                                                    <input type="hidden" name="speakid" value={{ speaker.getSpeakid() }}>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,29 +70,40 @@
                 let voteForm = document.getElementById("vote_form");
                 if (voteForm) {
                     let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
-                    $(voteForm).submit(function(event) {
-                        
+                    $(voteForm).submit(function(event){
                         let checkedcount=0;
                         for (let i=0; i<checkgroup.length; i++)
-                            checkedcount+=(checkgroup[i].checked)? 1 : 0;
+                            if(checkgroup[i].value) {
+                                checkedcount += (checkgroup[i].value);
+                            }
+                        let limit='{{cycle.getVoteNum()}}';
+                        if (limit != "unlimited") {
+                             if (parseInt(checkedcount) > parseInt(limit)){
+                                alert("You can only vote for a maximum of "+limit+" candidate(s).")
+                                event.preventDefault();
+                                }
+                        }
                         if (checkedcount==0){
                             alert("You have not voted for any speakers.");
                             event.preventDefault();
                         }
+
                     });
                     let limit='{{cycle.getVoteNum()}}';
                     if (limit != 'unlimited'){
                         for (let i=0; i<checkgroup.length; i++){
-                            checkgroup[i].onclick=function(){
+                            checkgroup[i].oninput=function(){
                             let checkedcount=0
                             for (let i=0; i<checkgroup.length; i++)
-                                checkedcount+=(checkgroup[i].checked)? 1 : 0;
-                            if (checkedcount>limit){
+                                if (checkgroup[i].value) {
+                                    checkedcount += (checkgroup[i].value);
+                                }
+                            if (parseInt(checkedcount) > parseInt(limit)){
                                 alert("You can only vote for a maximum of "+limit+" candidate(s).")
-                                this.checked=false
+                                event.preventDefault();
                                 }
                             }
-                        };
+                        }
                     }
                 }
             }
