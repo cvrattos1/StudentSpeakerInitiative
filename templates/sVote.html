@@ -66,53 +66,53 @@
             $(document.getElementById("navSpeaker")).addClass("active");
 
             let cycleName = '{{cycle.getName()}}';
-            if (cycleName != '') {
-                let voteForm = document.getElementById("vote_form");
-                if (voteForm) {
-                    let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
-                    $(voteForm).submit(function(event){
-                        let checkedcount=0;
-                        for (let i=0; i<checkgroup.length; i++)
-                            if(checkgroup[i].value) {
-                                 if (parseInt(checkgroup[i].value) < 0) {
-                                        alert("A speaker cannot have negative votes.")
-                                    }
-                                checkedcount += parseInt(checkgroup[i].value);
-                            }
-                        let limit='{{cycle.getVoteNum()}}';
-                        if (limit != "unlimited") {
-                             if (parseInt(checkedcount) > parseInt(limit)){
-                                alert("You can only vote for a maximum of "+limit+" candidate(s).")
-                                event.preventDefault();
-                                }
-                        }
-                        if (checkedcount==0){
-                            alert("You have not voted for any speakers.");
-                            event.preventDefault();
-                        }
+            // if (cycleName != '') {
+            //     let voteForm = document.getElementById("vote_form");
+            //     if (voteForm) {
+            //         let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
+            //         $(voteForm).submit(function(event){
+            //             let checkedcount=0;
+            //             for (let i=0; i<checkgroup.length; i++)
+            //                 if(checkgroup[i].value) {
+            //                      if (parseInt(checkgroup[i].value) < 0) {
+            //                             alert("A speaker cannot have negative votes.")
+            //                         }
+            //                     checkedcount += parseInt(checkgroup[i].value);
+            //                 }
+            //             let limit='{{cycle.getVoteNum()}}';
+            //             if (limit != "unlimited") {
+            //                  if (parseInt(checkedcount) > parseInt(limit)){
+            //                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
+            //                     event.preventDefault();
+            //                     }
+            //             }
+            //             if (checkedcount==0){
+            //                 alert("You have not voted for any speakers.");
+            //                 event.preventDefault();
+            //             }
 
-                    });
-                    let limit='{{cycle.getVoteNum()}}';
-                    if (limit != 'unlimited'){
-                        for (let i=0; i<checkgroup.length; i++){
-                            checkgroup[i].oninput=function(){
-                            let checkedcount=0
-                            for (let i=0; i<checkgroup.length; i++)
-                                if (checkgroup[i].value) {
-                                    if (parseInt(checkgroup[i].value) < 0) {
-                                        alert("A speaker cannot have negative votes.")
-                                    }
-                                    checkedcount += parseInt((checkgroup[i].value));
-                                }
-                            if (parseInt(checkedcount) > parseInt(limit)){
-                                alert("You can only vote for a maximum of "+limit+" candidate(s).")
+            //         });
+            //         let limit='{{cycle.getVoteNum()}}';
+            //         if (limit != 'unlimited'){
+            //             for (let i=0; i<checkgroup.length; i++){
+            //                 checkgroup[i].oninput=function(){
+            //                 let checkedcount=0
+            //                 for (let i=0; i<checkgroup.length; i++)
+            //                     if (checkgroup[i].value) {
+            //                         if (parseInt(checkgroup[i].value) < 0) {
+            //                             alert("A speaker cannot have negative votes.")
+            //                         }
+            //                         checkedcount += parseInt((checkgroup[i].value));
+            //                     }
+            //                 if (parseInt(checkedcount) > parseInt(limit)){
+            //                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
 
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
             // Call

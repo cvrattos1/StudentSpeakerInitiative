@@ -40,23 +40,22 @@
 		                                            		</div>
 		                                            	</div>
                                                     	{% endfor %}
-                                                        <p class="card-text font-italic"> This conversation currently has {{conversation.getVotes()}} vote(s).</p>
+                                                        </p>
                                                 		</div>
                                                 	</div>
-                                                <div class="card-footer font-weight-bolder custom-control custom-checkbox">
-                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}} min= 0>
-                                                </div>
-
+                                                    <div class="card-footer font-weight-bolder custom-control custom-checkbox">
+                                                        <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}} min= 0>
+                                                    </div>
                                                 </div>
                                             <br>
                                          {% endfor %}
                                          <br>
                                          {% if conversations|length > 0 %}
                                          <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Votes">
+                            </form>
                                          {% else %}
                                          <p class="lead text-center font-weight-bold"> There are no candidates to vote for!</p><br>
                                          {% endif %}
-                                    </form>
                                     </div>
                                 <br>
                         {% endif %}
@@ -72,38 +71,38 @@
             $(document.getElementById("scVote")).addClass("active");
             $(document.getElementById("navConvo")).addClass("active");
 
-        	let cycleName = '{{cycle.getName()}}';
-            if (cycleName != '') {
-	            let voteForm = document.getElementById("ccvote_form");
-	            if (voteForm) {
-	                let checkgroup = document.getElementById("ccvote_form").elements.namedItem("check");
-	                $(voteForm).submit(function(event) {
+        	// let cycleName = '{{cycle.getName()}}';
+         //    if (cycleName != '') {
+	        //     let voteForm = document.getElementById("ccvote_form");
+	        //     if (voteForm) {
+	        //         let checkgroup = document.getElementById("ccvote_form").elements.namedItem("check");
+	        //         $(voteForm).submit(function(event) {
 	                    
-	                    let checkedcount=0;
-	                    for (let i=0; i<checkgroup.length; i++)
-	                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-	                    if (checkedcount==0){
-	                        alert("You have not voted for any conversations.");
-	                        event.preventDefault();
-	                    }
-	                });
+	        //             let checkedcount=0;
+	        //             for (let i=0; i<checkgroup.length; i++)
+	        //                 checkedcount+=(checkgroup[i].checked)? 1 : 0;
+	        //             if (checkedcount==0){
+	        //                 alert("You have not voted for any conversations.");
+	        //                 event.preventDefault();
+	        //             }
+	        //         });
 
-	               let limit='{{cycle.getEndorseNum()}}';
-                    if (limit != 'unlimited'){
-	                for (let i=0; i<checkgroup.length; i++){
-	                    checkgroup[i].onclick=function(){
-	                    let checkedcount=0
-	                    for (let i=0; i<checkgroup.length; i++)
-	                        checkedcount+=(checkgroup[i].checked)? 1 : 0;
-	                    if (checkedcount>limit){
-	                        alert("You can only vote for a maximum of "+limit+" conversation(s).")
-	                        this.checked=false
-	                        }
-	                    }
-	                }
-	            }
-	        }
-            }
+	        //        let limit='{{cycle.getEndorseNum()}}';
+         //            if (limit != 'unlimited'){
+	        //         for (let i=0; i<checkgroup.length; i++){
+	        //             checkgroup[i].onclick=function(){
+	        //             let checkedcount=0
+	        //             for (let i=0; i<checkgroup.length; i++)
+	        //                 checkedcount+=(checkgroup[i].checked)? 1 : 0;
+	        //             if (checkedcount>limit){
+	        //                 alert("You can only vote for a maximum of "+limit+" conversation(s).")
+	        //                 this.checked=false
+	        //                 }
+	        //             }
+	        //         }
+	        //     }
+	        // }
+         //    }
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
             // Call
             cl.responsive();
