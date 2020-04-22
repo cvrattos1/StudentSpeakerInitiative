@@ -107,6 +107,10 @@ def index():
 	return render_template('index.html')
 
 
+@app.route('/aboutus')
+def aboutus():
+	return render_template('aboutus.html')
+
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
