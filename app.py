@@ -64,27 +64,37 @@ def filllist(username, database, request):
 	return finallist
 
 def cyclevalidation(cycle):
-    
-    if cycle.getName():
-        nominating = cycle.getDateNom() >= datetime.date.today()
-        if nominating:
-            endorsing = False
-            voting = False
-        else:
-            endorsing = cycle.getDateEndorse() >= datetime.date.today()
-            if endorsing:
-                voting = False
-            else:
-                voting = cycle.getDateVoting() >= datetime.date.today()
+	if cycle.getName():
+		if cycle.getDateEnd() <= datetime.date.today():
+			voting = None
+			endorsing = None
+			nominating = None
 
-    else:
-        nominating = None
-        endorsing = None
-        voting = None
+		elif cycle.getDateVoting() <= datetime.date.today():
+			voting = True
+			endorsing = False
+			nominating = False
+
+		else:
+			endorsing = cycle.getDateEndorse() <= datetime.date.today()
+			if endorsing:
+				nominating = False
+				voting = False
+
+			else:
+				nominating = cycle.getDateNom() <= datetime.date.today()
+				if nominating:
+					voting = False
+					endorsing = False
+
+	else:
+		nominating = None
+		endorsing = None
+		voting = None
 	
-    validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting }
+	validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting }
 
-    return validation
+	return validation
 
 def uservalidation(username, database):
 	student = database.getStudent(username)
@@ -204,6 +214,8 @@ def sNom():
 						   remaining=remaining,
 						   validation = validation)
 
+	print("validation: " + str(validation['voting']) + str(validation['endorsing']) + str(validation['nominating']))
+
 	response = make_response(html)
 	return response
 
@@ -303,7 +315,7 @@ def new_cycle():
 				errorMsg = errorMsg + error
 
 	elif (argdict["Nomination Date Begins"] >= argdict["Enosorsement Date Begins"]
-		  	or argdict["Enosorsement Date Begins"] >= argdict["Voting Date Begins"]
+			or argdict["Enosorsement Date Begins"] >= argdict["Voting Date Begins"]
 			or argdict["Voting Date Begins"] >= enddate):
 		errorMsg = "The Nomination, Endorsement and Voting period must be chronological and cannot have the " \
 				   "same starting date. Please check your dates and resubmit."
@@ -399,17 +411,29 @@ def vote_flask():
 	database = Database()
 	cycle = database.getCycle()
 	voted = request.form.getlist('check')
+	speakids = request.form.getlist('speakid')
+
 	student = database.getStudent(username)
 	if student.getVotes():
 		return redirect('sHome')
-	
+
+	error = False
 	if cycle.getEndorseNum() != 'unlimited':
-		if len(voted) > int(cycle.getVoteNum()):
-			#some error
+		count = 0
+		for vote in voted:
+			if vote != '':
+				if int(vote) >= 0:
+					count += int(vote)
+				else:
+					error = True
+		print(count)
+
+		if count > int(cycle.getVoteNum()) or error == True:
 			return redirect('sVote')
 
-	for speakid in voted:
-		database.vote(username,speakid)
+	for i in range(len(voted)):
+		if voted[i] != '':
+			database.vote(username, speakids[i], voted[i])
 	return redirect('sVote')
 
 
@@ -535,16 +559,15 @@ def sEndorse():
 def sVote():
 	username = current_user.id
 	database = Database()
-	
-	
+
 	cycle = database.getCycle()
-	student = database.getStudent(username)
+	user = database.getStudent(username)
 	validation = cyclevalidation(cycle)
 	
 	if cycle.getName():
 		speakers = database.getEndorsed(cycle.getThreshold())
-		if student:
-			hasvoted = student.getVotes()
+		if user:
+			hasvoted = user.getVotes()
 		else:
 			hasvoted = 0
 	else:
@@ -640,9 +663,9 @@ def ccnominate_flask():
 	conzip = json.dumps(conversation)
 	
 	if remaining:
-	    database.ccnominate(username, 
-				        cycle.getName(), 
-				        conzip)
+		database.ccnominate(username,
+						cycle.getName(),
+						conzip)
 	
 	return redirect('scEndorse')
 	#-------------------------------------------------------------------------
@@ -729,7 +752,7 @@ def ccvote_flask():
 	voted = request.form.getlist('check')
 	student = database.getStudent(username)
 	if student.getccVotes():
-	    return redirect('sHome')
+		return redirect('sHome')
 
 	if cycle.getEndorseNum() != 'unlimited':
 		if len(voted) > int(cycle.getVoteNum()):

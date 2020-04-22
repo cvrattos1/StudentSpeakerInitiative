@@ -327,11 +327,11 @@ class Database:
 
 
     # allows the student with netid netid to vote for the speaker with speakid speakid
-    def vote(self, netid, speakid):
-        query = 'UPDATE speakers SET votes = votes + 1 WHERE speakid = ' + '\'' + speakid + '\''
+    def vote(self, netid, speakid, count):
+        query = 'UPDATE speakers SET votes = votes + ' + count + ' WHERE speakid = ' + '\'' + speakid + '\''
         Database.connectDB(self, query)
 
-        query = 'UPDATE students SET votes = votes + 1 WHERE netid = ' + '\'' + netid.strip() + '\''
+        query = 'UPDATE students SET votes = votes + ' + count + ' WHERE netid = ' + '\'' + netid.strip() + '\''
         Database.connectDB(self, query)
         
     def ccvote(self, netid, converseid):

@@ -18,39 +18,43 @@
 		<div class="container-fluid">
 				{% if cycle.getName() %}
 					{% if validation['voting'] %}
-						<br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p>
+						<br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><hr>
 					{% elif validation['nominating'] %}
-						<br><p class="lead text-center font-italic">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr><br>
-							{%for conversation in conversations: %}
-								<div class="card text-center" style="border-width: medium; border-color: #F58025">
-									<div class="card-header">
-										<button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{conversation.getConverseId()}} data-target="#reportModal">
-										Report</button>
-										<h3 class="card-title text-center font-italic">Conversation between:</h3>
-									</div>
-									<div class="card-body">
-										<div class="row text-center mx-auto justify-content-center">
-										{% for speaker in conversation.getSpeakers() %}
-											<div class="col-auto mb-3">
-												<div class="card mx-auto h-100" style="width: 18rem;">
-													<div class="card-body">
-														<h4 class="card-title font-weight-bold">{{speaker[0]}}</h4>
-														<p class="card-text"> Descripition: {{speaker[1]}} </p>
-														<a class="card-link" href=" {{speaker[2]}}" target="_blank"> Link to Works/Biography</a>
-													</div>
-												</div>
-											</div>
-											{% endfor %}
-										</div>
-									</div>
-								</div>
-								<br>    
-								{% endfor %}
-								<hr><br>
-								
+        				{% if conversations|length > 0 %}
+    						<br><p class="lead text-center font-italic">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr><br>
+    							{%for conversation in conversations: %}
+    								<div class="card text-center" style="border-width: medium; border-color: #F58025">
+    									<div class="card-header">
+    										<button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{conversation.getConverseId()}} data-target="#reportModal">
+    										Report</button>
+    										<h3 class="card-title text-center font-italic">Conversation between:</h3>
+    									</div>
+    									<div class="card-body">
+    										<div class="row text-center mx-auto justify-content-center">
+    										{% for speaker in conversation.getSpeakers() %}
+    											<div class="col-auto mb-3">
+    												<div class="card mx-auto h-100" style="width: 18rem;">
+    													<div class="card-body">
+    														<h4 class="card-title font-weight-bold">{{speaker[0]}}</h4>
+    														<p class="card-text"> Descripition: {{speaker[1]}} </p>
+    														<a class="card-link" href=" {{speaker[2]}}" target="_blank"> Link to Works/Biography</a>
+    													</div>
+    												</div>
+    											</div>
+    											{% endfor %}
+    										</div>
+    									</div>
+    								</div>
+    								<br>    
+    								{% endfor %}
+    								<hr><br>
+    					{% else %}
+                            <br><p class="lead text-center font-weight-bold"> There are no conversations nominated at this time!</p><hr>
+                        {% endif %}		
+					
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
-							<br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p>
+							<br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
 						{% else %}
 							<br><p class="lead text-center font-italic">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr><br>
 							<form action="ccendorse_flask" method= "post" name= "ccendorse_form" id="ccendorse_form">
@@ -92,7 +96,7 @@
 						
 					{% endif %}
 				{% else %}
-					  <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p>
+					  <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
 				{% endif %}
 			</div>
 

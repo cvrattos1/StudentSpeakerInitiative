@@ -44,7 +44,7 @@
                                                 		</div>
                                                 	</div>
                                                 <div class="card-footer font-weight-bolder custom-control custom-checkbox">
-                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}}>
+                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}} min= 0>
                                                 </div>
 
                                                 </div>
@@ -61,10 +61,10 @@
                                 <br>
                         {% endif %}
                      {% else %}
-                         <br><p class="lead text-center font-weight-bold"> The voting cycle will begin on {{ cycle.getDateVoting() }}</p>
+                         <br><p class="lead text-center font-weight-bold"> The voting cycle will begin on {{ cycle.getDateVoting() }}.</p><hr>
                      {% endif %}
                 {% else %}
-                    <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p>
+                    <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p><hr>
                 {% endif %}
                 
         </div>
