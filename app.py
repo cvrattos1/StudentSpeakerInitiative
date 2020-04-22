@@ -454,14 +454,13 @@ def flag_flask():
 def remove_nomination():
 	username = current_user.id
 	database = Database()
-	
+
 	speakerid = request.args.get('speakerid')
-
-	database.removeNomination(speakerid)
-
 	today = date.today()
-	speakerinfo = database.getSpeaker(speakid)    # returns Speaker object
+	speakerinfo = database.getSpeaker(speakerid)    # returns Speaker object
 	database.addLog(today, username, 4, speakerinfo.getName())
+	
+	database.removeNomination(speakerid)
 
 	return redirect('aReports')
 
@@ -473,10 +472,10 @@ def dismiss_flag():
 	database = Database()
 
 	speakerid = request.args.get('speakerid')
-	database.dismissFlag(username, speakerid)
+	database.dismissFlag(speakerid)
 
 	today = date.today()
-	speakerinfo = database.getSpeaker(speakid)
+	speakerinfo = database.getSpeaker(speakerid)
 	database.addLog(today, username, 3, speakerinfo.getName())
 
 	return redirect('aReports')

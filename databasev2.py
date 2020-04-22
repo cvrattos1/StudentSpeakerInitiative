@@ -310,17 +310,14 @@ class Database:
 
     # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
     def flag(self, netid, speakid, reason):
-        query = 'INSERT INTO reports VALUES (' + '\'' + netid + '\', \'' + speakid + '\', \'' + reason + '\')'
+        query = 'INSERT INTO reports VALUES (' + '\'' + netid + '\', \'' + speakid + '\', \'' + str(reason) + '\')'
         Database.connectDB(self, query)
 
 
     # allows admin to dismiss a flagged speaker
-    def dismissFlag(self, netid, speakid):
-        query = 'SELECT speakid FROM reports WHERE netid = \'' + netid + '\' AND speakid = \'' + speakid + '\''
-        exists = Database.connectDB(self, query)
-        if len(exists) == 1:
-            query = 'DELETE FROM reports WHERE netid = \'' + netid + '\' AND speakid = \'' + speakid + '\''
-            Database.connectDB(self, query)
+    def dismissFlag(self, speakid):
+        query = 'DELETE FROM reports WHERE speakid = \'' + speakid + '\''
+        Database.connectDB(self, query)
 
     def removeNomination(self, speakid):
         query = "DELETE FROM speakers WHERE speakid = '" + speakid + "'"
