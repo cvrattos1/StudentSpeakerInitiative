@@ -37,7 +37,7 @@
                                                     <p class="card-text font-italic"> This speaker currently has {{speaker.getVotes()}} vote(s).</p>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{speaker.getSpeakid()}}>
+                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{speaker.getSpeakid()}} min= 0>
                                                     <input type="hidden" name="speakid" value={{ speaker.getSpeakid() }}>
                                                 </div>
                                             </div>
