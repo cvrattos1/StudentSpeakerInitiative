@@ -946,6 +946,27 @@ def removeAdmin():
 		database.addLog(today, username, 1, oldAdmin)
 	return redirect(url_for('admin'))
 
+@app.route('/aAdminLogs', methods=['GET'])
+def aAdminLogs(): 
+	username = CASClient().authenticate()
+	database = Database()
+
+	if database.adminAuthenticate(username) == 0:
+		html = render_template('index.html',
+								errorMsg = 'Not authorized')
+		response = make_response(html)
+		   
+		return response
+
+	info = database.returnAdminLogs()
+	admins = database.returnAdmins()
+
+	html = render_template('sAdminLogs.html',
+							admins=admins, 
+							info=info)
+	response = make_response(html)
+	return response
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int(argv[1]), debug=True)
 

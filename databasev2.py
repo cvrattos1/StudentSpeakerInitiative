@@ -516,7 +516,7 @@ class Database:
         return Database.connectDB(self, query)
 
     def returnAdminLogs(self):
-        query = 'SELECT * FROM adminlogs'
+        query = 'SELECT * FROM adminlogs ORDER BY date DESC'
         info = Database.connectDB(self, query)
         return Database.connectDB(self, query)
 
