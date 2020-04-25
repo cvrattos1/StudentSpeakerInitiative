@@ -31,18 +31,17 @@
                                         <h4 class="card-title">{{speakers[i].getName()}}</h4>
                                         <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
                                         <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
-                                        <div class="form-control">
-                                            <form action="dismiss_flag" method = "put">
-                                                <input type="submit" class="btn btn-primary" id="status" name="dismiss" value="Dismiss">
-                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                            </form>
-                                        </div>
-                                        <div class="form-control">
-                                            <form action="remove_nomination" method = "put">
-                                                <input type="submit" class="btn btn-danger" id="status" name="remove" value="Remove">
-                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                            </form>
-                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                         <form action="dismiss_flag form-group" method = "put">
+                                            <input type="submit" class="form-control btn btn-success" id="status" name="dismiss" value="Dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker is removed from the current cycle.">
+                                            <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                        </form>
+                                        <br>
+                                        <form action="remove_nomination form-group" method = "put">
+                                            <input type="submit" class="form-control btn btn-danger" id="status" name="remove" value="Approve" data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
+                                            <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -53,6 +52,9 @@
         <script type="text/javascript">
             $(document.getElementById("aReports")).addClass("active");
             $(document.getElementById("navSpeaker")).addClass("active");
+            $(document).ready(function(){
+			  $('[data-toggle="tooltip"]').tooltip();   
+			});
         </script>
     </body>
 </html>

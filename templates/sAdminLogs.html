@@ -14,54 +14,51 @@
         <title>Students' Speaker Initiative</title>
     </head>
 
-    <body class="bg-light">
-        <body class="bg-light">
-            {% include 'sHeader.html' %}
-
-        <div class="row">
-
-            <div class="container-fluid col-md-6" style="padding-left: 70px;">
-                <br>
-                <h3>Admin Log</h3>
-                {%for row in info: %}
-                    <span>{{row[0]}}: </span>
-                    <span>{{row[1]}}</span>
-
-                    {%if row[2]|int() == 0|int(): %}
-                        <span>added admin with id</span>
-                        <span>{{row[3]}}</span>
-                    {% endif %}
-                    {%if row[2]|int() == 1|int(): %}
-                        <span>removed admin with id</span>
-                        <span>{{row[3]}} </span>
-                    {% endif %}
-                    {%if row[2]|int() == 2|int(): %}
-                        <span>created new cycle</span>
-                        <span>to be ended on {{row[3]}}</span>
-                    {% endif %}
-                    {%if row[2]|int() == 3|int(): %}
-                        <span>dismissed request of review</span>
-                        <span>for speaker {{row[3]}}</span>
-                    {% endif %}
-                    {%if row[2]|int() == 4|int(): %}
-                        <span>accepted request for review</span>
-                        <span>of speaker {{row[3]}}</span>
-                    {% endif %}
-                    <br>
-                {% endfor %}
-                <br>
-                <br>
-            </div>
-
-            <div class="container-fluid col-md-6 text-center">
-                <br>
-                <h3>Current Admins</h3>
-                {%for admin in admins: %}
-                    <span>{{admin[0]}}</span>
-                    <br>
-                {% endfor %}
+    <body class="bg-light" style="height:75vh;">
+        {% include 'sHeader.html' %}
+        <div class="container-fluid h-100">
+            <div class="row h-100 mx-auto my-auto">
+                <div class="col-sm-8 h-100 mx-auto mb-4">
+                    <br><br>
+                    <div class="bg-white h-100 overflow-auto p-4" style="border: solid medium #F58025;">
+                        <h3 class="text-center">Admin Log</h3><hr>
+                        {%for row in info: %}
+                            <p class="lead">{{row[0]}}: {{row[1]}}
+                            {%if row[2]|int() == 0|int(): %}
+                                added admin with id {{row[3]}}
+                            {%elif row[2]|int() == 1|int(): %}
+                                removed admin with id
+                                {{row[3]}}
+                            {%elif row[2]|int() == 2|int(): %}
+                                created new cycle
+                                to be ended on {{row[3]}}
+                            {%elif row[2]|int() == 3|int(): %}
+                                dismissed request of review
+                                for speaker {{row[3]}}
+                            {%elif row[2]|int() == 4|int(): %}
+                                accepted a report and removed
+                                the speaker {{row[3]}}
+                            {% endif %}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-sm-4 h-100 mx-auto">
+                    <br><br>
+                    <div class="bg-white overflow-auto mx-auto h-100 p-4 text-center" style="border: solid medium #F58025;">
+                        <br>
+                        <h3>Current Admins</h3><hr>
+                        {%for admin in admins: %}
+                            <p class="lead m-0">{{admin[0]}}</p>
+                        {% endfor %}
+                    </div>
+                    <br><br>
+                </div>
             </div>
         </div>
+        <script>
+            $(document.getElementById("sAdminLogs")).addClass("active");
+        </script>
 
     </body>
 

@@ -14,47 +14,57 @@
     </head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <div class="container-fluid text-center">
+        <div class="container text-center">
         	<br><p class="lead font-weight-bold">Welcome to the admin homepage!</p> <hr>
             <br>
-            <form action="reset_flask" method = "put">
-                <input type="submit" class="btn btn-lg btn-primary" id="status" name="status" value= "Create a new cycle"><br>
-            </form> <br>
+            <br>
 
-            <div class="container bg-secondary rounded-lg text-left lead text-light">
+            <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025">
+                <br>
                 {% if exists == 0: %}
                 <p class="font-weight-bold text-center">There is no current cycle.</p>
                 {% else: %}
-                <br><p class="font-weight-bold text-center">Information for cycle {{ cycle.getName() }}:</p>
-                <p>Created on: {{cycle.getDateCreated()}} by {{ cycle.getAdmin()}}. <br>
-                Students have {{ cycle.getNominateNum() }} nomination(s), {{ cycle.getEndorseNum()}} endorsement(s) and {{ cycle.getVoteNum() }} vote(s). <br>
-                The endorsement threshold is {{ cycle.getThreshold() }}.<br>
-                Nominations will begin on {{ cycle.getDateNom()}}. <br>
-                Endorsements will begin on {{ cycle.getDateEndorse()}}.<br>
-                Voting will begin on {{ cycle.getDateVoting()}}. <br>
-                The end date of this cycle is {{ cycle.getDateEnd() }}. </p>
+                <h2 class="font-italic">Information for Current Cycle: {{ cycle.getName() }}</h2>
+                <p class="font-italic">Created on: <strong>{{cycle.getDateCreated()}}</strong> by <strong>{{ cycle.getAdmin()}}</strong>.<hr>
+                Number of nominations: <strong>{{ cycle.getNominateNum() }}</strong>. <br>
+                Number of Endorsements: <strong>{{ cycle.getEndorseNum()}}</strong>.<br>
+                Number of Votes: <strong>{{ cycle.getVoteNum() }}</strong>. <br>
+                The endorsement threshold is <strong>{{ cycle.getThreshold() }}</strong>.<br>
+                The rollover threshold is <strong>NEED THIS IN CYCLE</strong>.<br>
+                Nomininating begins on <strong>{{ cycle.getDateNom()}}</strong>. <br>
+                Endorsing begins on <strong>{{ cycle.getDateEndorse()}}</strong>.<br>
+                Voting begins on <strong>{{ cycle.getDateVoting()}}</strong>. <br><hr>
+                <strong> This cycle ends on {{ cycle.getDateEnd() }}.</strong> </p>
+                <a type='button' class="btn btn-lg btn-primary text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% endif %}
-                <br>
             </div>
             <br>
-            <div class="container rounded-lg text-light bg-secondary">
-                <h4 class="font-weight-bold text-center">Add a new Admin:</h4>
-                <div class=" form-group">
-                    <form action='addAdmin' method='get'>
-                        <input type="text" placeholder="Netid of Admin" class="form-control" name="newAdmin" id="newAdmin">
+            <div class="row mx-auto">
+                <div class="col-sm-6 rounded-lg text-dark bg-white" style="border: solid medium #F58025;">
+                    <h4 class="font-weight-bold text-center">Add A New Admin:</h4><hr>
+                    <form class="form-group" action='addAdmin' method='get'>
+                        <input type="text" placeholder="Netid of Admin" class="form-control mb-4" name="newAdmin" id="newAdmin" required="">
+                        <input type="submit" class="btn btn-lg bg-success text-light" value = "Add">
                     </form>
-                    <center><input type="submit" class="btn btn-lg bg-primary text-light" value = "Add"></center>
                 </div>
-                <hr>
-                <h4 class="font-weight-bold text-center">Remove an Admin:</h4>
-                <form action='removeAdmin' method='get'>
-                    <input type="text" placeholder="Netid of Admin" class="form-control" name="oldAdmin" id="oldAdmin">
-                    <center><input type="submit" class="btn btn-lg bg-danger text-light" value = "Remove"></center>
-                </form>
-
-                <br>
-                <br>
+                 <div class="col-sm-6 rounded-lg text-dark bg-white" style="border: solid medium #F58025;">
+                    <h4 class="font-weight-bold text-center">Remove An Admin:</h4><hr>
+                    <form class="form-group" action='removeAdmin' method='get'>
+                        <select class="form-control mb-4" name="oldAdmin" id="oldAdmin" required>
+                            <option value="" selected>Select an admin</option>
+                            {% for admin in admins %}
+                                <option value="{{admin[0]}}">{{admin[0]}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-lg bg-danger text-light" value = "Remove">
+                    </form>
+                </div>
             </div>
-        </div> 
+            <br><br>
+        </div>
+        <script>
+            $(document.getElementById("aHome")).addClass("active");
+            $(document.getElementById("navAdmin")).addClass("active");
+        </script>
     </body>
 </html>

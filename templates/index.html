@@ -20,18 +20,19 @@
       }
       .bg {
         /* The image used */
-        background-image: url("https://commencement.princeton.edu/sites/commencement/files/styles/pwds_media_xxlarge_no_crop/public/media/classday-01.jpg?itok=Uczln_NH");
         background-image: 
           linear-gradient(
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.55)
           ),
-          url("https://commencement.princeton.edu/sites/commencement/files/styles/pwds_media_xxlarge_no_crop/public/media/classday-01.jpg?itok=Uczln_NH");
+        url("https://commencement.princeton.edu/sites/commencement/files/styles/pwds_media_xxlarge_no_crop/public/media/classday-01.jpg?itok=Uczln_NH");
         /* Full height */
+        height: 100%;
 
         /* Center and scale the image nicely */
-        background-position: center;
+        background-position: center center;
         background-repeat: no-repeat;
+        background-attachment: fixed;
         background-size: cover;
 
         background-color: rgba(0,0,0,0.2)
@@ -40,7 +41,7 @@
         /* background-image: url("https://www.princeton.edu/sites/default/files/styles/full_2x/public/images/2019/06/20190603_ClassDay_2_DLA_248.jpg?itok=Cc33rirs") */
     </style>
 	</head >
-	<body >
+	<body class="bg">
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark normal fixed-top">
         <br><br><a class="navbar-brand font-weight-bold" href="#">Students' Speaker Initiative</a>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
@@ -51,12 +52,21 @@
           </ul>
         </div>
       </nav>
-	  <div class="container-fluid bg h-100">
-	  	<br><br><br>
-	    <div class="row">
-	        <div class="col-sm-6 text-white mx-auto">
-	          <br><br><br><h2>Bring the speaker you want to campus!</h2><br>
-	          <p>The Students' Speaker Initiative is a chance for undergraduates to elect the speakers they would most like to see on campus.
+      
+	  <div class="container-fluid h-100 mt-4">
+	    <div class="row row-cols-1 h-100 my-auto">
+	    	<div class="text-center col-sm-12 col-md-6 my-auto">
+	          <br><br><br><br><br>
+            <div class="mx-auto" style="max-width: 50%;">
+              <a type='button' class="btn btn-lg btn-light font-weight-bold btn-block text-secondary" style="border: solid #F58025" href="sHome" target="_blank">Student Portal</a>
+  	          <br><br>
+              <a type='button' class="btn btn-lg btn-light font-weight-bold btn-block text-secondary" style="border: solid #F58025" href="aHome" target="_blank">Admin Portal</a>
+            </div>
+            <br><br><br>
+	        </div>
+	        <div class="col-sm-12 col-md-6 text-white my-auto">
+	          <br><br><h2 class="font-weight-bold">Bring the speaker you want to campus!</h2><br>
+	          <p class="lead">The Students' Speaker Initiative is a chance for undergraduates to elect the speakers they would most like to see on campus.
 	          This Initiative was created by Tyler Eddy ('21) to not only capture the drive students have to see a particular speaker, 
 	          but also ensure that even the smallest voices on campus can become empowered. We have proposed a ten-vote system 
 	          so that every student can quantify their desire to see a given speaker. In addition, votes  roll over between semesters 
@@ -66,12 +76,6 @@
 	          progress occurs through compromise. In order to encourage more transparency, all actions on behalf of the site's administrators are 
 	          displayed to all students. We believe the limitless possibilities of various conversations make the Student 
 	          Speaker Initiative a great asset to campus.</p>
-	        <br><br><br>
-	        </div>
-	        <div class="text-center col-sm-6 mx-auto my-auto">
-	          <br><a type='button' class="btn btn-lg btn-light btn-outline-secondary" href="sHome" target="_blank">Student Portal</a>
-	          <br><br><a type='button' class="btn btn-lg btn-light btn-outline-secondary" href="aHome" target="_blank">Admin Portal</a>
-	          <br><br><br>
 	        </div>
 	      </div>
     </div> 

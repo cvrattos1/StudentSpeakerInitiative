@@ -13,36 +13,7 @@
         <title>Students' Speaker Initiative</title>
 </head>
 <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <a class="navbar-brand font-weight-bold" href="aHome">Students' Speaker Initiative</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Speaker Information
-                          </a>
-                          <div class="dropdown-menu">
-                            <a class="dropdown-item" href="aNoms">View Nominations</a>
-                            <a class="dropdown-item" href="aVotes">Check Standings</a>
-                            <a class="dropdown-item" href="aReports">Review Reports</a>
-                          </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            Conversation Information
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" href="acNoms">View Nominations</a>
-                        <a class="dropdown-item" href="acVotes">Check Standings</a>
-                        <a class="dropdown-item" href="acReports">Review Reports</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'aHeader.html' %}
         <div class="container">
             <br><p class="font-weight-bold">{{errorMsg}}</p>
             <script type="text/javascript">
@@ -73,91 +44,100 @@
                         }
                     }
                 </script>
-                <form action="new_cycle" method="get">
-                    <div class="container-fluid rounded-lg text-light bg-secondary form-group">
-                        <br><h4 class="lead text-center font-weight-bold">Let's create a new cycle!</h4> <hr>
-                        <label for="cname">Name of voting cycle:</label>
-                        <input type="hidden" name="admin" value={{ username }}>
-                        <input type="text" class="form-control" placeholder="Name" id="cname" name="cname" value= {{cname}}>
-                        <hr>
+                    <div class="container bg-white rounded-lg text-left text-dark" style="border: solid medium #F58025">
+                        <br><h2 class="font-italic text-center">Let's Create A New Cycle!</h2><hr>
+                        <form action="new_cycle" method="get">
+                            <div class="container form-row form-group">
 
-                        <label for="nominations">Number of nominations allowed per student:</label> <br>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="nominatenum" value="unlimited" id="unlimitnom" onclick="handleTextBoxNom(1)" >
-                            <label class="custom-control-label" for="unlimitnom">Unlimited Nominations</label><br>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="nominatenum" value="limited" id="limitnom" onclick="handleTextBoxNom(1)">
-                            <label class="custom-control-label" for="limitnom">Limited Nominations</label>
-                            <input type="number" name="nominatetext" id="nomtext" disabled="disabled" min="0">
-                        </div>
-                        <br>
+                                <label class="col-sm-2 font-weight-bold" for="cname">Name Of Cycle:</label>
+                                <input type="hidden" name="admin" value="{{username}}">
+                                <input type="text" class="form-control col-sm-10 mb-4" placeholder="Name" id="cname" name="cname" required>
+                                <div class="clearfix"></div>
+                                <label class="font-weight-bold col-sm-3" for="nominations">Nominations Per Student:</label>
+                                <div class="input-group col-sm-9 mb-4" id="nominations">
+                                    <div class="custom-control custom-radio col-sm-4">
+                                        <input type="radio" class="custom-control-input" name="nominatenum" value="unlimited" id="unlimitnom" onclick="handleTextBoxNom(1)" required>
+                                        <label class="custom-control-label" for="unlimitnom">Unlimited</label><br>
+                                    </div>
+                                    <div class="custom-control custom-radio col-sm-8">
+                                        <input type="radio" class="custom-control-input" name="nominatenum" value="limited" id="limitnom" onclick="handleTextBoxNom(1)">
+                                        <label class="custom-control-label" for="limitnom">Limited</label>
+                                        <input type="number" class="form-control" placeholder="Number" name="nominatetext" id="nomtext" disabled="disabled" min="1" required>
+                                    </div>
+                                </div>
 
-                        <label for="endorsements">Number of endorsements allowed per student:</label> <br>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="endorsenum" value="unlimited" id="unlimitend" onclick="handleTextBoxNom(2)" >
-                            <label class="custom-control-label" for="unlimitend">Unlimited Endorsements</label><br>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="endorsenum" value="limited" id="limitend" onclick="handleTextBoxNom(2)">
-                            <label class="custom-control-label" for="limitend">Limited Endorsements</label>
-                            <input type="number" name="endorsetext" id="endorsetext" disabled="disabled" min="0">
-                        </div>
-                        <br>
+                                <label class="font-weight-bold col-sm-3" for="endorsements">Endorsements Per Student:</label> <br>
+                                <div class="input-group col-sm-9 mb-4" id="endorsements">
+                                    <div class="custom-control custom-radio col-sm-4">
+                                        <input type="radio" class="custom-control-input" name="endorsenum" value="unlimited" id="unlimitend" onclick="handleTextBoxNom(2)" required>
+                                        <label class="custom-control-label" for="unlimitend">Unlimited</label><br>
+                                    </div>
+                                    <div class="custom-control custom-radio col-sm-8">
+                                        <input type="radio" class="custom-control-input" name="endorsenum" value="limited" id="limitend" onclick="handleTextBoxNom(2)">
+                                        <label class="custom-control-label" for="limitend">Limited</label>
+                                        <input type="number" class="form-control" placeholder="Number" name="endorsetext" id="endorsetext" disabled="disabled" min="1" required>
+                                    </div>
+                                </div>
 
-                        <label for="votes">Number of votes allowed per student:</label> <br>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="votenum" value="unlimited" id="unlimitvot" onclick="handleTextBoxNom(3)" >
-                            <label class="custom-control-label" for="unlimitvot">Unlimited Votes</label><br>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" name="votenum" value="limited" id="limitvot" onclick="handleTextBoxNom(3)">
-                            <label class="custom-control-label" for="limitvot">Limited Votes</label>
-                            <input type="number" name="votetext" id="votetext" disabled="disabled" min="0">
-                        </div>
-                        <hr>
+                                <label class="font-weight-bold col-sm-3" for="votes">Votes Per Student:</label> <br>
+                                <div class="input-group col-sm-9 mb-4" id="votes">
+                                    <div class="custom-control custom-radio col-sm-4">
+                                        <input type="radio" class="custom-control-input" name="votenum" value="unlimited" id="unlimitvot" onclick="handleTextBoxNom(3)" required>
+                                        <label class="custom-control-label" for="unlimitvot">Unlimited Votes</label><br>
+                                    </div>
+                                    <div class="custom-control custom-radio col-sm-8">
+                                        <input type="radio" class="custom-control-input" name="votenum" value="limited" id="limitvot" onclick="handleTextBoxNom(3)">
+                                        <label class="custom-control-label" for="limitvot">Limited Votes</label>
+                                        <input type="number" class="form-control" placeholder="Number" name="votetext" id="votetext" disabled="disabled" min="1" required>
+                                    </div>
+                                </div>
 
- 
+                                <label class="font-weight-bold col-sm-3" for="threshold">Endorsement Threshold: </label>
+                                <input class="form-control col-sm-9 mb-4" type="number" placeholder="Number" name="threshold" min="1" required>
 
-                        <label for="rollover">Rollover from previous cycle: </label> <br>
-                        <label for="rolloverthresh">Rollover Threshold</label>
-                        <input type="number" name="rolloverthresh" id="rolloverthresh" min="0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="rollovernom" id="rollovernom">
-                            <label class="custom-control-label" for="rollovernom">Nominations</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="rolloverend" id="rolloverend">
-                            <label class="custom-control-label" for="rolloverend">Endorsements</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="rollovervot" id="rollovervot">
-                            <label class="custom-control-label" for="rollovervot">Votes</label>
-                        </div> <hr>
+                                <label class="font-weight-bold col-sm-12 mb-2 pt-4" style="border-top: solid thin rgba(0, 0, 0, 0.1)" for="rollover">Rollover from Previous Cycle: </label>
+                                <label class="col-sm-3" for="rolloverthresh">Threshold:</label>
+                                <input class="form-control col-sm-9 mb-2" type="number" placeholder="Number" name="rolloverthresh" id="rolloverthresh" min="0">
 
+                                <div class="input-group col-sm-12 pl-2 mb-4" style="border-bottom: solid thin rgba(0, 0, 0, 0.1)">
+                                    <div class="custom-control custom-checkbox col-sm-4">
+                                        <input type="checkbox" class="custom-control-input" name="rollovernom" id="rollovernom">
+                                        <label class="custom-control-label" for="rollovernom">Rollover Nominations?</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-sm-4">
+                                        <input type="checkbox" class="custom-control-input" name="rolloverend" id="rolloverend">
+                                        <label class="custom-control-label" for="rolloverend">Rollover Endorsements?</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-sm-4 mb-4">
+                                        <input type="checkbox" class="custom-control-input" name="rollovervot" id="rollovervot">
+                                        <label class="custom-control-label" for="rollovervot">Rollover Votes?</label>
+                                    </div>
+                                </div>
 
-                        <label for="threshold">Endorsement threshold </label>
-                        <input type="number" name="threshold" value={{threshold}}><br>
+                                <label class="col-sm-3 font-weight-bold" for="nomdate">Nomination Start Date: </label>
+                                <input type="date" class="form-control col-sm-9 mb-4" name="nomdate" required> 
+                                
+                                <label class="col-sm-3 font-weight-bold" for="endorsedate">Endorsement Start Date: </label>
+                                <input type="date" class="form-control col-sm-9 mb-4" name="endorsedate" required> <br>
+                                
+                                <label class="col-sm-3 font-weight-bold" for="votingdate">Vote Start Date: </label>
+                                <input type="date" class="form-control col-sm-9 mb-4" name="votingdate" required> <br>
 
-                        <label for="nomdate">Set nominations to begin on </label>
-                        <input type="date" name="nomdate" value={{nomdate}}> <br>
-                        
-                        <label for="endorsedate">Set endorsements to begin on </label>
-                        <input type="date" name="endorsedate" value={{endorsedate}}> <br>
-                        
-                        <label for="votingdate">Set voting to begin on </label>
-                        <input type="date" name="votingdate" value={{votingdate}}> <br>
-
-                        <label for="enddate">Set cycle to end on </label>
-                        <input type="date" name="enddate" value={{enddate}}> <br>
-
-                        <hr>
-                        <center><input type="submit" class="btn btn-lg btn-primary" value = "Submit"></center>
-                        <br>
+                                <label class="col-sm-3 font-weight-bolder" for="enddate">Cycle End Date: </label>
+                                <input type="date" class="form-control col-sm-9 mb-4" name="enddate" required> 
+                                <div class="pt-4 col-sm-12 text-center" style="border-top: solid thin rgba(0, 0, 0, 0.1)">
+                                    <input type="submit" class="btn btn-lg btn-primary" value = "Submit">
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+            <br><br>
 
             </div>
         </div>
+        <script>
+            $(document.getElementById("aCreateCycle")).addClass("active");
+            $(document.getElementById("navAdmin")).addClass("active");
+        </script>
     </body>
 </html>

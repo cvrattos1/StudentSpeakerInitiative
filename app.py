@@ -437,20 +437,6 @@ def vote_flask():
 	return redirect('sVote')
 
 
-@app.route('/reset_flask')
-@login_required
-def reset_flask():
-	username = current_user.id
-	database = Database()
-	
-	html = render_template('aCreateCycle.html',
-						   username=username,
-						   )
-	response = make_response(html)
-	   
-	return response
-
-
 @app.route('/flag_flask')
 @login_required
 def flag_flask():
@@ -852,9 +838,10 @@ def admin():
 		exists = 0
 	else:
 		exists = 1
-
+	admins = database.returnAdmins()
 	html = render_template('aHome.html',
 						   username=username,
+						   admins=admins,
 						   cycle=cycle,
 						   exists=exists
 						   )
@@ -915,6 +902,19 @@ def aVotes():
 
 	return response
 
+@app.route('/aCreateCycle')
+@login_required
+def aCreateCycle_flask():
+	username = current_user.id
+	database = Database()
+	
+	html = render_template('aCreateCycle.html',
+						   username=username,
+						   )
+	response = make_response(html)
+	   
+	return response
+
 
 @app.route('/aReports', methods=['GET'])
 def aReports():
@@ -967,7 +967,7 @@ def removeAdmin():
 	oldAdmin = request.args.get('oldAdmin')
 	username = CASClient().authenticate()
 	database = Database()
-	if database.returnCount('admin') != 1:  # can't delete last admin
+	if database.returnCount('admin') != 1 and oldAdmin != "":  # can't delete last admin or empty admin
 		database.removeAdmin(oldAdmin)
 		today = date.today()					   # add action to DB
 		database.addLog(today, username, 1, oldAdmin)
@@ -988,7 +988,7 @@ def aAdminLogs():
 	info = database.returnAdminLogs()
 	admins = database.returnAdmins()
 
-	html = render_template('sAdminLogs.html',
+	html = render_template('aAdminLogs.html',
 							admins=admins, 
 							info=info)
 	response = make_response(html)
