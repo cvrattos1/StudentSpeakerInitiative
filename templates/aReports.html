@@ -33,12 +33,11 @@
                                         <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
                                     </div>
                                     <div class="card-footer">
-                                         <form action="dismiss_flag form-group" method = "put">
+                                         <form class="form-group" action="dismiss_flag" method = "put">
                                             <input type="submit" class="form-control btn btn-success" id="status" name="dismiss" value="Dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker is removed from the current cycle.">
                                             <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
                                         </form>
-                                        <br>
-                                        <form action="remove_nomination form-group" method = "put">
+                                        <form class="form-group" action="remove_nomination" method = "put">
                                             <input type="submit" class="form-control btn btn-danger" id="status" name="remove" value="Approve" data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
                                             <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
                                         </form>
