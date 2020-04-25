@@ -62,8 +62,22 @@ class Database:
         student = Student(netid, result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6] )
         return student
     
+    def getFaculty(self, netid):
+        query = "SELECT * from faculty WHERE netid = '" + netid.strip() + "'"
+        
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return None
+        faculty = Faculty(netid, result[0][1])
+        return faculty
+    
     def makeStudent(self, netid):
         query = "INSERT INTO students VALUES('" + netid.strip() + "', 0, 0, 0, 0, 0, 0)"
+        Database.connectDB(self, query)
+        
+    def makeFaculty(self, netid):
+        query = "INSERT INTO faculty VALUES('" + netid.strip() + "', 0)"
         Database.connectDB(self, query)
 
     # ---------------------------------------------------------------------
@@ -334,11 +348,11 @@ class Database:
         query = 'UPDATE students SET votes = votes + ' + count + ' WHERE netid = ' + '\'' + netid.strip() + '\''
         Database.connectDB(self, query)
         
-    def ccvote(self, netid, converseid):
-        query = 'UPDATE conversation SET votes = votes + 1 WHERE converseid = ' + '\'' + converseid + '\''
+    def ccvote(self, netid, converseid, count):
+        query = 'UPDATE conversation SET votes = votes + ' + count + ' WHERE converseid = ' + '\'' + converseid + '\''
         Database.connectDB(self, query)
 
-        query = 'UPDATE students SET ccvotes = ccvotes + 1 WHERE netid = ' + '\'' + netid.strip() + '\''
+        query = 'UPDATE students SET ccvotes = ccvotes + ' + count + ' WHERE netid = ' + '\'' + netid.strip() + '\''
         Database.connectDB(self, query)
 
     # allows access of an image for a particular speakid
