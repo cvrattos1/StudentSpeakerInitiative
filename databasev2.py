@@ -200,7 +200,7 @@ class Database:
     # returns a list of all endorsed speakers with a name fitting the search criteria
     def searchEndorsements(self, search):
         search = search.lower()
-        query = "SELECT * FROM speakers WHERE LOWER(name) LIKE '" + search + "%'"
+        query = "SELECT * FROM speakers WHERE LOWER(name) LIKE '%" + search + "%'"
         speakers = Database.connectDB(self, query)
 
         speaker_list = []
@@ -210,6 +210,11 @@ class Database:
                                         speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
         return speaker_list
 
+    def searchAdminLogs(self, search):
+        search = search.lower()
+        query = "SELECT * FROM adminlogs WHERE netid LIKE '%" + search + "%' ORDER BY date DESC";
+        results = Database.connectDB(self, query)
+        return results
 
     # ---------------------------------------------------------------------
 

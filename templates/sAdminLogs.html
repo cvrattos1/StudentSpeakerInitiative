@@ -22,7 +22,11 @@
                     <br><br>
                     <div class="bg-white h-100 overflow-auto p-4" style="border: solid medium #F58025;">
                         <h3 class="text-center">Admin Log</h3><hr>
-                        {%for row in info: %}
+                        <div class="justify-content-center mx-auto text-center">
+                                <input type="search" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search admin" value="">
+                        </div><br>
+                        <div id="resultsSpan">
+                        <!-- {%for row in info: %}
                             <p class="lead">{{row[0]}}: {{row[1]}}
                             {%if row[2]|int() == 0|int(): %}
                                 added admin with id {{row[3]}}
@@ -40,7 +44,7 @@
                                 the speaker {{row[3]}}
                             {% endif %}
                             </p>
-                        {% endfor %}
+                        {% endfor %} -->
                     </div>
                 </div>
                 <div class="col-sm-4 h-100 mx-auto">
@@ -59,7 +63,39 @@
         <script>
             $(document.getElementById("sAdminLogs")).addClass("active");
         </script>
+        <script type="text/javascript">
+        function handleResponse(response)
+        { 
+            $('#resultsSpan').html(response);
+        }
+         
+        let request = null;
+                       
+        function getResults()
+        {  
+           let search = $('#searchBar').val();
+           search = encodeURIComponent(search);
+           let url = '/adminsearch?name=' + search;
+           if (request != null)
+              request.abort();
+           request = $.ajax(
+           {
+                type: "GET",
+                url: url,
+                success: handleResponse
+            });
+         }
 
+        function setup()
+        {
+            $('#searchBar').focus();
+            $('#searchBar').on('input', getResults);
+            // $(document.getElementById("sAdminLogs")).addClass("active");
+            getResults();
+            endorseValidation();
+        }
+        $('document').ready(setup);  
+        </script>
     </body>
 
 
