@@ -612,6 +612,24 @@ def ssearch():
 		response = make_response(html)
 	return response
 
+@app.route('/adminsearch', methods=['GET'])
+def adminsearch():
+	try:
+		name = request.args.get('name')
+		if name is None:
+			name = ''
+
+		database = Database()
+		info = database.searchAdminLogs(name)
+		admins = database.returnAdmins()
+		html = render_template('adminresults.html',
+								info=info)
+		response = make_response(html)
+	except Exception as e:
+		print(e, file=stderr)
+		html= "A search related error occurred"
+		response = make_response(html)
+	return response
 
 @app.route('/sEndorse', methods=['GET'])
 @login_required
