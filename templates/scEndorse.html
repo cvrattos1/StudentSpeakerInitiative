@@ -55,7 +55,7 @@
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
 							<br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
-						{% else %}
+						{% elif conversations|length > 0 %}
 							<br><p class="lead text-center font-italic">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr><br>
 							<form action="ccendorse_flask" method= "post" name= "ccendorse_form" id="ccendorse_form">
 								{%for conversation in conversations: %}
@@ -81,19 +81,17 @@
 											<input type="checkbox" class="custom-control-input" name="check" id={{conversation.getConverseId()}} value={{conversation.getConverseId()}}>
 											<label class="custom-control-label" for={{conversation.getConverseId()}}>Endorse</label>
 										 </div>
-									</div>
-									<br>
+									</div><br>
 										 {% endfor %}
-										 <br>
-										 {% if conversations|length > 0 %}
-										 <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Endorsements">
-										 {% else %}
-										 <p class="lead text-center font-weight-bold"> There are no conversations to endorse!</p><br>
-										 {% endif %}
-									</form>
-								<br><hr><br>
+									<hr><br>
+                                    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
+                                        <button type="button" class="endorseButton btn bg-primary text-light font-weight-bold" data-target="#confirmModal">Submit Endorsements</button>
+                                    </nav>
+                            </form>
+						{% elif conversations|length <= 0  %}
+							<p class="lead text-center font-weight-bold"> There are no conversations to endorse!</p><br>
 						{% endif %}
-						
+								<br><hr><br>
 					{% endif %}
 				{% else %}
 					  <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>

@@ -52,6 +52,7 @@
                             <div class="justify-content-center mx-auto text-center">
                                 <input type="search" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search for a Speaker" value="">
                             </div><br>
+                            <form class="form-group">
                                     <div class="row row-cols-2 justify-content-center text-center form-group" id="resultsSpan">
                                         <!-- {%for speaker in speakers: %}
                                             <div class="col-auto mb-3">
@@ -69,13 +70,12 @@
                                                     </div>
                                          {% endfor %} -->
                                     </div>
-                                        <br>
+                                    <hr><br><br>
                                         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
-                                           <button type="button" class="endorseButton btn bg-primary text-light" data-target="#confirmModal">Submit Endorsements</button>
+                                           <button type="button" class="endorseButton btn bg-primary text-light font-weight-bold" data-target="#confirmModal">Submit Endorsements</button>
                                         </nav>
-                                    <hr><br>
-                                                                </form>
-                        {% else %}
+                                    </form>
+                        {% elif speakers|length <= 0 %}
                             <p class="lead text-center font-weight-bold"> There are no candidates to endorse!</p><hr>                         
                         {% endif %}
                         
