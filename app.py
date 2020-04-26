@@ -99,34 +99,28 @@ def cyclevalidation(cycle):
 
 def uservalidation(username, database):
     student = database.getStudent(username)
-    faculty = database.getFaculty(username)
     if student:
         return "undergraduates"
-    elif faculty:
+    faculty = database.getFaculty(username)
+    if faculty:
         return "faculty"
-    else:
-        undergrad = pustatus.isUndergraduate(ldapserver, username)
-        fac = pustatus.isFaculty(ldapserver, username)
-        if undergrad:
-            database.makeStudent(username)
-            return "undergraduates"
-        elif fac:
-            database.makeFaculty(username)
-            return "faculty"
-        else:
-            return "other"
+    undergrad = pustatus.isUndergraduate(ldapserver, username)
+    if undergrad:
+        database.makeStudent(username)
+        return "undergraduates"
+    fac = pustatus.isFaculty(ldapserver, username)
+    if fac:
+        database.makeFaculty(username)
+        return "faculty"
+    return "other"
 
 
-def checkuser(currentUser, pageType):
-    role = currentUser.getRole()
+def checkuser(role, pageType):
+    
     if role != pageType:
-
-        html = render_template('loginfail.html',
-								   username=username,
-                                   pageType = pageType)
-        response = make_response(html)
-			   
-        return response
+        return False
+    else:
+        return True
         
 
 @login_manager.user_loader
@@ -161,7 +155,6 @@ def logout():
 
 @app.route('/sHome', methods=['GET', 'POST'])
 def student():
-	 
     username = CASClient().authenticate()
     undergrad = pustatus.isUndergraduate(ldapserver, username)
     if not undergrad:
@@ -216,12 +209,70 @@ def student():
         response = make_response(html)
 		   
         return response
+    
+@app.route('/fHome', methods=['GET', 'POST'])
+def faculty():
+	 
+    username = CASClient().authenticate()
+    faculty = pustatus.isFaculty(ldapserver, username)
+    if not faculty:
+        database = Database()
+        if (database.adminAuthenticate(username) == 0):
+			
+            html = render_template('loginfail.html',
+								   username=username,
+                                   pageType= "faculty")
+            response = make_response(html)
+			   
+            return response
+        else:
+            uservalidation(username, database)
+			
+            useraccount = userAccount(username,"faculty")
+            login_user(useraccount)
+		
+            cycle = database.getCycle()
+            validation = cyclevalidation(cycle)
+            if cycle.getName() is None:
+                exists = 0
+            else:
+                exists = 1
+            html = render_template('fHome.html',
+								   username=username,
+								   exists=exists,
+								   cycle=cycle,
+								   validation=validation
+								   )
+            response = make_response(html)
+			   
+            return response    
+	   
+    else:
+        database = Database()
+        uservalidation(username, database)
+        useraccount = userAccount(username, "faculty")
+        login_user(useraccount)
+        cycle = database.getCycle()
+        validation = cyclevalidation(cycle)
+        if cycle.getName() is None:
+            exists = 0 
+        else:
+            exists = 1
+        html = render_template('fHome.html',
+							   username=username,
+							   exists=exists,
+							   cycle=cycle,
+							   validation=validation
+							   )
+        response = make_response(html)
+		   
+        return response
 
 
 @app.route('/sNom')
 @login_required
 def sNom():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -249,7 +300,7 @@ def sNom():
 @app.route('/nominate_flask', methods=['POST'])
 @login_required
 def nominate_flask():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -412,7 +463,7 @@ def new_cycle():
 @app.route('/endorse_flask', methods=['POST'])
 @login_required
 def endorse_flask():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -436,7 +487,7 @@ def endorse_flask():
 @app.route('/vote_flask', methods=['POST'])
 @login_required
 def vote_flask():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	cycle = database.getCycle()
@@ -547,7 +598,7 @@ def ssearch():
 @app.route('/sEndorse', methods=['GET'])
 @login_required
 def sEndorse():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -574,7 +625,7 @@ def sEndorse():
 @app.route('/sVote', methods=['GET'])
 @login_required
 def sVote():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 
@@ -608,7 +659,7 @@ def sVote():
 @app.route('/scNom')
 @login_required
 def scNom():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	cycle = database.getCycle()
@@ -635,7 +686,7 @@ def scNom():
 @app.route('/ccnominate_flask', methods=['POST'])
 @login_required
 def ccnominate_flask():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -740,7 +791,7 @@ def ccnominate_flask():
 @app.route('/ccendorse_flask', methods=['POST'])
 @login_required
 def ccendorse_flask():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	cycle = database.getCycle()
@@ -761,12 +812,32 @@ def ccendorse_flask():
 
 	return redirect('scEndorse')
 
+@app.route('/fpromote_flask', methods=['POST'])
+@login_required
+def fpromote_flask():
+	checkuser(current_user.getRole(), "faculty")
+	username = current_user.id
+	database = Database()
+	cycle = database.getCycle()
+	cyclevalidation(cycle)
+	endorsed = request.form.getlist('check')
+	student = database.getStudent(username)
+	print(student)
+	print(student.getccEndorsements())
+	if student.getccEndorsements():
+		return redirect('fHome')
+	
+	for converseid in endorsed:
+		database.ccendorse(username,converseid, 1)
+
+	return redirect('scEndorse')
+
 
 
 @app.route('/ccvote_flask' , methods=['POST'])
 @login_required
 def ccvote_flask():
-    checkuser(current_user, "undergraduates")
+    checkuser(current_user.getRole(), "undergraduates")
     username = current_user.id
     database = Database()
     cycle = database.getCycle()
@@ -800,7 +871,7 @@ def ccvote_flask():
 @app.route('/scEndorse', methods=['GET'])
 @login_required
 def scEndorse():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	cycle = database.getCycle()
@@ -810,7 +881,7 @@ def scEndorse():
 		hasendorsed = student.getccEndorsements()
 	else:
 		hasendorsed = 0
-	conversations = database.getConversations()
+	conversations = database.getConversations(1)
 	html = render_template('scEndorse.html',
 						   username= username,
 						   cycle= cycle,
@@ -822,11 +893,46 @@ def scEndorse():
 	   
 	return response
 
+@app.route('/fPromote', methods=['GET'])
+@login_required
+def fPromote():
+    pageType = "faculty"
+    username = current_user.id
+    # check = checkuser(current_user.getRole(), pageType)
+    check = True
+    if not check:
+        html = render_template('loginfail.html',
+								   username=username,
+                                   pageType = pageType)
+        response = make_response(html)
+			   
+        return response
+    else:
+    	database = Database()
+    	cycle = database.getCycle()
+    	validation = cyclevalidation(cycle)
+    	faculty = database.getFaculty(username)
+    	if faculty:
+    		haspromoted = faculty.getEndorsements()
+    	else:
+    		haspromoted = 0
+    	conversations = database.getConversations(0)
+    	html = render_template('fPromote.html',
+    						   username= username,
+    						   cycle= cycle,
+    						   conversations = conversations,
+    						   validation = validation,
+    						   haspromoted = haspromoted
+    						   )
+    	response = make_response(html)
+    	   
+    	return response
+
 
 @app.route('/scVote', methods=['GET'])
 @login_required
 def scVote():
-	checkuser(current_user, "undergraduates")
+	checkuser(current_user.getRole(), "undergraduates")
 	username = current_user.id
 	database = Database()
 	
@@ -916,6 +1022,30 @@ def aNoms():
 						   username=username,
 						   speakers=speakers,
 						   exists=exists
+						   )
+	response = make_response(html)
+	   
+	return response
+
+@app.route('/acNoms', methods=['GET'])
+def acNoms():
+	username = CASClient().authenticate()
+	database = Database()
+
+	cycle = database.getCycle()
+	if cycle.getName() is None:
+		exists = 0
+	else:
+		exists = 1
+
+	conversations = database.getConversations(0)
+	promotedconversations = database.getConversations(1)
+    
+	html = render_template('acNoms.html',
+						   username=username,
+						   conversations = conversations,
+						   promotedconversations = promotedconversations,
+                           exists = exists
 						   )
 	response = make_response(html)
 	   

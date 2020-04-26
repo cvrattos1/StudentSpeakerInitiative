@@ -131,7 +131,7 @@ class Database:
         allowance = Database.connectDB(self, query)[0][0]
 
         if allowance == UNLIMITED_VALUE:
-            return "unlmited"
+            return "unlimited"
         else:
             return allowance - nominations
         
@@ -147,7 +147,7 @@ class Database:
         allowance = Database.connectDB(self, query)[0][0]
 
         if allowance == UNLIMITED_VALUE:
-            return "unlmited"
+            return "unlimited"
         else:
             return allowance - ccnominations
 
@@ -225,11 +225,12 @@ class Database:
                                         speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
         return speaker_list
     
-    def getConversations(self):
-        query = 'SELECT * FROM conversation'
+    def getConversations(self, promoted):
+        if promoted == 0:
+            query = "SELECT * FROM conversation WHERE faculty = 'none'"
+        else:
+            query = "SELECT * FROM conversation WHERE faculty != 'none'"
         conversations = Database.connectDB(self, query)
-        
-        
         
         conversation_list = []
         
