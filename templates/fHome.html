@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+<!--         <script src="./static/script.js" defer></script>
+        <link href="./static/styles.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <title>Students' Speaker Initiative</title>
+	</head>
+    <body class="bg-light">
+    	{% include 'sHeader.html' %}
+        <div class="container-fluid text-center">
+            <div>
+                <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
+                <hr>
+               {% if exists == 0: %}
+                     <p class="lead font-weight-bold"> There is currently no active cycle. Please come back later to promote a student-nominated conversation for our campus! </p>
+                {% else: %}
+                     <p class="lead"> You are able to promote one student-nominated conversation per cycle.</p><hr><br>
+                     {% if validation['voting'] %}
+                        <p class="lead text-center font-weight-bold"> Students are currently voting on conversations.</p>
+                    {% elif validation['endorsing']%}
+                        <p class="lead text-center font-weight-bold"> Students are currently endorsing faculty-promoted conversations.</p>
+                    {% elif validation['nominating'] %}
+                        <p class="lead text-center font-weight-bold"> Students are currently nominating conversations. Click below to see the current list of student-nominated conversations. </p>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fPromote">Promote a Conversation</a><hr>
+                    {% endif %} 
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>
