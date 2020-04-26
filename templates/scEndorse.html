@@ -16,12 +16,11 @@
 	<body class="bg-light">
 		{% include 'sHeader.html' %}
 		<div class="container-fluid">
+				<br>
 				{% if cycle.getName() %}
-					{% if validation['voting'] %}
-						<br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><hr>
-					{% elif validation['nominating'] %}
+					{% if validation['nominating'] %}
         				{% if conversations|length > 0 %}
-    						<br><p class="lead text-center font-italic">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr><br>
+    						<p class="lead text-center font-italic">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr><br>
     							{%for conversation in conversations: %}
     								<div class="card text-center" style="border-width: medium; border-color: #F58025">
     									<div class="card-header">
@@ -49,14 +48,14 @@
     								{% endfor %}
     								<hr><br>
     					{% else %}
-                            <br><p class="lead text-center font-weight-bold"> There are no student-nominated, faculty-promoted conversations at this time!</p><hr>
+                            <hr><br><p class="lead text-center font-weight-bold"> There are no student-nominated, faculty-promoted conversations at this time!</p><hr>
                         {% endif %}		
 					
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
-							<br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
+							<hr><br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><br><hr>
 						{% elif conversations|length > 0 %}
-							<br><p class="lead text-center font-italic">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr><br>
+							<p class="lead text-center font-italic">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr><br>
 							<form action="ccendorse_flask" method= "post" name= "ccendorse_form" id="ccendorse_form">
 								{%for conversation in conversations: %}
 									<div class="card text-center" style="border-width: 2px; border-color: #F58025">
@@ -87,15 +86,19 @@
                                     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
                                         <button type="button" class="endorseButton btn bg-primary text-light font-weight-bold" data-target="#confirmModal">Submit Endorsements</button>
                                     </nav>
-                            </form>
+                            </form><br><hr><br>
 						{% elif conversations|length <= 0  %}
-							<p class="lead text-center font-weight-bold"> There are no conversations to endorse!</p><br>
+							<hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no panels made it into the endorsement block. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
 						{% endif %}
-								<br><hr><br>
-					{% endif %}
-				{% else %}
-					  <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
-				{% endif %}
+								
+					{% elif validation['voting'] %}
+                        <hr><br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><br><hr>
+                    {% else %}
+                        <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
+                    {% endif %}
+                {% else %}
+                      <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.<br><hr>
+                {% endif %}
 			</div>
 
 

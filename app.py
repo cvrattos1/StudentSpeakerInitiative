@@ -84,27 +84,27 @@ def cyclevalidation(cycle):
 					end = cycle.getDateEnd() > datetime.date.today()
 
 		# if cycle.getDateEnd() <= datetime.date.today():
-		# 	voting = None
-		# 	endorsing = None
-		# 	nominating = None
-		# 	end = True
+		#   voting = None
+		#   endorsing = None
+		#   nominating = None
+		#   end = True
 
 		# elif cycle.getDateVoting() <= datetime.date.today():
-		# 	voting = True
-		# 	endorsing = False
-		# 	nominating = False
+		#   voting = True
+		#   endorsing = False
+		#   nominating = False
 
 		# else:
-		# 	endorsing = cycle.getDateEndorse() <= datetime.date.today()
-		# 	if endorsing:
-		# 		nominating = False
-		# 		voting = False
+		#   endorsing = cycle.getDateEndorse() <= datetime.date.today()
+		#   if endorsing:
+		#       nominating = False
+		#       voting = False
 
-		# 	else:
-		# 		nominating = cycle.getDateNom() <= datetime.date.today()
-		# 		if nominating:
-		# 			voting = False
-		# 			endorsing = False
+		#   else:
+		#       nominating = cycle.getDateNom() <= datetime.date.today()
+		#       if nominating:
+		#           voting = False
+		#           endorsing = False
 	else:
 		nominating = None
 		endorsing = None
@@ -116,30 +116,30 @@ def cyclevalidation(cycle):
 	return validation
 
 def uservalidation(username, database):
-    student = database.getStudent(username)
-    if student:
-        return "undergraduates"
-    faculty = database.getFaculty(username)
-    if faculty:
-        return "faculty"
-    undergrad = pustatus.isUndergraduate(ldapserver, username)
-    if undergrad:
-        database.makeStudent(username)
-        return "undergraduates"
-    fac = pustatus.isFaculty(ldapserver, username)
-    if fac:
-        database.makeFaculty(username)
-        return "faculty"
-    return "other"
+	student = database.getStudent(username)
+	if student:
+		return "undergraduates"
+	faculty = database.getFaculty(username)
+	if faculty:
+		return "faculty"
+	undergrad = pustatus.isUndergraduate(ldapserver, username)
+	if undergrad:
+		database.makeStudent(username)
+		return "undergraduates"
+	fac = pustatus.isFaculty(ldapserver, username)
+	if fac:
+		database.makeFaculty(username)
+		return "faculty"
+	return "other"
 
 
 def checkuser(role, pageType):
-    
-    if role != pageType:
-        return False
-    else:
-        return True
-        
+	
+	if role != pageType:
+		return False
+	else:
+		return True
+		
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -173,118 +173,121 @@ def logout():
 
 @app.route('/sHome', methods=['GET', 'POST'])
 def student():
-    username = CASClient().authenticate()
-    undergrad = pustatus.isUndergraduate(ldapserver, username)
-    if not undergrad:
-        database = Database()
-        if (database.adminAuthenticate(username) == 0):
+	username = CASClient().authenticate()
+	undergrad = pustatus.isUndergraduate(ldapserver, username)
+	if not undergrad:
+		database = Database()
+		if (database.adminAuthenticate(username) == 0):
 			
-            html = render_template('loginfail.html',
+			html = render_template('loginfail.html',
 								   username=username,
-                                   pageType= "undergraduates")
-            response = make_response(html)
+								   pageType= "undergraduates")
+			response = make_response(html)
 			   
-            return response
-        else:
-            uservalidation(username, database)
+			return response
+		else:
+			uservalidation(username, database)
 			
-            useraccount = userAccount(username,"undergraduates")
-            login_user(useraccount)
+			useraccount = userAccount(username,"undergraduates")
+			login_user(useraccount)
 		
-            cycle = database.getCycle()
-            validation = cyclevalidation(cycle)
-            if cycle.getName() is None:
-                exists = 0
-            else:
-                exists = 1
-            html = render_template('sHome.html',
+			cycle = database.getCycle()
+			validation = cyclevalidation(cycle)
+			html = render_template('sHome.html',
 								   username=username,
-								   exists=exists,
 								   cycle=cycle,
 								   validation=validation
 								   )
-            response = make_response(html)
+			response = make_response(html)
 			   
-            return response    
+			return response    
 	   
-    else:
-        database = Database()
-        uservalidation(username, database)
-        useraccount = userAccount(username, "undergraduates")
-        login_user(useraccount)
-        cycle = database.getCycle()
-        validation = cyclevalidation(cycle)
-        if cycle.getName() is None:
-            exists = 0 
-        else:
-            exists = 1
-        html = render_template('sHome.html',
+	else:
+		database = Database()
+		uservalidation(username, database)
+		useraccount = userAccount(username, "undergraduates")
+		login_user(useraccount)
+		cycle = database.getCycle()
+		validation = cyclevalidation(cycle)
+		html = render_template('sHome.html',
 							   username=username,
-							   exists=exists,
 							   cycle=cycle,
 							   validation=validation
 							   )
-        response = make_response(html)
+		response = make_response(html)
 		   
-        return response
-    
+		return response
+	
 @app.route('/fHome', methods=['GET', 'POST'])
-def faculty():
+def fHome():
 	 
-    username = CASClient().authenticate()
-    faculty = pustatus.isFaculty(ldapserver, username)
-    if not faculty:
-        database = Database()
-        if (database.adminAuthenticate(username) == 0):
+	username = CASClient().authenticate()
+	faculty = pustatus.isFaculty(ldapserver, username)
+	if not faculty:
+		database = Database()
+		if (database.adminAuthenticate(username) == 0):
 			
-            html = render_template('loginfail.html',
+			html = render_template('loginfail.html',
 								   username=username,
-                                   pageType= "faculty")
-            response = make_response(html)
+								   pageType= "faculty")
+			response = make_response(html)
 			   
-            return response
-        else:
-            uservalidation(username, database)
+			return response
+		else:
+			uservalidation(username, database)
 			
-            useraccount = userAccount(username,"faculty")
-            login_user(useraccount)
+			useraccount = userAccount(username,"faculty")
+			login_user(useraccount)
 		
-            cycle = database.getCycle()
-            validation = cyclevalidation(cycle)
-            if cycle.getName() is None:
-                exists = 0
-            else:
-                exists = 1
-            html = render_template('fHome.html',
+			cycle = database.getCycle()
+			validation = cyclevalidation(cycle)
+			html = render_template('fHome.html',
 								   username=username,
-								   exists=exists,
 								   cycle=cycle,
 								   validation=validation
 								   )
-            response = make_response(html)
+			response = make_response(html)
 			   
-            return response    
+			return response    
 	   
-    else:
-        database = Database()
-        uservalidation(username, database)
-        useraccount = userAccount(username, "faculty")
-        login_user(useraccount)
-        cycle = database.getCycle()
-        validation = cyclevalidation(cycle)
-        if cycle.getName() is None:
-            exists = 0 
-        else:
-            exists = 1
-        html = render_template('fHome.html',
+	else:
+		database = Database()
+		uservalidation(username, database)
+		useraccount = userAccount(username, "faculty")
+		login_user(useraccount)
+		cycle = database.getCycle()
+		validation = cyclevalidation(cycle)
+
+		html = render_template('fHome.html',
 							   username=username,
-							   exists=exists,
 							   cycle=cycle,
 							   validation=validation
 							   )
-        response = make_response(html)
+		response = make_response(html)
 		   
-        return response
+		return response
+
+
+@app.route('/fResults', methods=['GET'])
+def fResults():
+	username = CASClient().authenticate()
+	database = Database()
+
+	cycle = database.getCycle()
+	validation = cyclevalidation(cycle)
+
+	promotedconversations = database.getConversations(1)
+	
+	html = render_template('fResults.html',
+						   username=username,
+						   promotedconversations = promotedconversations,
+						   validation=validation,
+						   cycle=cycle
+						   )
+	response = make_response(html)
+	   
+	return response
+
 
 
 @app.route('/sNom')
@@ -873,35 +876,35 @@ def fpromote_flask():
 @app.route('/ccvote_flask' , methods=['POST'])
 @login_required
 def ccvote_flask():
-    checkuser(current_user.getRole(), "undergraduates")
-    username = current_user.id
-    database = Database()
-    cycle = database.getCycle()
-    cyclevalidation(cycle)
-    voted = request.form.getlist('check')
-    converseid = request.form.getlist('converseid')
-    student = database.getStudent(username)
+	checkuser(current_user.getRole(), "undergraduates")
+	username = current_user.id
+	database = Database()
+	cycle = database.getCycle()
+	cyclevalidation(cycle)
+	voted = request.form.getlist('check')
+	converseid = request.form.getlist('converseid')
+	student = database.getStudent(username)
 	
-    if student.getccVotes():
-        return redirect('sHome')
+	if student.getccVotes():
+		return redirect('sHome')
 
-    error = False
-    if cycle.getVoteNum() != 'unlimited':
-        count = 0
-        for vote in voted:
-            if vote != '':
-                if int(vote) >= 0:
-                    count += int(vote)
-                else:
-                    error = True
+	error = False
+	if cycle.getVoteNum() != 'unlimited':
+		count = 0
+		for vote in voted:
+			if vote != '':
+				if int(vote) >= 0:
+					count += int(vote)
+				else:
+					error = True
 
-        if count > int(cycle.getVoteNum()) or error == True:
-            return redirect('scVote')
+		if count > int(cycle.getVoteNum()) or error == True:
+			return redirect('scVote')
 
-    for i in range(len(voted)):
-        if voted[i] != '':
-            database.ccvote(username, converseid[i], voted[i])
-    return redirect('scVote')
+	for i in range(len(voted)):
+		if voted[i] != '':
+			database.ccvote(username, converseid[i], voted[i])
+	return redirect('scVote')
 
 
 @app.route('/scEndorse', methods=['GET'])
@@ -932,37 +935,37 @@ def scEndorse():
 @app.route('/fPromote', methods=['GET'])
 @login_required
 def fPromote():
-    pageType = "faculty"
-    username = current_user.id
-    # check = checkuser(current_user.getRole(), pageType)
-    check = True
-    if not check:
-        html = render_template('loginfail.html',
+	pageType = "faculty"
+	username = current_user.id
+	# check = checkuser(current_user.getRole(), pageType)
+	check = True
+	if not check:
+		html = render_template('loginfail.html',
 								   username=username,
-                                   pageType = pageType)
-        response = make_response(html)
+								   pageType = pageType)
+		response = make_response(html)
 			   
-        return response
-    else:
-    	database = Database()
-    	cycle = database.getCycle()
-    	validation = cyclevalidation(cycle)
-    	faculty = database.getFaculty(username)
-    	if faculty:
-    		haspromoted = faculty.getEndorsements()
-    	else:
-    		haspromoted = 0
-    	conversations = database.getConversations(0)
-    	html = render_template('fPromote.html',
-    						   username= username,
-    						   cycle= cycle,
-    						   conversations = conversations,
-    						   validation = validation,
-    						   haspromoted = haspromoted
-    						   )
-    	response = make_response(html)
-    	   
-    	return response
+		return response
+	else:
+		database = Database()
+		cycle = database.getCycle()
+		validation = cyclevalidation(cycle)
+		faculty = database.getFaculty(username)
+		if faculty:
+			haspromoted = faculty.getEndorsements()
+		else:
+			haspromoted = 0
+		conversations = database.getConversations(0)
+		html = render_template('fPromote.html',
+							   username= username,
+							   cycle= cycle,
+							   conversations = conversations,
+							   validation = validation,
+							   haspromoted = haspromoted
+							   )
+		response = make_response(html)
+		   
+		return response
 
 
 @app.route('/scVote', methods=['GET'])
@@ -1014,7 +1017,7 @@ def sAdminLogs():
 
 # Should add another layer of authentication
 @app.route('/aHome', methods=['GET'])
-def admin():
+def aHome():
 	username = CASClient().authenticate()
 	database = Database()
 
@@ -1026,16 +1029,13 @@ def admin():
 		return response
 
 	cycle = database.getCycle()
-	if cycle.getName() is None:
-		exists = 0
-	else:
-		exists = 1
+	validation = cyclevalidation(cycle)
 	admins = database.returnAdmins()
 	html = render_template('aHome.html',
 						   username=username,
 						   admins=admins,
 						   cycle=cycle,
-						   exists=exists
+						   validation=validation
 						   )
 	response = make_response(html)
 	   
@@ -1048,16 +1048,14 @@ def aNoms():
 	database = Database()
 
 	cycle = database.getCycle()
-	if cycle.getName() is None:
-		exists = 0
-	else:
-		exists = 1
+	validation = cyclevalidation(cycle)
 
 	speakers = database.getSpeakers()
 	html = render_template('aNoms.html',
 						   username=username,
 						   speakers=speakers,
-						   exists=exists
+						   validation=validation,
+						   cycle=cycle
 						   )
 	response = make_response(html)
 	   
@@ -1069,24 +1067,41 @@ def acNoms():
 	database = Database()
 
 	cycle = database.getCycle()
-	if cycle.getName() is None:
-		exists = 0
-	else:
-		exists = 1
+	validation = cyclevalidation(cycle)
 
 	conversations = database.getConversations(0)
 	promotedconversations = database.getConversations(1)
-    
+	
 	html = render_template('acNoms.html',
 						   username=username,
 						   conversations = conversations,
 						   promotedconversations = promotedconversations,
-                           exists = exists
+						   cycle=cycle,
+						   validation=validation
 						   )
 	response = make_response(html)
 	   
 	return response
 
+@app.route('/acVotes', methods=['GET'])
+def acVotes():
+	username = CASClient().authenticate()
+	database = Database()
+
+	cycle = database.getCycle()
+	validation = cyclevalidation(cycle)
+
+	promotedconversations = database.getConversations(1)
+	
+	html = render_template('acVotes.html',
+						   username=username,
+						   promotedconversations = promotedconversations,
+						   validation=validation,
+						   cycle=cycle
+						   )
+	response = make_response(html)
+	   
+	return response
 
 @app.route('/aVotes', methods=['GET'])
 def aVotes():
@@ -1101,17 +1116,14 @@ def aVotes():
 		return response
 
 	cycle = database.getCycle()
-	if cycle.getName() is None:
-		exists = 0
-		speakers = []
-	else:
-		exists = 1
-		speakers = database.getEndorsed(cycle.getThreshold())
+	validation = cyclevalidation(cycle)
+	speakers = database.getEndorsed(cycle.getThreshold())
 
 	html = render_template('aVotes.html',
 						   username=username,
 						   speakers=speakers,
-						   exists=exists
+						   cycle=cycle,
+						   validation=validation
 						   )
 	response = make_response(html)
 	   
@@ -1145,10 +1157,7 @@ def aReports():
 		return response
 
 	cycle = database.getCycle()
-	if cycle.getName() is None:
-		exists = 0
-	else:
-		exists = 1
+	validation = cyclevalidation(cycle)
 
 	reports = database.getReports()
 	speakers = []
@@ -1158,7 +1167,8 @@ def aReports():
 
 	html = render_template('aReports.html',
 						   username=username,
-						   exists=exists,
+						   cycle=cycle,
+						   validation=validation,
 						   reports=reports,
 						   speakers=speakers,
 						   length=len(speakers)
@@ -1174,7 +1184,7 @@ def addAdmin():
 	database = Database()
 	if database.adminAuthenticate(newAdmin) != 1:  # can't double add
 		database.addAdmin(newAdmin)
-		today = date.today()					   # add action to DB
+		today = date.today()                       # add action to DB
 		database.addLog(today, username, 0, newAdmin)
 	return redirect(url_for('admin'))
 
@@ -1185,7 +1195,7 @@ def removeAdmin():
 	database = Database()
 	if database.returnCount('admin') != 1 and oldAdmin != "":  # can't delete last admin or empty admin
 		database.removeAdmin(oldAdmin)
-		today = date.today()					   # add action to DB
+		today = date.today()                       # add action to DB
 		database.addLog(today, username, 1, oldAdmin)
 	return redirect(url_for('admin'))
 

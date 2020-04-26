@@ -27,7 +27,7 @@
 						{% elif speakers|length > 0 %}
 							<h3 class="text-center font-italic">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd()}}. You have {{cycle.getVoteNum()}} vote(s).</h3><hr><br>
 							<form action="vote_flask" method= "post" name="vote_form" id="vote_form">
-										<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
+										<div class="row row-cols-2 text-center mx-auto justify-content-center">
 										{%for speaker in speakers: %}
 										<div class="col-auto mb-3">
 											<div class="card card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
@@ -51,9 +51,12 @@
 										</nav>   
 									</form>
 									<hr><br><br>
-						{% endif %}
+						{% else %}
+                        	<hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no speakers made it into the voting block. Please come back later to participate in selecting a speaker for our campus.</p><br><hr> 
+                        {% endif %}
 					{% elif validation['end'] %}
-						<h3 class="text-center font-italic"> Here are the results of the vote!</h3><hr><br>
+						{% if speakers|length > 0 %}
+						<h3 class="text-center"> Here are the results of the vote!</h3><hr><br>
 							<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
 								{%for speaker in speakers: %}
 									<div class="col-auto mb-3">
@@ -71,12 +74,14 @@
 									</div>
 								{% endfor %}
 							</div>
+						{% else %}
+                        	<hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no speakers made it into the voting block. Please come back later to participate in selecting a speaker for our campus.</p><br><hr> 
+                        {% endif %}
 					{% else %}
 						<hr><br><p class="lead text-center font-weight-bold"> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>	
 					{% endif %}   
 			{% else %}
 				<hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later to participate in selecting a speaker for our campus! </p><br><hr>
-					  
 			{% endif %}
 
 		</div>

@@ -14,24 +14,42 @@
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
-    	{% include 'sHeader.html' %}
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="fHome">Students' Speaker Initiative</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav d-flex justify-content-end w-100">
+                    <li class="nav-item">
+                        <a class="nav-link" href="fPromote" id="fPromote">Promote A Conversation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="fResults" id="fResults">View Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
         <div class="container-fluid text-center">
             <div>
                 <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
-                <hr>
-               {% if exists == 0: %}
-                     <p class="lead font-weight-bold"> There is currently no active cycle. Please come back later to promote a student-nominated conversation for our campus! </p>
-                {% else: %}
-                     <p class="lead"> You are able to promote one student-nominated conversation per cycle.</p><hr><br>
-                     {% if validation['voting'] %}
-                        <p class="lead text-center font-weight-bold"> Students are currently voting on conversations.</p>
+                <hr><br>
+                    {% if validation['nominating'] %}
+                        <p class="lead text-center font-weight-bold"> Students are currently nominating conversations. You may promote one student-nominated conversation per cycle. Click below to see the current list of student-nominated conversations. </p>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fPromote">Promote a Conversation</a><br><br><hr>
                     {% elif validation['endorsing']%}
-                        <p class="lead text-center font-weight-bold"> Students are currently endorsing faculty-promoted conversations.</p>
-                    {% elif validation['nominating'] %}
-                        <p class="lead text-center font-weight-bold"> Students are currently nominating conversations. Click below to see the current list of student-nominated conversations. </p>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fPromote">Promote a Conversation</a><hr>
+                        <p class="lead text-center font-weight-bold"> Faculty promotion of conversations has closed. Students are currently endorsing faculty-promoted conversations. Please come back on {{cycle.getVoteDate() }} to see the results. </p><br><hr>
+                    {% elif validation['voting'] %}
+                        <p class="lead text-center font-weight-bold"> Faculty promoting of conversations has closed. Students are currently voting on conversations. Please come back on {{cycle.getVoteDate() }} to see the results. </p><br><hr>
+                    {% elif validation['end'] %}
+                        <p class="lead text-center font-weight-bold"> The current cycle has ended. Click below to see the current list of student-nominated conversations. </p>
+                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fResults">View Results</a><br><br><hr>
+                    {% else %}
+                        <p class="lead text-center font-weight-bold"> There is no current cycle. Please come back later to promote conversations!</p><br><hr>
                     {% endif %} 
-                {% endif %}
             </div>
         </div>
     </body>
