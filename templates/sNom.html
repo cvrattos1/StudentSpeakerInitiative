@@ -15,42 +15,45 @@
 	</head>
     <body class="bg-light">
         {% include 'sHeader.html' %}
-        <div class="container">
+        <div class="container-fluid">
             <br>
             {% if cycle.getName() %}
-                {% if validation['voting'] %}
-                    <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p><hr>
-                {% elif validation['endorsing']%}
-                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
-                {% elif validation['nominating'] %}    
+                {% if validation['nominating'] %}    
                      {% if remaining %}
-                        <p class="lead text-center font-italic">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</p><hr>
-                            <!--form-->
-                        <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
-                            <div class="card text-center " style="border-width: thin; border-color: #F58025">
-                                <div class="justify-content-center card-body form-group">
-                                    <h2 class="text-center font-weight-bold">Speaker Information:</h2><br>
-                                    <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" required>
-                                    <br>
-                                    <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" required>
-                                    <br>
-                                    <input type="url" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" required>
-                                    <br>
-                                    <div class="custom-file mb-3">
-                                      <input type="file" class="custom-file-input" id="img" name="file" accept="image/*" required>
-                                      <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
+                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</p><hr>
+                        <div lass="container">
+                            <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
+                                <div class="card text-center " style="border-width: thin; border-color: #F58025">
+                                    <div class="justify-content-center card-body form-group">
+                                        <h2 class="text-center font-weight-bold">Speaker Information:</h2><br>
+                                        <input type="text" placeholder="Name of Speaker" class="form-control" id="name" name="name" required>
+                                        <br>
+                                        <input type="text" placeholder="Brief Description of Speaker" class="form-control" id="descrip" name="descrip" required>
+                                        <br>
+                                        <input type="url" placeholder="Link to Works/Biography" class="form-control" id="links" name="links" required>
+                                        <br>
+                                        <div class="custom-file mb-3">
+                                          <input type="file" class="custom-file-input" id="img" name="file" accept="image/*" required>
+                                          <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
+                                        </div>
                                     </div>
+                                    <div class="card-footer"><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></div>
                                 </div>
-                                <div class="card-footer"><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></div>
-                            </div>
-                         </form>
-                         <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>
+                             </form>
+                             <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>
+                        </div>
                      {% else %}
                         <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of speakers.</p><hr>
                      {% endif %}
+                {% elif validation['voting'] %}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please vote.</p><hr>
+                {% elif validation['endorsing']%}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please endorse.</p><br><hr>
+                {% else %}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
                 {% endif %}
             {% else %}
-                      <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
+                    <hr><br><p class="lead text-center font-weight-bold">Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
             {% endif %}
         </div>
         <script>

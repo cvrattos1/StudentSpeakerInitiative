@@ -66,34 +66,52 @@ def filllist(username, database, request):
 
 def cyclevalidation(cycle):
 	if cycle.getName():
-		if cycle.getDateEnd() <= datetime.date.today():
-			voting = None
-			endorsing = None
-			nominating = None
-
-		elif cycle.getDateVoting() <= datetime.date.today():
-			voting = True
+		nominating = cycle.getDateNom() > datetime.date.today()
+		if nominating:
+			voting = False
 			endorsing = False
-			nominating = False
-
+			end = False
 		else:
-			endorsing = cycle.getDateEndorse() <= datetime.date.today()
+			endorsing = cycle.getDateEndorse() > datetime.date.today()
 			if endorsing:
-				nominating = False
 				voting = False
-
+				end = False
 			else:
-				nominating = cycle.getDateNom() <= datetime.date.today()
-				if nominating:
-					voting = False
-					endorsing = False
+				voting = cycle.getDateVoting() > datetime.date.today()
+				if voting:
+					end = False
+				else:
+					end = cycle.getDateEnd() > datetime.date.today()
 
+		# if cycle.getDateEnd() <= datetime.date.today():
+		# 	voting = None
+		# 	endorsing = None
+		# 	nominating = None
+		# 	end = True
+
+		# elif cycle.getDateVoting() <= datetime.date.today():
+		# 	voting = True
+		# 	endorsing = False
+		# 	nominating = False
+
+		# else:
+		# 	endorsing = cycle.getDateEndorse() <= datetime.date.today()
+		# 	if endorsing:
+		# 		nominating = False
+		# 		voting = False
+
+		# 	else:
+		# 		nominating = cycle.getDateNom() <= datetime.date.today()
+		# 		if nominating:
+		# 			voting = False
+		# 			endorsing = False
 	else:
 		nominating = None
 		endorsing = None
 		voting = None
+		end = None
 	
-	validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting }
+	validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting, "end": end }
 
 	return validation
 
@@ -290,7 +308,7 @@ def sNom():
 						   errorMsg=errorMsg,
 						   cycle=cycle,
 						   remaining=remaining,
-						   validation = validation)
+						   validation=validation)
 
 	print("validation: " + str(validation['voting']) + str(validation['endorsing']) + str(validation['nominating']))
 

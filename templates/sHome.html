@@ -18,26 +18,33 @@
         <div class="container-fluid text-center">
             <div>
                 <br><h2 class="font-weight-bold">Welcome to the student homepage!</h2>
-                <hr>
-               {% if exists == 0: %}
-                     <p class="lead font-weight-bold"> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus! </p>
-                {% else: %}
-                     <p class="lead"> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
+                <br><hr><br>
+                {% if validation['nominating'] %}
+                    <p class="lead"> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
                     a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</p><hr><br>
-                     {% if validation['voting'] %}
-                        <p class="lead text-center font-weight-bold"> Currently voting is underway. Click one of the buttons below to vote.</p>
-                        <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Vote for Speaker(s)</a>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Vote for Conversation(s)</a><hr>
-                    {% elif validation['endorsing']%}
-                        <p class="lead text-center font-weight-bold"> Currently endorsements are underway. Click one of the buttons below to endorse.</p>
-                        <a type='button' class="btn btn-lg btn-outline-dark" href="sEndorse">Endorse Speaker(s)</a>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scEndorse">Endorse Conversation(s)</a><hr>
-                    {% elif validation['nominating'] %}
-                        <p class="lead text-center font-weight-bold"> Currently nominations are underway. Click one of the buttons below to nominate.</p>
-                        <a type='button' class="btn btn-lg btn-outline-dark" href="sNom">Nominate Speaker(s)</a>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scNom">Nominate Conversation(s)</a><hr>
-                    {% endif %} 
+                    <p class="lead text-center font-weight-bold"> Currently nominations are underway. Click one of the buttons below to nominate.</p>
+                    <a type='button' class="btn btn-lg btn-outline-dark" href="sNom">Nominate Speaker(s)</a>
+                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scNom">Nominate Conversation(s)</a>
+                {% elif validation['endorsing']%}
+                    <p class="lead"> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
+                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</p><hr><br>
+                    <p class="lead text-center font-weight-bold"> Currently endorsements are underway. Click one of the buttons below to endorse.</p>
+                    <a type='button' class="btn btn-lg btn-outline-dark" href="sEndorse">Endorse Speaker(s)</a>
+                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scEndorse">Endorse Conversation(s)</a>
+                {% elif validation['voting'] %}
+                    <p class="lead"> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
+                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</p><hr><br>
+                    <p class="lead text-center font-weight-bold"> Currently voting is underway. Click one of the buttons below to vote.</p>
+                    <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Vote for Speaker(s)</a>
+                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Vote for Conversation(s)</a>
+                {% elif validation['end'] %}
+                    <p class="lead text-center font-weight-bold"> The cycle "{{cycle.getName()}}" has ended. Click one of the buttons below to view the results.</p>
+                    <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Results for Speakers</a>
+                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Results for Conversations</a>
+                {% else %}
+                    <p class="lead text-center font-weight-bold"> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!</p>
                 {% endif %}
+                <br><hr>
             </div>
         </div>
     </body>

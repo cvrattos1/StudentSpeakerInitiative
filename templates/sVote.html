@@ -3,121 +3,141 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+		<meta http-equiv="X-UA-Compatible" content="ie-edge">
 <!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
-        <title>Students' Speaker Initiative</title>
-        
+		<link href="./static/styles.css" rel="stylesheet"> -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
+		<title>Students' Speaker Initiative</title>
+		
 	</head>
-    <body class="bg-light">
-        {% include 'sHeader.html' %}
-        <div class="container-fluid">
-            <br>
-            {% if cycle.getName() %}
-                    {% if validation['voting'] %}
-                        {% if hasvoted %}
-                            <p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p><hr>
-                        {% elif speakers|length > 0 %}
-                            <p class="lead text-center font-italic">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd()}}. You have {{cycle.getVoteNum()}} vote(s).</p><hr><br>
-                            <form action="vote_flask" method= "post" name="vote_form" id="vote_form">
-                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
-                                        {%for speaker in speakers: %}
-                                        <div class="col-auto mb-3">
-                                            <div class="card card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
-                                                <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">{{speaker.getName()}}</h4>
-                                                    <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
-                                                    <a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a><br><br>
-                                                    <p class="card-text font-italic"> This speaker currently has {{speaker.getVotes()}} vote(s).</p>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{speaker.getSpeakid()}} min= 0>
-                                                    <input type="hidden" name="speakid" value={{ speaker.getSpeakid() }}>
-                                                </div>
-                                            </div>
-                                        </div>
-                                         {% endfor %}
-                                        </div>
-                                        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
-                                        <input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Votes">
-                                        </nav>   
-                                    </form>
-                                    <hr><br><br>
-                        {% endif %}
-                        {% else %}
-                            <p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p><hr>
-                        
-                    {% endif %}   
-            {% else %}
-                <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later. </p><hr>
-                      
-            {% endif %}
+	<body class="bg-light">
+		{% include 'sHeader.html' %}
+		<div class="container-fluid">
+			<br>
+			{% if cycle.getName() %}
+					{% if validation['nominating'] or validation['endorsing'] %}
+							<p class="lead text-center font-weight-bold">The voting cycle will begin on {{ cycle.getDateVoting() }}.</p><hr>
+					{% elif validation['voting'] %}
+						{% if hasvoted %}
+							<p class="lead text-center font-weight-bold">Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</p><hr>
+						{% elif speakers|length > 0 %}
+							<h3 class="text-center font-italic">These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd()}}. You have {{cycle.getVoteNum()}} vote(s).</h3><hr><br>
+							<form action="vote_flask" method= "post" name="vote_form" id="vote_form">
+										<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
+										{%for speaker in speakers: %}
+										<div class="col-auto mb-3">
+											<div class="card card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+												<img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
+												<div class="card-body">
+													<h4 class="card-title">{{speaker.getName()}}</h4>
+													<p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+													<a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a><br><br>
+													<p class="card-text font-italic"> This speaker currently has {{speaker.getVotes()}} vote(s).</p>
+												</div>
+												<div class="card-footer">
+													<input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{speaker.getSpeakid()}} min= 0>
+													<input type="hidden" name="speakid" value={{ speaker.getSpeakid() }}>
+												</div>
+											</div>
+										</div>
+										 {% endfor %}
+										</div>
+										<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
+										<input type="submit" class="btn btn-primary font-weight-bold mx-auto" id="status" name="submit" value="Submit Votes">
+										</nav>   
+									</form>
+									<hr><br><br>
+						{% endif %}
+					{% elif validation['end'] %}
+						<h3 class="text-center font-italic"> Here are the results of the vote!</h3><hr><br>
+							<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
+								{%for speaker in speakers: %}
+									<div class="col-auto mb-3">
+										<div class="card card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+											<img data-src="{{speaker.getImgLink()}}" alt="" class="card-img-top cld-responsive">
+											<div class="card-body">
+												<h4 class="card-title">{{speaker.getName()}}</h4>
+												<p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+												<a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
+											</div>
+											<div class="card-footer">
+												<p class="card-text font-weight-bold lead"> Received {{speaker.getVotes()}} vote(s).</p>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+					{% else %}
+						<hr><br><p class="lead text-center font-weight-bold"> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>	
+					{% endif %}   
+			{% else %}
+				<hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later to participate in selecting a speaker for our campus! </p><br><hr>
+					  
+			{% endif %}
 
-        </div>
-        <script type="text/javascript">
-            // Changes appropriate navBar buttons to active
-            $(document.getElementById("sVote")).addClass("active");
-            $(document.getElementById("navSpeaker")).addClass("active");
+		</div>
+		<script type="text/javascript">
+			// Changes appropriate navBar buttons to active
+			$(document.getElementById("sVote")).addClass("active");
+			$(document.getElementById("navSpeaker")).addClass("active");
 
-            let cycleName = '{{cycle.getName()}}';
-            // if (cycleName != '') {
-            //     let voteForm = document.getElementById("vote_form");
-            //     if (voteForm) {
-            //         let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
-            //         $(voteForm).submit(function(event){
-            //             let checkedcount=0;
-            //             for (let i=0; i<checkgroup.length; i++)
-            //                 if(checkgroup[i].value) {
-            //                      if (parseInt(checkgroup[i].value) < 0) {
-            //                             alert("A speaker cannot have negative votes.")
-            //                         }
-            //                     checkedcount += parseInt(checkgroup[i].value);
-            //                 }
-            //             let limit='{{cycle.getVoteNum()}}';
-            //             if (limit != "unlimited") {
-            //                  if (parseInt(checkedcount) > parseInt(limit)){
-            //                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
-            //                     event.preventDefault();
-            //                     }
-            //             }
-            //             if (checkedcount==0){
-            //                 alert("You have not voted for any speakers.");
-            //                 event.preventDefault();
-            //             }
+			let cycleName = '{{cycle.getName()}}';
+			// if (cycleName != '') {
+			//     let voteForm = document.getElementById("vote_form");
+			//     if (voteForm) {
+			//         let checkgroup = document.getElementById("vote_form").elements.namedItem("check");
+			//         $(voteForm).submit(function(event){
+			//             let checkedcount=0;
+			//             for (let i=0; i<checkgroup.length; i++)
+			//                 if(checkgroup[i].value) {
+			//                      if (parseInt(checkgroup[i].value) < 0) {
+			//                             alert("A speaker cannot have negative votes.")
+			//                         }
+			//                     checkedcount += parseInt(checkgroup[i].value);
+			//                 }
+			//             let limit='{{cycle.getVoteNum()}}';
+			//             if (limit != "unlimited") {
+			//                  if (parseInt(checkedcount) > parseInt(limit)){
+			//                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
+			//                     event.preventDefault();
+			//                     }
+			//             }
+			//             if (checkedcount==0){
+			//                 alert("You have not voted for any speakers.");
+			//                 event.preventDefault();
+			//             }
 
-            //         });
-            //         let limit='{{cycle.getVoteNum()}}';
-            //         if (limit != 'unlimited'){
-            //             for (let i=0; i<checkgroup.length; i++){
-            //                 checkgroup[i].oninput=function(){
-            //                 let checkedcount=0
-            //                 for (let i=0; i<checkgroup.length; i++)
-            //                     if (checkgroup[i].value) {
-            //                         if (parseInt(checkgroup[i].value) < 0) {
-            //                             alert("A speaker cannot have negative votes.")
-            //                         }
-            //                         checkedcount += parseInt((checkgroup[i].value));
-            //                     }
-            //                 if (parseInt(checkedcount) > parseInt(limit)){
-            //                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
+			//         });
+			//         let limit='{{cycle.getVoteNum()}}';
+			//         if (limit != 'unlimited'){
+			//             for (let i=0; i<checkgroup.length; i++){
+			//                 checkgroup[i].oninput=function(){
+			//                 let checkedcount=0
+			//                 for (let i=0; i<checkgroup.length; i++)
+			//                     if (checkgroup[i].value) {
+			//                         if (parseInt(checkgroup[i].value) < 0) {
+			//                             alert("A speaker cannot have negative votes.")
+			//                         }
+			//                         checkedcount += parseInt((checkgroup[i].value));
+			//                     }
+			//                 if (parseInt(checkedcount) > parseInt(limit)){
+			//                     alert("You can only vote for a maximum of "+limit+" candidate(s).")
 
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            
-            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
-            // Call
-            cl.responsive();
-            
-        </script>
-    </body>
+			//                     }
+			//                 }
+			//             }
+			//         }
+			//     }
+			// }
+			
+			let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+			// Call
+			cl.responsive();
+			
+		</script>
+	</body>
 </html>
