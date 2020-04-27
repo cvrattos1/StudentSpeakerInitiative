@@ -66,22 +66,22 @@ def filllist(username, database, request):
 
 def cyclevalidation(cycle):
 	if cycle.getName():
-		nominating = cycle.getDateNom() > datetime.date.today()
+		nominating = cycle.getDateNom() < datetime.date.today()
 		if nominating:
 			voting = False
 			endorsing = False
 			end = False
 		else:
-			endorsing = cycle.getDateEndorse() > datetime.date.today()
+			endorsing = cycle.getDateEndorse() < datetime.date.today()
 			if endorsing:
 				voting = False
 				end = False
 			else:
-				voting = cycle.getDateVoting() > datetime.date.today()
+				voting = cycle.getDateVoting() < datetime.date.today()
 				if voting:
 					end = False
 				else:
-					end = cycle.getDateEnd() > datetime.date.today()
+					end = cycle.getDateEnd() < datetime.date.today()
 
 		# if cycle.getDateEnd() <= datetime.date.today():
 		#   voting = None
@@ -110,9 +110,10 @@ def cyclevalidation(cycle):
 		endorsing = None
 		voting = None
 		end = None
+
 	
 	validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting, "end": end }
-
+	print(validation)
 	return validation
 
 def uservalidation(username, database):
