@@ -8,16 +8,30 @@
 import os
 import psycopg2
 
-# ---------------------------------------------------------------------
-TOTAL_ENDORSEMENTS = 10
-# ---------------------------------------------------------------------
+from student import Student
+from speaker import Speaker
+from faculty import Faculty
+from cycle import Cycle
+from report import Report
+from conversation import Conversation
+import cloudinary as Cloud
+import cloudinary.uploader
+import json
+
+UNLIMITED_VALUE = 2147483647
+
+cloudinary.config(cloud_name='dqp1yoed2',
+                  api_key='129874246392789',
+                  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
 
 class Database:
 
+    # connect to the database and execute query, return result of query, if there is one.
     def connectDB(self, query):
 
         try:
-            DATABASE_URL = os.environ['DATABASE_URL']
+            # DATABASE_URL = os.environ['DATABASE_URL']
+            DATABASE_URL = 'postgres://fhfqbhbbxmzxjr:4258130a81cde0e835e3bb78d4e93e5660840682f5a140975f26a900a42a6067@ec2-23-22-156-110.compute-1.amazonaws.com:5432/dtc2bl3kqgkv'
 
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
@@ -33,376 +47,662 @@ class Database:
             return elements
 
         except Exception as e:
+            print(e)
             return []
+
+    # ---------------------------------------------------------------------
+
+    # returns the information about the student with netid as a Student object, or None if does not exist
+    def getStudent(self, netid):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+        
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return None
+        student = Student(netid, result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6] )
+        return student
+    
+    def getFaculty(self, netid):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM faculty WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+        
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return None
+        faculty = Faculty(netid, result[0][1])
+        return faculty
+    
+    def makeStudent(self, netid):
+
+        query = "PREPARE stmt(text) AS " \
+                "INSERT INTO students VALUES($1, 0, 0, 0, 0, 0, 0);" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+
+        Database.connectDB(self, query)
+        
+    def makeFaculty(self, netid):
+        query = "PREPARE stmt(text) AS " \
+                "INSERT INTO faculty VALUES($1, 0);" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+        Database.connectDB(self, query)
+
+    # ---------------------------------------------------------------------
+
+    # returns the information about the speaker with speakid as a Speaker object, or None if does not exist
+    def getSpeaker(self, speakid):
+
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM speakers WHERE speakid = $1;" \
+                "EXECUTE stmt('" + speakid + "');"
+        
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return None
+        speaker = Speaker(speakid, result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6], result[0][7], result[0][8])
+        return speaker
+
+    # ---------------------------------------------------------------------
+
+    def getCycle(self):
+
+        query = "SELECT * from cycle"
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return Cycle(None, None, None, None, None, None, None, None, None, None, None, None)
+        else:
+            return Cycle(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5],
+                         result[0][6], result[0][7], result[0][8], result[0][9],result[0][10],result[0][11])
+
+    # ---------------------------------------------------------------------
+
+    # returns as an integer the number of endorsements remaining for the student with netid netid
+    def hasEndorsed(self, netid):
+
+        query = "PREPARE stmt(text) AS " \
+                "SELECT endorsements FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid + "');"
+
+        endorsements = Database.connectDB(self, query)
+        if not endorsements:
+            return 0
+        else:
+            return endorsements
+
+    # ---------------------------------------------------------------------
+
+    # returns as an integer the number of endorsements remaining for the student with netid netid
+    def remainingNominations(self, netid):
+
+        query = "PREPARE stmt(text) AS " \
+                "SELECT nominations FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+
+        noms = Database.connectDB(self, query)
+        if noms:
+            nominations=noms[0][0]
+        else:
+            nominations=0
+
+        query = "SELECT nominatenum FROM cycle"
+        allowance = Database.connectDB(self, query)[0][0]
+
+        if allowance == UNLIMITED_VALUE:
+            return "unlimited"
+        else:
+            return allowance - nominations
+        
+    def remainingccNominations(self, netid):
+
+        query = "PREPARE stmt(text) AS " \
+                "SELECT ccnominations FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+
+        ccnoms = Database.connectDB(self, query)
+        if ccnoms[0][0]:
+            ccnominations=ccnoms[0][0]
+        else:
+            ccnominations=0
+
+        query = "SELECT nominatenum FROM cycle"
+        allowance = Database.connectDB(self, query)[0][0]
+
+        if allowance == UNLIMITED_VALUE:
+            return "unlimited"
+        else:
+            return allowance - ccnominations
 
 
     # ---------------------------------------------------------------------
 
-    # returns 1 if the student with netid netid has voted, and 0 otherwise
-    def hasVoted(self, s_netid):
-        query = 'SELECT voted FROM votes WHERE netid = ' + '\'' + s_netid + '\''
-        voted = Database.connectDB(self, query)
-
-        if len(voted) == 0:
-            return 0
-        else:
-            return voted[0][0]
-
-
-    # returns 1 if the student with netid netid has nominated a speaker, and 0 otherwise
-    def hasNominated(self, s_netid):
-        query = 'SELECT speakid FROM nominations WHERE netid = ' + '\'' + s_netid + '\''
-        nominated = Database.connectDB(self, query)
-
-        if len(nominated) == 0:
-            return 0
-        else:
-            return 1
-
-
     # returns as an integer the number of endorsements remaining for the student with netid netid
-    def remainingEndorsements(self, s_netid):
-        query = 'SELECT count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
-        endorsements = Database.connectDB(self, query)
+    def hasVoted(self, netid):
 
-        if len(endorsements) == 0:
-            return TOTAL_ENDORSEMENTS
+        query = "PREPARE stmt(text) AS " \
+                "SELECT votes FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid + "');"
+
+        votes = Database.connectDB(self, query)
+        if not votes:
+            return 0
         else:
-            remaining = TOTAL_ENDORSEMENTS
-            for i in range(len(endorsements)):
-                remaining = remaining - endorsements[i][0]
-            return remaining
+            return votes
 
+    # ---------------------------------------------------------------------
 
     # returns as an integer the number of endorsements that the student with netid netid has currently used
-    def usedEndorsements(self, s_netid):
-        query = 'SELECT count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
-        endorsements = Database.connectDB(self, query)
+    def usedEndorsements(self, netid):
 
-        if len(endorsements) == 0:
-            return 0
-        else:
-            total = 0
-            for i in range(len(endorsements)):
-                total = total + endorsements[i][0]
-            return total
+        query = "PREPARE stmt(text) AS " \
+                "SELECT endorsements FROM students WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid + "');"
 
+        endorsements = Database.connectDB(self, query)[0][0]
 
-    # returns a list of tuples: each tuple contains the speakid of the speaker that the student with netid netid has
-    # endorsed, as well as the number of endorsements that the student has used on that speaker
-    def getEndorsements(self, s_netid):
-        query = 'SELECT speakid, count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
-        endorsements = Database.connectDB(self, query)
         return endorsements
-    
-    # returns the string Endorse or Unendorse depending on if the student with netid has endorsed the speaker with
-    # speakid or not
-    def hasEndorsed(self, s_netid, s_speakid):
-        query = 'SELECT speakid, count FROM endorsements WHERE netid = ' + '\'' + s_netid + '\''
-        endorsements = Database.connectDB(self, query)
-        idlist = []
-        for ids, _ in endorsements:
-            idlist.append(ids)
-        if s_speakid in idlist:
-            return "Unendorse"
-        else:
-            return "Endorse"
 
-    # returns True or False depending on if the student with netid s_netid has flagged the speakid
-    # s_speakid or not
-    def hasFlagged(self, s_netid, s_speakid):
-        query = 'SELECT speakid FROM reports WHERE netid = ' + '\'' + s_netid + '\''
+    # ---------------------------------------------------------------------
+
+    # returns 'flagged' or 'flag' depending on whether netid has flagged speakid
+    def hasFlagged(self, netid, speakid):
+
+        query = "PREPARE stmt(text, text) AS " \
+                "SELECT reason FROM reports WHERE netid = $1 AND speakid = $2;" \
+                "EXECUTE stmt('" + netid + ", '" + speakid + "');"
+
         reports = Database.connectDB(self, query)
 
-        idlist = []
-        for report in reports:
-            idlist.append(report[0])
-        if s_speakid in idlist:
+        if reports and reports[0][0] != 0:
             return "Flagged"
         else:
             return "Flag"
 
+    # ---------------------------------------------------------------------
+
     # returns a list of all of the reports that have been submitted
     def getReports(self):
         query = 'SELECT netid, speakid, reason FROM reports'
-        reports = Database.connectDB(self, query)
+        result = Database.connectDB(self, query)
+
+        reports = []
+        for i in range(len(result)):
+            reports.append(Report(result[i][0], result[i][1], result[i][2]))
+
         return reports
 
-    # returns the speakid of the speaker that the student with netid netid has nominated if it exists, None otherwise
-    def getNomination(self, s_netid):
-        query = 'SELECT speakid FROM nominations WHERE netid = ' + '\'' + s_netid + '\''
-        nomination = Database.connectDB(self, query)
+    # returns a list of all endorsed speakers with a name fitting the search criteria
+    def searchEndorsements(self, search):
+        search = search.lower()
 
-        if len(nomination) == 0:
-            return None
-        else:
-            return nomination[0][0]
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM speakers WHERE LOWER(name) LIKE '%$1%';" \
+                "EXECUTE stmt('" + search + "');"
 
-
-    # returns a list of all the speakids of speakers that have been nominated, empty list if no speakers
-    def getSpeakers(self):
-        query = 'SELECT speakid FROM speakers'
         speakers = Database.connectDB(self, query)
 
         speaker_list = []
-        for i in range (len(speakers)):
-            speaker_list.append(speakers[i][0])
-        print(speaker_list)
+
+        for i in range(len(speakers)):
+            speaker_list.append(Speaker(speakers[i][0], speakers[i][1], speakers[i][2], speakers[i][3], speakers[i][4],
+                                        speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
         return speaker_list
 
+    def searchAdminLogs(self, search):
+        search = search.lower()
 
-    # returns a list of all the speakids of speakers that have reached the threshold threshold of endorsements
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM adminlogs WHERE netid LIKE $1 ORDER BY date DESC;" \
+                "EXECUTE stmt('%" + search + "%');"
+
+        results = Database.connectDB(self, query)
+        return results
+
+    # ---------------------------------------------------------------------
+
+    # returns a list of all the Speakers that have been nominated
+    def getSpeakers(self):
+        query = 'SELECT * FROM speakers'
+        speakers = Database.connectDB(self, query)
+        print(speakers)
+
+        speaker_list = []
+
+        for i in range(len(speakers)):
+            speaker_list.append(Speaker(speakers[i][0], speakers[i][1], speakers[i][2], speakers[i][3], speakers[i][4],
+                                        speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
+        return speaker_list
+
+    
+    def getConversations(self, promoted):
+        if promoted == 0:
+            query = "SELECT * FROM conversation WHERE faculty = 'none'"
+        else:
+            query = "SELECT * FROM conversation WHERE faculty != 'none'"
+        conversations = Database.connectDB(self, query)
+        print(conversations)
+        
+        conversation_list = []
+        
+        
+        for i, conversation in enumerate(conversations):
+            
+            conzip = json.loads(conversation[3])
+            speakers = []
+            descrips = []
+            links = []
+            images = []
+            
+            
+            for converse in conzip.values():
+                print(converse)
+                speakers.append(converse[0])
+                descrips.append(converse[1])
+                links.append(converse[2])
+                images.append(converse[3])
+                
+            
+            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], speakers, descrips, links, images, conversation[4],conversation[5],conversation[6]))
+        
+        
+        return conversation_list
+
+    # ---------------------------------------------------------------------
+
+    # returns a list of all the speakers that have reached the threshold threshold of endorsements
     def getEndorsed(self, threshold):
-        query = 'SELECT speakid FROM endorsements WHERE count >= ' + str(threshold)
-        endorsed = Database.connectDB(self, query)
+
+        query = "PREPARE stmt(int) AS " \
+                "SELECT * FROM speakers WHERE endorsements >= $1;" \
+                "EXECUTE stmt(" + str(threshold) + ");"
+
+        result = Database.connectDB(self, query)
         endorsed_list = []
-        for i in range(len(endorsed)):
-            if endorsed[i][0] not in endorsed_list:
-                endorsed_list.append(endorsed[i][0])
-        
+        for i in range(len(result)):
+            if result[i][0] not in endorsed_list:
+                endorsed_list.append(Speaker(result[i][0], result[i][1], result[i][2], result[i][3], result[i][4], result[i][5], result[i][6], result[i][7], result[i][8]))
+
         return endorsed_list
-
-
-    # returns the first name of the speaker with speakid speakid, None if speaker does not exist
-    def getSpeakerFirstName(self, s_speakid):
-        query = 'SELECT firstname FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
-        firstname = Database.connectDB(self, query)
-        if len(firstname) == 0:
-            return None
-        else:
-            return firstname[0][0]
-
-    # returns the last name of the speaker with speakid speakid
-    def getSpeakerLastName(self, s_speakid):
-        query = 'SELECT lastname FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
-        lastname = Database.connectDB(self, query)
-        if len(lastname) == 0:
-            return None
-        else:
-            return lastname[0][0]
-
-    # returns the description of the speaker with speakid speakid
-    def getSpeakerDescription(self, s_speakid):
-        query = 'SELECT descrip FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
-        descrip = Database.connectDB(self, query)
-        if len(descrip) == 0:
-            return None
-        else:
-            return descrip[0][0]
-
-    # returns the number of votes given to the speaker with speakid speakid, None if speaker does not exist
-    def getSpeakerVotes(self, s_speakid):
-        query = 'SELECT votes FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
-        votes = Database.connectDB(self, query)
-        if len(votes) == 0:
-            return None
-        else:
-            return votes[0][0]
-
-    # returns the number of endorsements given to the speaker with speakid speakid, None if speaker does not exits
-    def getSpeakerEndorsements(self, s_speakid):
-        query = 'SELECT count FROM endorsements  WHERE speakid = ' + '\'' + s_speakid + '\''
-        endorsements = Database.connectDB(self, query)
-        if len(endorsements) == 0:
-            return None
-        else:
-            total = 0;
-            for i in range(len(endorsements)):
-                total = total + endorsements[i][0]
-            return total
     
-    def adminClearTables(self):
-        query = "SELECT table_schema, table_name FROM information_schema.tables WHERE ( table_schema = 'public' ) ORDER BY table_schema, table_name;"
-        tables = Database.connectDB(self, query) 
-        tables.remove(('public', 'cycleinfo'))
-        tablelist = []
-        for _, table in tables:
-            Database.connectDB(self, "DELETE FROM " + table + ";")
+    def getccEndorsed(self, threshold):
+
+        query = "PREPARE stmt(int) AS " \
+                "SELECT * FROM conversation WHERE endorsements >= $1;" \
+                "EXECUTE stmt(" + str(threshold) + ");"
+
+        conversations = Database.connectDB(self, query)
+
+        conversation_list = []
         
-    def votePeriod(self):
-        query = 'SELECT votingperiod FROM cycleinfo'
-        votingperiod = Database.connectDB(self, query) 
-        return votingperiod[0][0]
-    
-    def changePeriod(self,currentPeriod):
-        query = 'UPDATE cycleinfo SET votingperiod = ' + str(currentPeriod)
+        
+        for i, conversation in enumerate(conversations):
+            
+            conzip = json.loads(conversation[3])
+            speakers = []
+            descrips = []
+            links = []
+            images = []
+            
+            
+            for converse in conzip.values():
+                print(converse)
+                speakers.append(converse[0])
+                descrips.append(converse[1])
+                links.append(converse[2])
+                images.append(converse[3])
+                
+            
+            conversation_list.append(Conversation(conversation[0], conversation[1], conversation[2], speakers, descrips, links, images, conversation[4],conversation[5],conversation[6]))
+        
+        
+        return conversation_list
+
+    # ---------------------------------------------------------------------
+
+    # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
+    def endorse(self, netid, speakid, count):
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE students SET endorsements = endorsements + $1 WHERE netid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE speakers SET endorsements = endorsements + $1 WHERE speakid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + speakid + "');"
+
         Database.connectDB(self, query)
         
     # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
-    def endorse(self, s_netid, s_speakid, s_count):
-        query = 'SELECT count FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-        exists = Database.connectDB(self, query)
-        if len(exists) == 0:
-            query = 'INSERT INTO endorsements VALUES (' + '\'' + s_netid + '\', \'' + s_speakid + '\', \'' + str(s_count) + '\')'
-            Database.connectDB(self, query)
+    def ccendorse(self, netid, converseid, count):
 
-    # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
-    def flag(self, s_netid, s_speakid, reason):
-        query = 'SELECT speakid FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-        exists = Database.connectDB(self, query)
-        print('called')
-        if len(exists) == 0:
-            print('inserted')
-            query = 'INSERT INTO reports VALUES (' + '\'' + s_netid + '\', \'' + s_speakid + '\', \'' + str(reason) + '\')'
-            Database.connectDB(self, query)
-            
-    # allows the student with netid netid to unendorse the speaker with speakid speakid with count number of endorsements        
-    def unendorse(self, s_netid, s_speakid, s_count):
-        query = 'SELECT count FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-        exists = Database.connectDB(self, query)
-        print(len(exists))
-        if len(exists) == 1:
-            print("yes")
-            query = 'DELETE FROM endorsements WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-            Database.connectDB(self, query)
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE students SET ccendorsements = ccendorsements + $1 WHERE netid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
 
-    # allows admin to dismiss a flagged speaker
-    def dismissFlag(self, s_netid, s_speakid):
-        query = 'SELECT speakid FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-        exists = Database.connectDB(self, query)
-        if len(exists) == 1:
-            query = 'DELETE FROM reports WHERE netid = \'' + s_netid + '\' AND speakid = \'' + s_speakid + '\''
-            Database.connectDB(self, query)
-
-    def removeNomination(self, s_speakid):
-        query = 'SELECT netid FROM endorsements WHERE speakid = \'' + s_speakid + '\''
-        query = 'SELECT FROM endorsements WHERE netid IN (' + query + ')'
-        endorsements = Database.connectDB(self, query)
-        print(endorsements)
-        # query = 'DELETE FROM speakers WHERE speakid = \'' + s_speakid +'\''
-        # Database.connectDB(self, query)
-        # query = 'DELETE FROM reports WHERE speakid = \'' + s_speakid +'\''
-        # Database.connectDB(self, query)
-
-    # allows the student with netid netid to vote for the speaker with speakid speakid
-    def vote(self, s_netid, s_speakid):
-        query = 'UPDATE speakers SET votes = votes + 1 WHERE speakid = ' + '\'' + s_speakid + '\''
         Database.connectDB(self, query)
 
-        query = 'INSERT INTO votes VALUES (' + '\'' + s_netid + '\', 1)'
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE conversation SET endorsements = endorsements + $1 WHERE converseid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + converseid + "');"
+
+        Database.connectDB(self, query)
+
+    # allows the student with netid netid to flag the speaker with speakid speakid for reason reason
+    def flag(self, netid, speakid, reason):
+
+        query = "PREPARE stmt(text) AS " \
+                "INSERT INTO reports VALUES($1, $2, $3);" \
+                "EXECUTE stmt('" + netid.strip() + "', '" + speakid + "', '" + str(reason) + "');"
+
+        Database.connectDB(self, query)
+
+    # allows admin to dismiss a flagged speaker
+    def dismissFlag(self, speakid):
+
+        query = "PREPARE stmt(text) AS " \
+                "DELETE FROM reports WHERE speakid = $1;" \
+                "EXECUTE stmt('" + speakid + "');"
+
+        Database.connectDB(self, query)
+
+    def removeNomination(self, speakid):
+
+        query = "PREPARE stmt(text) AS " \
+                "DELETE FROM speakers WHERE speakid = $1;" \
+                "EXECUTE stmt('" + speakid + "');"
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(text) AS " \
+                "DELETE FROM reports WHERE speakid = $1;" \
+                "EXECUTE stmt('" + speakid + "');"
+
+        Database.connectDB(self, query)
+
+
+    # allows the student with netid netid to vote for the speaker with speakid speakid
+    def vote(self, netid, speakid, count):
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE speakers SET votes = votes + $1 WHERE speakid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + speakid + "');"
+
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE students SET votes = votes + $1 WHERE netid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+
+        Database.connectDB(self, query)
+        
+    def ccvote(self, netid, converseid, count):
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE conversation SET votes = votes + $1 WHERE converseid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + converseid + "');"
+
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(int, text) AS " \
+                "UPDATE students SET ccvotes = ccvotes + $1 WHERE netid = $2;" \
+                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+
         Database.connectDB(self, query)
 
     # allows access of an image for a particular speakid
-    def getImage(self, s_speakid):
-        query = 'SELECT imagelink FROM speakers WHERE speakid = ' + '\'' + s_speakid + '\''
+    def getImage(self, speakid):
+
+        query = "PREPARE stmt(text) AS " \
+                "SELECT imglink FROM speakers WHERE speakid = $1;" \
+                "EXECUTE stmt('" + speakid + "');"
+
         imagelink = Database.connectDB(self, query)
         return imagelink
 
     # allows the student with netid netid to nominate a new speaker by providing the speaker’s firstname, lastname, descrip. Returns the speakid of the new speaker.
-    def nominate(self, s_netid, s_firstname, s_lastname, s_descrip, s_imglink):
-        query = 'SELECT * FROM speakers'
-        speakers = Database.connectDB(self, query)
-        new_speakid = str(len(speakers))
-
-        print(s_descrip)
-
-        query = 'INSERT INTO speakers VALUES (' + '\'' + new_speakid + '\', \'' + s_firstname + '\', \'' + s_lastname + \
-                '\', \'' + s_descrip + '\', \'' + s_imglink + '\', 0)'
+    def nominate(self, netid, cycle, name, descrip, links, imglink):
+        query = 'SELECT ids FROM cycle'
+        new_speakid = int(Database.connectDB(self, query)[0][0])
+        print(new_speakid)
+        query = "UPDATE cycle SET ids = ids + 1"
         Database.connectDB(self, query)
 
-        query = 'INSERT INTO nominations VALUES (' + '\'' + s_netid + '\', \'' + new_speakid + '\')'
+        query = "PREPARE stmt(text, text, text, text, text, text, text) AS " \
+                "INSERT INTO speakers VALUES($1, $2, $3, $4, $5, $6, $7, 0, 0);" \
+                "EXECUTE stmt('" + str(new_speakid) + "', '" + str(netid).strip() + "', '" + str(cycle) + "', '" + str(name) \
+                + "', '" + str(descrip) + "', '" + str(links) + "', '" + str(imglink) + "');"
+
         Database.connectDB(self, query)
 
-    def createCycle(self, name, datecreated, datevoting, admin, endorsenum, votenum, nominatenum, threshold):
-        query = 'INSERT INTO cycle VALUES (\'' + name + '\', \'' + str(datecreated) + '\', \'' + str(datevoting) + '\', \'' + admin + '\', \'' + str(endorsenum) + '\', \'' + str(votenum) + '\', \'' + str(nominatenum) + '\', \'' + str(threshold) + '\')'
+        query = "PREPARE stmt(text) AS " \
+                "UPDATE students SET nominations = nominations + 1 WHERE netid = $1;" \
+                "EXECUTE stmt('" + str(netid).strip() + "');"
+
+        Database.connectDB(self, query)
+        
+    def ccnominate(self, netid, cycle, conzip):
+        query = 'SELECT ccids FROM cycle'
+        new_ccid = int(Database.connectDB(self, query)[0][0])
+        query = "UPDATE cycle SET ccids = ccids + 1"
         Database.connectDB(self, query)
 
-    def getCycleInfo(self):
-        query = 'SELECT * FROM cycle'
+        query = "PREPARE stmt(text, text, text, text) AS " \
+                "INSERT INTO conversation VALUES($1, $2, $3, $4, 0, 0, 0);" \
+                "EXECUTE stmt('" + str(new_ccid) + "', '" + str(netid).strip() + "', '" + str(cycle) + "', '" + str(conzip) + "');"
+        print(query)
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(text) AS " \
+                "UPDATE students SET ccnominations = ccnominations + 1 WHERE netid = $1;" \
+                "EXECUTE stmt('" + str(netid).strip() + "');"
+        
+        Database.connectDB(self, query)
+
+    def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, threshold, nomdate, endorsedate, datevoting, dateend):
+        query = 'SELECT ids FROM cycle'
+        result = Database.connectDB(self, query)
+        if not result:
+            ids = 0
+        else:
+            ids = int(result[0][0])
+            
+        query = 'SELECT ccids FROM cycle'
+        result = Database.connectDB(self, query)
+        if not result:
+            ccids = 0
+        else:
+            ccids = int(result[0][0])
+
+        query='DELETE FROM cycle'
+        Database.connectDB(self, query)
+
+        query='DELETE FROM students'
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(text, date, text, int, int, int, int, int, date, date, date, date, int) AS " \
+                "INSERT INTO cycle VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);" \
+                "EXECUTE stmt('" + str(name) + "', '" + str(datecreated).strip() + "', '" + str(admin).strip() + "', " + str(ids) \
+                + ", " + str(nominatenum) + ", " + str(endorsenum) + ", " + str(votenum) + ", " + str(threshold) \
+                + ", '" + str(nomdate) + "', '" + str(endorsedate) + "', '" + str(datevoting) + "', '" + \
+                str(dateend) + "', " + str(ccids) + ");"
+        print(query)
+
+        Database.connectDB(self, query)
+    
+    def adjustDatabase(self, rolloverNom, rolloverEnd, rolloverVot, rolloverThresh):
+        if rolloverNom:
+            if rolloverEnd:
+                if rolloverThresh:
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE speakers SET endorsements = 0 WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE conversation SET endorsements = 0 WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+
+                    Database.connectDB(self, query)
+            else:
+                 query='UPDATE speakers SET endorsements = 0'
+                 Database.connectDB(self, query)
+                 
+                 query='UPDATE conversation SET endorsements = 0'
+                 Database.connectDB(self, query)
+            if rolloverVot:
+                if rolloverThresh:
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE speakers SET votes = 0 WHERE votes < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE conversation SET votes = 0 WHERE votes < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+
+                    Database.connectDB(self, query)
+            else:
+                 query='UPDATE speakers SET votes = 0'
+                 Database.connectDB(self, query)
+                 
+                 query='UPDATE conversation SET votes = 0'
+                 Database.connectDB(self, query)
+        
+        elif rolloverEnd:
+            if rolloverVot:
+                if rolloverThresh:
+                    query = "PREPARE stmt(int, int) AS " \
+                            "DELETE FROM speakers WHERE endorsements < $1 AND votes < $2;" \
+                            "EXECUTE stmt(" + rolloverThresh + ", " + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE speakers SET endorsements = 0 WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE speakers SET votes = 0 WHERE votes < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int, int) AS " \
+                            "DELETE FROM conversation WHERE endorsements < $1 AND votes < $2;" \
+                            "EXECUTE stmt(" + rolloverThresh + ", " + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE conversation SET endorsements = 0 WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "UPDATE conversation SET votes = 0 WHERE votes < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+                 
+            else:
+                if rolloverThresh:
+                    query = "PREPARE stmt(int) AS " \
+                            "DELETE FROM speakers WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+
+                    query = "PREPARE stmt(int) AS " \
+                            "DELETE FROM conversation WHERE endorsements < $1;" \
+                            "EXECUTE stmt(" + rolloverThresh + ");"
+                    Database.connectDB(self, query)
+                    
+                query='UPDATE speakers SET votes = 0'
+                Database.connectDB(self, query)
+                
+                query='UPDATE conversation SET votes = 0'
+                Database.connectDB(self, query)
+                
+        elif rolloverVot:
+             if rolloverThresh:
+                 query = "PREPARE stmt(int) AS " \
+                         "DELETE FROM speakers WHERE votes < $1;" \
+                         "EXECUTE stmt(" + rolloverThresh + ");"
+                 Database.connectDB(self, query)
+
+                 query = "PREPARE stmt(int) AS " \
+                         "DELETE FROM conversation WHERE votes < $1;" \
+                         "EXECUTE stmt(" + rolloverThresh + ");"
+                 Database.connectDB(self, query)
+             
+             query='UPDATE speakers SET endorsements = 0'
+             Database.connectDB(self, query)
+             
+             query='UPDATE conversation SET endorsements = 0'
+             Database.connectDB(self, query)
+             
+        else:
+            query='DELETE FROM speakers'
+            Database.connectDB(self, query)
+            
+            query='DELETE FROM conversation'
+            Database.connectDB(self, query)
+            
+           
+       
+    
+    def adminAuthenticate(self, username):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM admin WHERE netid = $1;" \
+                "EXECUTE stmt('" + username.strip() + "');"
+        exists = Database.connectDB(self, query)
+        return len(exists)
+
+    def addAdmin(self, newAdmin):
+        query = "PREPARE stmt(text) AS " \
+                "INSERT INTO admin VALUES($1);" \
+                "EXECUTE stmt('" + newAdmin.strip() + "');"
+        Database.connectDB(self, query)
+
+    def removeAdmin(self, oldAdmin):
+        query = "PREPARE stmt(text) AS " \
+                "DELETE FROM admin WHERE netid = $1;" \
+                "EXECUTE stmt('" + oldAdmin.strip() + "');"
+        Database.connectDB(self, query)
+
+    def returnCount(self, table):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT COUNT(*) FROM $1; " \
+                "EXECUTE stmt('" + table.strip() + "');"
+        return Database.connectDB(self, query)
+    
+    def returnAdmins(self):
+        query = 'SELECT * FROM admin'
         return Database.connectDB(self, query)
 
-    def getThreshold(self):
-        query = 'SELECT threshold FROM cycle'
-        threshold = Database.connectDB(self, query)
-        if (threshold == []):
-            return 0
-        else:
-            return threshold[0][0]
+    def returnAdminLogs(self):
+        query = 'SELECT * FROM adminlogs ORDER BY date DESC'
+        info = Database.connectDB(self, query)
+        return info
 
-    def getNomAllowance(self):
-        query = 'SELECT nominatenum FROM cycle'
-        num = Database.connectDB(self, query)
-        if (num == []):
-            return 0
-        else:
-            return num[0][0]
+    def addLog(self, date, netid, action, info):
+        print('added log')
+        query = "PREPARE stmt(date, text, int, text) AS " \
+                "INSERT INTO adminlogs VALUES($1, $2, $3, $4);" \
+                "EXECUTE stmt('" + str(date) + "', '" + netid.strip() + "', " + str(action) + ", '" + info.strip() + "');"
+        Database.connectDB(self, query)
 
-    def getEndAllowance(self):
-        query = 'SELECT endorsenum FROM cycle'
-        num = Database.connectDB(self, query)
-        if (num == []):
-            return 0
-        else:
-            return num[0][0]
-
-    def getVotAllowance(self):
-        query = 'SELECT votenum FROM cycle'
-        num = Database.connectDB(self, query)
-        if not num:
-            return 0
-        else:
-            return num[0][0]
-
-    def getCycleName(self):
-        query = 'SELECT name FROM cycle'
-        name = Database.connectDB(self, query)
-        if not name:
-            return ''
-        else:
-            return name[0][0]
-
-    def getCycleDateCreated(self):
-        query = 'SELECT datecreated FROM cycle'
-        date = Database.connectDB(self, query)
-        if not date:
-            return ''
-        else:
-            return date[0][0]
-
-
-    def getCycleDateVoting(self):
-        query = 'SELECT datevoting FROM cycle'
-        date = Database.connectDB(self, query)
-        if not date:
-            return ''
-        else:
-            return date[0][0]
-
-    def getCycleAdmin(self):
-        query = 'SELECT admin FROM cycle'
-        admin = Database.connectDB(self, query)
-        if not admin:
-            return ''
-        else:
-            return admin[0][0]
-
-    def existsCurrentCycle(self):
-        query = 'SELECT threshold FROM cycle'
-        if (Database.connectDB(self, query) == []):
-            return 0
-        else:
-            return 1
-
-    def clearAllSpeakers(self):
-        query = 'DELETE FROM speakers'
-        Database.connectDB(query)
-
-        query = 'DELETE FROM votes'
-        Database.connectDB(query)
-
-        query = 'DELETE FROM reports'
-        Database.connectDB(query)
-
-        query = 'DELETE FROM nominations'
-        Database.connectDB(query)
-
-        query = 'DELETE FROM endorsements'
-        Database.connectDB(query)
-
-
-
+    def testFction(self, netid):
+        query = "PREPARE test (text) AS " \
+                "SELECT netid FROM students WHERE netid = $1;" \
+                "EXECUTE test('" + netid + "');"
+        # query = 'SELECT netid FROM students WHERE netid = (%netid)'
+        print(Database.connectDB(self, query))
 
 # ---------------------------------------------------------------------
 if __name__ == '__main__':
-   database = Database()
-   print(str(database.existsCurrentCycle()))
+    database = Database()
