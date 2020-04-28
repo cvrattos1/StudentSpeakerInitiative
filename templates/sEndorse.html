@@ -4,240 +4,254 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+		<meta http-equiv="X-UA-Compatible" content="ie-edge">
 <!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <title>Students' Speaker Initiative</title>
-        
+		<link href="./static/styles.css" rel="stylesheet"> -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<title>Students' Speaker Initiative</title>
+		
 	</head>
-    <body class="bg-light">
-        {% include 'sHeader.html' %}
-        <div class="container-fluid">
-                <br>
-                {% if cycle.getName() %}
-                    {% if validation['nominating'] %}
-                        {% if speakers|length > 0 %}
-                            <p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
-                            <div class="row row-cols-2 justify-content-center text-center">
-                                {%for speaker in speakers: %}
-                                <div class="col-auto mb-3">
-                                    <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
-                                        <div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal" data={{speaker.getSpeakid()}}>
-                                            Report</button></div>
-                                        <div class="card-body">
-                                            <h4 class="card-title">{{speaker.getName()}}</h4>
-                                        </div>
-                                        <div class="card-footer">
-                                            <a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                                </div>
-                                <br><hr><br>
-                        {% else %}
-                            <hr><br><p class="lead text-center font-weight-bold"> There are no candidates nominated at this time!</p><br><hr>     
-                        {% endif %}
-                    {% elif validation['endorsing'] %}
-                        {% if hasendorsed %}
-                            <p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
-                        {% elif speakers|length > 0 %}
-                            <p class="lead text-center font-italic">These are the current nominations for endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. You have {{ cycle.getEndorseNum() }} endorsement(s).</p><hr>
-                            <div class="justify-content-center mx-auto text-center">
-                                <input type="search" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search for a Speaker" value="">
-                            </div><br>
-                            <form class="form-group">
-                                    <div class="row row-cols-2 justify-content-center text-center form-group" id="resultsSpan">
-                                        <!-- {%for speaker in speakers: %}
-                                            <div class="col-auto mb-3">
-                                                    <div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
-                                                        <div class="card-body">
-                                                            <h4 class="card-title">{{speaker.getName()}}</h4>
-                                                            <a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
-                                                            <p class="card-text"> This speaker has {{speaker.getEndorsements()}} endorsement(s).</p>
-                                                        </div>
-                                                        <div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
-                                                            <label class="custom-control-label" for={{speaker.getSpeakid()}}>Endorse</label>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                         {% endfor %} -->
-                                    </div>
-                                    <hr><br><br>
-                                        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
-                                           <button type="button" class="endorseButton btn bg-primary text-light font-weight-bold" data-target="#confirmModal">Submit Endorsements</button>
-                                        </nav>
-                                    </form><br><hr><br>
-                        {% elif speakers|length <= 0 %}
-                            <hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no speakers made it into the endorsement block. Please come back later to participate in selecting a speaker for our campus.</p><br><hr>                       
-                        {% endif %}
-                    {% elif validation['voting'] %}
-                        <hr><br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><br><hr>
-                    {% else %}
-                        <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
-                    {% endif %}
-                {% else %}
-                      <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a speaker for our campus!<br><hr>
-                {% endif %}
-            </div>
+	<body class="bg-light">
+		{% include 'sHeader.html' %}
+		<div class="container-fluid">
+				<br>
+				{% if cycle.getName() %}
+					{% if validation['nominating'] %}
+						{% if speakers|length > 0 %}
+							<p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
+							<div class="row row-cols-2 justify-content-center text-center">
+								{%for speaker in speakers: %}
+								<div class="col-auto mb-3">
+									<div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
+										<div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal" data={{speaker.getSpeakid()}}>
+											Report</button></div>
+										<div class="card-body">
+											<h4 class="card-title">{{speaker.getName()}}</h4>
+										</div>
+										<div class="card-footer">
+											<a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+								</div>
+								<br><hr><br>
+						{% else %}
+							<hr><br><p class="lead text-center font-weight-bold"> There are no candidates nominated at this time!</p><br><hr>     
+						{% endif %}
+					{% elif validation['endorsing'] %}
+						{% if hasendorsed %}
+							<p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><hr>
+						{% elif speakers|length > 0 %}
+							<p class="lead text-center font-italic">These are the current nominations for endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. You have {{ cycle.getEndorseNum() }} endorsement(s).</p><hr>
+							<div class="justify-content-center mx-auto text-center">
+								<input type="search" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search for a Speaker" value="">
+							</div><br>
+							<form class="form-group">
+									<div class="row row-cols-2 justify-content-center text-center form-group" id="resultsSpan">
+										<!-- {%for speaker in speakers: %}
+											<div class="col-auto mb-3">
+													<div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
+														<div class="card-body">
+															<h4 class="card-title">{{speaker.getName()}}</h4>
+															<a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a>
+															<p class="card-text"> This speaker has {{speaker.getEndorsements()}} endorsement(s).</p>
+														</div>
+														<div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
+															<input type="checkbox" class="custom-control-input" name="check" id={{speaker.getSpeakid()}} value={{speaker.getSpeakid()}}>
+															<label class="custom-control-label" for={{speaker.getSpeakid()}}>Endorse</label>
+														</div>
+														</div>
+													</div>
+										 {% endfor %} -->
+									</div>
+										<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
+										   <button type="button" class="endorseButton btn bg-primary text-light font-weight-bold" data-target="#confirmModal">Submit Endorsements</button>
+										</nav>
+									</form><br><hr><br>
+						{% elif speakers|length <= 0 %}
+							<hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no speakers made it into the endorsement block. Please come back later to participate in selecting a speaker for our campus.</p><br><hr>                       
+						{% endif %}
+					{% elif validation['voting'] %}
+						<hr><br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><br><hr>
+					{% else %}
+						<hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
+					{% endif %}
+				{% else %}
+					  <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a speaker for our campus!<br><hr>
+				{% endif %}
+			</div>
 
-                    <!-- The Modal -->
-              <div class="modal" id="reportModal">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                      <h4 class="modal-title">Report This Speaker</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>      
-                    <!-- Modal body -->
-                    <div class="modal-body text-center">
-                      Please give a reason for why you would like to flag this speaker for admin review.<br><br>
-                      <form action="flag_flask" id="flag_form" method = "put">
-                            <div class="form-group">
-                                <input type="hidden" name="speakerid" value="" id="speakerid">
-                                <input type="text" placeholder="Reason for Report" class="form-control" id="reason" name="reason" required>
-                                <br>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                <input type="submit" class="submitFlag btn btn-primary" name="flag"> 
-                            </div>
-                        </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
+					<!-- The Modal -->
+			  <div class="modal" id="reportModal">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<!-- Modal Header -->
+					<div class="modal-header">
+					  <h4 class="modal-title">Report This Speaker</h4>
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>      
+					<!-- Modal body -->
+					<div class="modal-body text-center">
+					  Please give a reason for why you would like to flag this speaker for admin review.<br><br>
+					  <form action="flag_flask" id="flag_form" method = "put">
+							<div class="form-group">
+								<input type="hidden" name="speakerid" value="" id="speakerid">
+								<input type="text" placeholder="Reason for Report" class="form-control" id="reason" name="reason" required>
+								<br>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+								<input type="submit" class="submitFlag btn btn-primary" name="flag"> 
+							</div>
+						</form>
+					</div>
+				  </div>
+				</div>
+			  </div>
 
-                  <!-- The Modal -->
-              <div class="modal" id="confirmModal">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                  
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                      <h4 class="modal-title text-center">Confirm Endorsements</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    
-                    <!-- Modal body -->
-                    <div class="modal-body text-center">
-                      <p class="font-weight-bold"> You have selected the following speakers for endorsement: </p>
-                      <p id="names" class="font-italic">
-                    </p>
-                        <form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
-                            <div class="modal-footer form-group justify-content-between">
-                                <input type="hidden" name="list" id="list">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
-                                <input type="submit" class="submitEndorse btn btn-primary" name="submiteEndorse" value="Confirm Submission"> 
-                            </div>
-                        </form>
-                  </div>
-                </div>
-              </div>
+				  <!-- The Modal -->
+			<div class="modal" id="confirmModal">
+				<div class="modal-dialog modal-dialog-scrollable">
+				  	<div class="modal-content">
+				  
+						<!-- Modal Header -->
+						<div class="modal-header">
+						  <h4 class="modal-title text-center">Confirm Endorsements</h4>
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						
+						<!-- Modal body -->
+						<div class="modal-body text-center">
+						  <p class="font-weight-bold"> You have selected the following speakers for endorsement: </p>
+						  <p id="names" class="font-italic"></p>
+					  	</div>
+						<form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
+							<div class="modal-footer form-group justify-content-between">
+								<input type="hidden" name="list" id="list">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
+								<button type="button" class="submit btn btn-primary" name="submitEndorse">Confirm Submission</button>
+							</div>
+						</form>
+					</div>
+			  	</div>
+			</div>
 
-        <script type="text/javascript">
+		<script type="text/javascript">
 
-        function endorseValidation(){
-            let cycleName = '{{cycle.getName()}}';
-            if (cycleName != '') {
-                //triggered when modal is about to be shown
-                $(document).on("click", ".reportButton", function() {
-                    //get data-speakid attribute of the clicked element
-                    var speakerid = $(this).attr('data-speakid')
-                    $("input[id='speakerid']").val(speakerid);
-                });
-            }
+		function endorseValidation(){
+			let cycleName = '{{cycle.getName()}}';
+			if (cycleName != '') {
+				//triggered when modal is about to be shown
+				$(document).on("click", ".reportButton", function() {
+					//get data-speakid attribute of the clicked element
+					var speakerid = $(this).attr('data-speakid')
+					$("input[id='speakerid']").val(speakerid);
+				});
+			}
 
-                $(document).on("click", ".endorseButton", function(e) {
-                    if (Object.keys(checkList).length==0){
-                        alert("You have not endorsed any speakers.");
-                    }
-                    else {
-                        $('#confirmModal').modal("show")
-                        let idsArray = Object.keys(checkList);
-                        let namesArray = Object.values(checkList);
+				$(document).on("click", ".endorseButton", function(e) {
+					if (Object.keys(checkList).length==0){
+						alert("You have not endorsed any speakers.");
+					}
+					else {
+						$('#confirmModal').modal("show")
+						let idsArray = Object.keys(checkList);
+						let namesArray = Object.values(checkList);
 
-                        names = namesArray[0]
-                        for (let i=1; i<namesArray.length; i++){
-                            names += "<br>" + namesArray[i];
-                        }
+						names = namesArray[0]
+						for (let i=1; i<namesArray.length; i++){
+							names += "<br>" + namesArray[i];
+						}
 
-                        $("p[id='names']").html(names);
-                        $("input[id='list']").val(idsArray);
-                    }
+						$("p[id='names']").html(names);
+						$("input[id='list']").val(idsArray);
+					}
 
-                });
+				});
 
-        }
+				$(document).on("click", ".submit", function(e) {
+					if (Object.keys(checkList).length==0){
+						alert("You have not endorsed any speakers.");
+						return false;
+					}
+					else {
+						// disable button
+				      $(this).prop("disabled", true);
+				      // add spinner to button
+				      $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...')
+				      document.getElementById("endorse_form").submit();
+					}
 
-        let checkList = [];
-        function handleResponse(response)
-        { 
-            $('#resultsSpan').html(response);
+				});
 
-            let checkgroup = document.getElementsByName("check");
-            for (let i=0; i<checkgroup.length; i++){
-                let speakid = checkgroup[i].id;
-                if (checkList[speakid]) {
+		}
 
-                    $(checkgroup[i]).attr('checked', true);
-                }
-                
-                $(checkgroup[i]).on("click", function(){
+		let checkList = [];
+		function handleResponse(response)
+		{ 
+			$('#resultsSpan').html(response);
 
-                    let speakid = this.id
-                    let name = this.value
-                    if (!this.checked) {
-                        delete checkList[speakid];
-                    }
-                    else {
-                        let limit='{{cycle.getEndorseNum()}}';
-                        if (limit == 'unlimited')
-                            checkList[speakid]=name;
-                        else{
-                            if (Object.keys(checkList).length>=limit){
-                                alert("You can only endorse a maximum of "+limit+" candidate(s).");
-                                this.checked=false;
-                            }
-                            else checkList[speakid]=name;
-                        }
-                    }
-                });  
-            }
-        }
-         
-        let request = null;
-                       
-        function getResults()
-        {  
-           let search = $('#searchBar').val();
-           search = encodeURIComponent(search);
-           let url = '/ssearch?name=' + search;
-           if (request != null)
-              request.abort();
-           request = $.ajax(
-           {
-                type: "GET",
-                url: url,
-                success: handleResponse
-            });
-         }
+			let checkgroup = document.getElementsByName("check");
+			for (let i=0; i<checkgroup.length; i++){
+				let speakid = checkgroup[i].id;
+				if (checkList[speakid]) {
 
-        function setup()
-        {
-            $('#searchBar').focus();
-            // Changes appropriate navBar buttons to active
-            $(document.getElementById("sEndorse")).addClass("active");
-            $(document.getElementById("navSpeaker")).addClass("active");
-            $('#searchBar').on('input', getResults);
-            getResults();
-            endorseValidation();
-        }
-        $('document').ready(setup);  
-        </script>
-    </body>
+					$(checkgroup[i]).attr('checked', true);
+				}
+				
+				$(checkgroup[i]).on("click", function(){
+
+					let speakid = this.id
+					let name = this.value
+					if (!this.checked) {
+						delete checkList[speakid];
+					}
+					else {
+						let limit='{{cycle.getEndorseNum()}}';
+						if (limit == 'unlimited')
+							checkList[speakid]=name;
+						else{
+							if (Object.keys(checkList).length>=limit){
+								alert("You can only endorse a maximum of "+limit+" candidate(s).");
+								this.checked=false;
+							}
+							else checkList[speakid]=name;
+						}
+					}
+				});  
+			}
+		}
+		 
+		let request = null;
+					   
+		function getResults()
+		{  
+		   let search = $('#searchBar').val();
+		   search = encodeURIComponent(search);
+		   let url = '/ssearch?name=' + search;
+		   if (request != null)
+			  request.abort();
+		   request = $.ajax(
+		   {
+				type: "GET",
+				url: url,
+				success: handleResponse
+			});
+		 }
+
+		function setup()
+		{
+			$('#searchBar').focus();
+			// Changes appropriate navBar buttons to active
+			$(document.getElementById("sEndorse")).addClass("active");
+			$(document.getElementById("navSpeaker")).addClass("active");
+			$('#searchBar').on('input', getResults);
+			getResults();
+			endorseValidation();
+		}
+		$('document').ready(setup);  
+		</script>
+	</body>
 </html>

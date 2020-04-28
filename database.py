@@ -98,7 +98,7 @@ class Database:
 
         query = "PREPARE stmt(text) AS " \
                 "SELECT * FROM speakers WHERE speakid = $1;" \
-                "EXECUTE stmt('" + speakid + "');"
+                "EXECUTE stmt('" + str(speakid) + "');"
         
         result = Database.connectDB(self, query)
 
@@ -115,10 +115,10 @@ class Database:
         result = Database.connectDB(self, query)
 
         if not result:
-            return Cycle(None, None, None, None, None, None, None, None, None, None, None, None)
+            return Cycle(None, None, None, None, None, None, None, None, None, None, None, None, None, None)
         else:
-            return Cycle(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5],
-                         result[0][6], result[0][7], result[0][8], result[0][9],result[0][10],result[0][11])
+            return Cycle(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6], 
+                        result[0][7], result[0][8], result[0][9],result[0][10], result[0][11], result[0][12], result[0][13])
 
     # ---------------------------------------------------------------------
 
@@ -214,7 +214,7 @@ class Database:
 
         query = "PREPARE stmt(text, text) AS " \
                 "SELECT reason FROM reports WHERE netid = $1 AND speakid = $2;" \
-                "EXECUTE stmt('" + netid + ", '" + speakid + "');"
+                "EXECUTE stmt('" + netid + ", '" + str(speakid) + "');"
 
         reports = Database.connectDB(self, query)
 
@@ -239,9 +239,10 @@ class Database:
     # returns a list of all endorsed speakers with a name fitting the search criteria
     def searchEndorsements(self, search):
         search = search.lower()
+        search = '%'+ search + '%'
 
         query = "PREPARE stmt(text) AS " \
-                "SELECT * FROM speakers WHERE LOWER(name) LIKE '%$1%';" \
+                "SELECT * FROM speakers WHERE LOWER(name) LIKE $1;" \
                 "EXECUTE stmt('" + search + "');"
 
         speakers = Database.connectDB(self, query)
@@ -269,7 +270,6 @@ class Database:
     def getSpeakers(self):
         query = 'SELECT * FROM speakers'
         speakers = Database.connectDB(self, query)
-        print(speakers)
 
         speaker_list = []
 
@@ -281,9 +281,9 @@ class Database:
     
     def getConversations(self, promoted):
         if promoted == 0:
-            query = "SELECT * FROM conversation WHERE faculty = 'none'"
+            query = "SELECT * FROM conversation WHERE faculty = '0'"
         else:
-            query = "SELECT * FROM conversation WHERE faculty != 'none'"
+            query = "SELECT * FROM conversation WHERE faculty != '0'"
         conversations = Database.connectDB(self, query)
         print(conversations)
         
@@ -369,13 +369,13 @@ class Database:
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET endorsements = endorsements + $1 WHERE netid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + netid.strip() + "');"
 
         Database.connectDB(self, query)
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE speakers SET endorsements = endorsements + $1 WHERE speakid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + speakid + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + str(speakid) + "');"
 
         Database.connectDB(self, query)
         
@@ -384,13 +384,13 @@ class Database:
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET ccendorsements = ccendorsements + $1 WHERE netid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + netid.strip() + "');"
 
         Database.connectDB(self, query)
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE conversation SET endorsements = endorsements + $1 WHERE converseid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + converseid + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + str(converseid) + "');"
 
         Database.connectDB(self, query)
 
@@ -399,7 +399,7 @@ class Database:
 
         query = "PREPARE stmt(text) AS " \
                 "INSERT INTO reports VALUES($1, $2, $3);" \
-                "EXECUTE stmt('" + netid.strip() + "', '" + speakid + "', '" + str(reason) + "');"
+                "EXECUTE stmt('" + netid.strip() + "', '" + str(speakid) + "', '" + str(reason) + "');"
 
         Database.connectDB(self, query)
 
@@ -408,7 +408,7 @@ class Database:
 
         query = "PREPARE stmt(text) AS " \
                 "DELETE FROM reports WHERE speakid = $1;" \
-                "EXECUTE stmt('" + speakid + "');"
+                "EXECUTE stmt('" + str(speakid) + "');"
 
         Database.connectDB(self, query)
 
@@ -416,12 +416,12 @@ class Database:
 
         query = "PREPARE stmt(text) AS " \
                 "DELETE FROM speakers WHERE speakid = $1;" \
-                "EXECUTE stmt('" + speakid + "');"
+                "EXECUTE stmt('" + str(speakid) + "');"
         Database.connectDB(self, query)
 
         query = "PREPARE stmt(text) AS " \
                 "DELETE FROM reports WHERE speakid = $1;" \
-                "EXECUTE stmt('" + speakid + "');"
+                "EXECUTE stmt('" + str(speakid) + "');"
 
         Database.connectDB(self, query)
 
@@ -431,13 +431,13 @@ class Database:
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE speakers SET votes = votes + $1 WHERE speakid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + speakid + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + str(speakid) + "');"
 
         Database.connectDB(self, query)
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET votes = votes + $1 WHERE netid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + netid.strip() + "');"
 
         Database.connectDB(self, query)
         
@@ -445,13 +445,13 @@ class Database:
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE conversation SET votes = votes + $1 WHERE converseid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + converseid + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + str(converseid) + "');"
 
         Database.connectDB(self, query)
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET ccvotes = ccvotes + $1 WHERE netid = $2;" \
-                "EXECUTE stmt(" + count + ", '" + netid.strip() + "');"
+                "EXECUTE stmt(" + str(count) + ", '" + netid.strip() + "');"
 
         Database.connectDB(self, query)
 
@@ -460,7 +460,7 @@ class Database:
 
         query = "PREPARE stmt(text) AS " \
                 "SELECT imglink FROM speakers WHERE speakid = $1;" \
-                "EXECUTE stmt('" + speakid + "');"
+                "EXECUTE stmt('" + str(speakid) + "');"
 
         imagelink = Database.connectDB(self, query)
         return imagelink
@@ -504,7 +504,8 @@ class Database:
         
         Database.connectDB(self, query)
 
-    def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, threshold, nomdate, endorsedate, datevoting, dateend):
+    def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, endorsethresh, rollthresh, nomdate, endorsedate, 
+                    votingdate, resultsdate, enddate):
         query = 'SELECT ids FROM cycle'
         result = Database.connectDB(self, query)
         if not result:
@@ -525,12 +526,12 @@ class Database:
         query='DELETE FROM students'
         Database.connectDB(self, query)
 
-        query = "PREPARE stmt(text, date, text, int, int, int, int, int, date, date, date, date, int) AS " \
-                "INSERT INTO cycle VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);" \
+        query = "PREPARE stmt(text, date, text, int, int, int, int, int, int, date, date, date, date, date, int) AS " \
+                "INSERT INTO cycle VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);" \
                 "EXECUTE stmt('" + str(name) + "', '" + str(datecreated).strip() + "', '" + str(admin).strip() + "', " + str(ids) \
-                + ", " + str(nominatenum) + ", " + str(endorsenum) + ", " + str(votenum) + ", " + str(threshold) \
-                + ", '" + str(nomdate) + "', '" + str(endorsedate) + "', '" + str(datevoting) + "', '" + \
-                str(dateend) + "', " + str(ccids) + ");"
+                + ", " + str(nominatenum) + ", " + str(endorsenum) + ", " + str(votenum) + ", " + str(endorsethresh) \
+                + ", " + str(rollthresh)+ ", '" + str(nomdate) + "', '" + str(endorsedate) + "', '" + str(votingdate) + "', '" + \
+                 str(resultsdate) + "', '" + str(enddate) + "', " + str(ccids) + ");"
         print(query)
 
         Database.connectDB(self, query)
@@ -541,13 +542,13 @@ class Database:
                 if rolloverThresh:
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE speakers SET endorsements = 0 WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
 
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE conversation SET endorsements = 0 WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
 
                     Database.connectDB(self, query)
             else:
@@ -560,13 +561,13 @@ class Database:
                 if rolloverThresh:
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE speakers SET votes = 0 WHERE votes < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
 
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE conversation SET votes = 0 WHERE votes < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
 
                     Database.connectDB(self, query)
             else:
@@ -581,44 +582,44 @@ class Database:
                 if rolloverThresh:
                     query = "PREPARE stmt(int, int) AS " \
                             "DELETE FROM speakers WHERE endorsements < $1 AND votes < $2;" \
-                            "EXECUTE stmt(" + rolloverThresh + ", " + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ", " + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE speakers SET endorsements = 0 WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE speakers SET votes = 0 WHERE votes < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int, int) AS " \
                             "DELETE FROM conversation WHERE endorsements < $1 AND votes < $2;" \
-                            "EXECUTE stmt(" + rolloverThresh + ", " + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ", " + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE conversation SET endorsements = 0 WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "UPDATE conversation SET votes = 0 WHERE votes < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
                  
             else:
                 if rolloverThresh:
                     query = "PREPARE stmt(int) AS " \
                             "DELETE FROM speakers WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
 
                     query = "PREPARE stmt(int) AS " \
                             "DELETE FROM conversation WHERE endorsements < $1;" \
-                            "EXECUTE stmt(" + rolloverThresh + ");"
+                            "EXECUTE stmt(" + str(rolloverThresh) + ");"
                     Database.connectDB(self, query)
                     
                 query='UPDATE speakers SET votes = 0'
@@ -631,12 +632,12 @@ class Database:
              if rolloverThresh:
                  query = "PREPARE stmt(int) AS " \
                          "DELETE FROM speakers WHERE votes < $1;" \
-                         "EXECUTE stmt(" + rolloverThresh + ");"
+                         "EXECUTE stmt(" + str(rolloverThresh) + ");"
                  Database.connectDB(self, query)
 
                  query = "PREPARE stmt(int) AS " \
                          "DELETE FROM conversation WHERE votes < $1;" \
-                         "EXECUTE stmt(" + rolloverThresh + ");"
+                         "EXECUTE stmt(" + str(rolloverThresh) + ");"
                  Database.connectDB(self, query)
              
              query='UPDATE speakers SET endorsements = 0'

@@ -18,13 +18,14 @@
         <div class="container-fluid">
             <br>
             {% if cycle.getName() %}
-                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['end'] %}
+                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                     {% if promotedconversations|length > 0 %}
-                        <p class="lead text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-promoted.</p><hr><br>
+                        <h4 class="text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-promoted.</h4>
+                        <hr><br>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in promotedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
-                                <div class="card-header"><h3 class="card-title text-center font-italic">Faculty-Promoted Conversation Between:</h3></div>
+                                <div class="card-header"><h4 class="card-title text-center font-italic">Faculty-Promoted Conversation Between:</h4></div>
                                 <div class="card-body">
                                     <div class="row text-center mx-auto justify-content-center">
                                         {% for speaker in conversation.getSpeakers() %}
@@ -42,7 +43,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <p class="card-text font-weight-bold"> Student Endorsment Count: {{conversation.getEndorsements()}}</p>
+                                    <p class="lead card-text font-weight-bold"> Student Endorsment Count: {{conversation.getEndorsements()}}</p>
                                 </div>
                             </div>
                         </div>
@@ -52,11 +53,12 @@
                     {% endif %}
 
                     {% if conversations|length > 0 %}
-                        <p class="lead text-center font-weight-bold">These are the current student-nominated conversations that are waiting for a faculty promotion.</p><hr>
+                        <h4 class="text-center font-weight-bold">These are the current student-nominated conversations that are waiting for a faculty promotion.</h4>
+                        <br><hr><br>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in conversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
-                                <div class="card-header"><h3 class="card-title text-center font-italic">Unpromoted Conversation Between:</h3></div>
+                                <div class="card-header"><h4 class="card-title text-center font-italic">Unpromoted Conversation Between:</h4></div>
                                 <div class="card-body">
                                     <div class="row text-center mx-auto justify-content-center">
                                         {% for speaker in conversation.getSpeakers() %}

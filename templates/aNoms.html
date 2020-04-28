@@ -18,9 +18,9 @@
         <div class="container-fluid">
             <br>
            {% if cycle.getName() %}
-                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['end'] %}
+                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                 <p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
+                    <div class="row row-cols-2 text-center mx-auto justify-content-center">
                                 {%for speaker in speakers: %}
                                     <div class="col-auto mb-3">
                                         <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">

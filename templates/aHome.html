@@ -20,21 +20,23 @@
 
             <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025">
                 <br>
-                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['end'] %}
+                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                     <h2 class="font-italic">Information for Current Cycle: {{ cycle.getName() }}</h2>
                     <p class="font-italic">Created on: <strong>{{cycle.getDateCreated()}}</strong> by <strong>{{ cycle.getAdmin()}}</strong>.<hr>
                     Number of nominations: <strong>{{ cycle.getNominateNum() }}</strong>. <br>
                     Number of Endorsements: <strong>{{ cycle.getEndorseNum()}}</strong>.<br>
                     Number of Votes: <strong>{{ cycle.getVoteNum() }}</strong>. <br>
                     The endorsement threshold is <strong>{{ cycle.getThreshold() }}</strong>.<br>
-                    The rollover threshold is <strong>NEED THIS IN CYCLE</strong>.<br>
+                    The rollover threshold is <strong>{{ cycle.getRolloverThreshold() }}</strong>.<br>
                     Nomininating begins on <strong>{{ cycle.getDateNom()}}</strong>. <br>
                     Endorsing begins on <strong>{{ cycle.getDateEndorse()}}</strong>.<br>
-                    Voting begins on <strong>{{ cycle.getDateVoting()}}</strong>. <br><hr>
+                    Voting begins on <strong>{{ cycle.getDateVoting()}}</strong>. <br>
+                    Voting ends and results are shown on <strong>{{ cycle.getDateResults()}}</strong>. <br><hr>
                     <strong> This cycle ends on {{ cycle.getDateEnd() }}.</strong> </p>
                     <a type='button' class="btn btn-lg btn-primary text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% else %}
-                    <p class="lead font-weight-bold text-center">There is no current cycle.</p>
+                    <p class="lead font-weight-bold text-center">There is no current cycle.</p><br>
+                    <a type='button' class="btn btn-lg btn-primary text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% endif %}
             </div>
             <br>

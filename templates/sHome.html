@@ -37,8 +37,8 @@
                     <p class="lead text-center font-weight-bold"> Currently voting is underway. Click one of the buttons below to vote.</p>
                     <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Vote for Speaker(s)</a>
                     <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Vote for Conversation(s)</a>
-                {% elif validation['end'] %}
-                    <p class="lead text-center font-weight-bold"> The cycle "{{cycle.getName()}}" has ended. Click one of the buttons below to view the results.</p>
+                {% elif validation['results'] %}
+                    <p class="lead text-center font-weight-bold"> The cycle "{{cycle.getName()}}" has ended. Click one of the buttons below to view the results.</p><br>
                     <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Results for Speakers</a>
                     <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Results for Conversations</a>
                 {% else %}

@@ -44,6 +44,7 @@
 		                                            	</div>
                                                     	{% endfor %}
                                                 		</div>
+                                                        <p class="card-text font-italic"> This conversation currently has {{conversation.getVotes()}} vote(s).</p>
                                                 	</div>
                                                     <div class="card-footer font-weight-bolder custom-control custom-checkbox">
                                                         <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="check" id={{conversation.getConverseId()}} min= 0>
@@ -55,15 +56,17 @@
                                          {% endfor %}
                                          <br>
                                          {% if conversations|length > 0 %}
-                                         <input type="submit" class="btn btn-primary" id="status" name="submit" style="display: block; margin: 0 auto;" value="Submit Votes">
-                            </form>
+                                            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom justify-content-center">
+                                                <button class="submitVotes btn bg-primary text-light font-weight-bold">Submit Votes</button>
+                                            </nav>
+                                            </form>
                                          {% else %}
                                          <p class="lead text-center font-weight-bold"> There are no candidates to vote for!</p><br>
                                          {% endif %}
                                     </div>
                                 <br>
                         {% endif %}
-                     {% elif validation['end'] %}
+                     {% elif validation['results'] %}
                         {% if conversations|length > 0 %}
                         <h3 class="text-center"> Here are the results of the vote!</h3><hr><br>
                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">

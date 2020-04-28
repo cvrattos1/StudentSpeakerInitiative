@@ -84,39 +84,48 @@ def cyclevalidation(cycle):
         # 			end = cycle.getDateEnd() <= datetime.date.today()
 
         if cycle.getDateEnd() <= datetime.date.today():
-          voting = None
-          endorsing = None
-          nominating = None
-          end = True
+          nominating = False
+          endorsing = False
+          voting = False
+          results = False 
+
+        elif cycle.getDateResults() <= datetime.date.today():
+          nominating = False
+          endorsing = False
+          voting = False
+          results = True
 
         elif cycle.getDateVoting() <= datetime.date.today():
-          voting = True
-          endorsing = False
           nominating = False
-          end = False
+          endorsing = False
+          voting = True
+          results = False 
+
+        elif cycle.getDateEndorse() <= datetime.date.today():
+          nominating = False
+          endorsing = True
+          voting = False
+          results = False 
+
+        elif cycle.getDateNom() <= datetime.date.today():
+          nominating = True
+          endorsing = False
+          voting = False
+          results = False
 
         else:
-          endorsing = cycle.getDateEndorse() <= datetime.date.today()
-          if endorsing:
-              nominating = False
-              voting = False
-              end = False
-
-          else:
-              nominating = cycle.getDateNom() <= datetime.date.today()
-              if nominating:
-                  voting = False
-                  endorsing = False
-                  end = False
+          nominating = False
+          endorsing = False
+          voting = False
+          results = False 
     else:
-        nominating = None
-        endorsing = None
-        voting = None
-        end = None
+        nominating = False
+        endorsing = False
+        voting = False
+        results = False 
 
 
-    validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting, "end": end }
-    print(validation)
+    validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting, "results": results }
     return validation
 
 def uservalidation(username, database):
@@ -393,13 +402,14 @@ def new_cycle():
                "Number of Nominations":request.args.get('nominatenum'),
                "Number of Endorsements":request.args.get('endorsenum'),
                "Number of Votes":request.args.get('votenum'),
-               "Endorsement Threshold":request.args.get('threshold'),
+               "Endorsement Threshold":request.args.get('endorsethresh'),
                "Nomination Date Begins":request.args.get('nomdate'),
-               "Enosorsement Date Begins":request.args.get('endorsedate'),
-               "Voting Date Begins":request.args.get('votingdate')
+               "Endsorsement Date Begins":request.args.get('endorsedate'),
+               "Voting Date Begins":request.args.get('votingdate'),
+               "Result Date Begins": request.args.get('resultsdate'),
+               "End Date": request.args.get('enddate')
                }
 
-    enddate = request.args.get('enddate')
     datecreated = datetime.datetime.now().strftime("%x")
     admin = request.args.get('admin')
 
@@ -420,9 +430,10 @@ def new_cycle():
             else:
                 errorMsg = errorMsg + error
 
-    elif (argdict["Nomination Date Begins"] >= argdict["Enosorsement Date Begins"]
-            or argdict["Enosorsement Date Begins"] >= argdict["Voting Date Begins"]
-            or argdict["Voting Date Begins"] >= enddate):
+    elif (argdict["Nomination Date Begins"] >= argdict["Endsorsement Date Begins"]
+            or argdict["Endsorsement Date Begins"] >= argdict["Voting Date Begins"]
+            or argdict["Voting Date Begins"] >= argdict["Result Date Begins"]
+            or argdict["Result Date Begins"] >= argdict["End Date"]):
         errorMsg = "The Nomination, Endorsement and Voting period must be chronological and cannot have the " \
                    "same starting date. Please check your dates and resubmit."
 
@@ -436,9 +447,9 @@ def new_cycle():
                            votenum = argdict["Number of Votes"],
                            threshold = argdict["Endorsement Threshold"],
                            nomdate = argdict["Nomination Date Begins"],
-                           endorsedate = argdict["Enosorsement Date Begins"],
+                           endorsedate = argdict["Endsorsement Date Begins"],
                            votingdate = argdict["Voting Date Begins"],
-                           enddate = enddate
+                           enddate = argdict["End Date"]
                            )
         response = make_response(html)
 
@@ -468,19 +479,21 @@ def new_cycle():
 
     database.adjustDatabase(rolloverNom, rolloverEnd, rolloverVot, rolloverThresh)
     today = date.today()
-    database.addLog(today, username, 2, str(enddate))
+    database.addLog(today, username, 2, str(argdict["End Date"]))
 
-    database.createCycle(argdict["Name of Voting Cycle"],
-                         datecreated,
-                         admin,
-                         nomination_count,
-                         endorse_count,
-                         vote_count,
-                         argdict["Endorsement Threshold"],
-                         argdict["Nomination Date Begins"],
-                         argdict["Enosorsement Date Begins"],
-                         argdict["Voting Date Begins"],
-                         enddate)
+    database.createCycle(name=argdict["Name of Voting Cycle"],
+                         datecreated=datecreated,
+                         admin=admin,
+                         nominatenum=nomination_count,
+                         endorsenum=endorse_count,
+                         votenum=vote_count,
+                         endorsethresh=argdict["Endorsement Threshold"],
+                         rollthresh=rolloverThresh,
+                         nomdate=argdict["Nomination Date Begins"],
+                         endorsedate=argdict["Endsorsement Date Begins"],
+                         votingdate=argdict["Voting Date Begins"],
+                         resultsdate=argdict["Result Date Begins"],
+                         enddate=argdict["End Date"])
 
 
 
@@ -841,10 +854,11 @@ def ccendorse_flask():
     database = Database()
     cycle = database.getCycle()
     cyclevalidation(cycle)
-    endorsed = request.form.getlist('check')
+
+    endorsed = request.form.get('list')
+    endorsed = endorsed.split(',')
+
     student = database.getStudent(username)
-    print(student)
-    print(student.getccEndorsements())
     if student.getccEndorsements():
         return redirect('sHome')
     if cycle.getEndorseNum() != 'unlimited':
@@ -853,7 +867,7 @@ def ccendorse_flask():
             return redirect('scEndorse')
 
     for converseid in endorsed:
-        database.ccendorse(username,converseid, 1)
+        database.ccendorse(username, converseid, 1)
 
     return redirect('scEndorse')
 
@@ -865,17 +879,17 @@ def fpromote_flask():
     database = Database()
     cycle = database.getCycle()
     cyclevalidation(cycle)
-    endorsed = request.form.getlist('check')
-    student = database.getStudent(username)
-    print(student)
-    print(student.getccEndorsements())
-    if student.getccEndorsements():
-        return redirect('fHome')
+    promoted = request.form['conversationid']
 
-    for converseid in endorsed:
-        database.ccendorse(username,converseid, 1)
+    # faculty = database.getFaculty(username)
 
-    return redirect('scEndorse')
+    # if faculty.getEndorsements():
+    #     return redirect('fHome')
+    
+    # database.ccendorse(username, converseid, 1)
+    # Please add the code for the fpromote system. I can't find it in the database.
+
+    return redirect('fPromote')
 
 
 

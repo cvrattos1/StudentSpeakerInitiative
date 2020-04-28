@@ -44,7 +44,7 @@
                         <p class="lead text-center font-weight-bold"> Faculty promotion of conversations has closed. Students are currently endorsing faculty-promoted conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </p><br><hr>
                     {% elif validation['voting'] %}
                         <p class="lead text-center font-weight-bold"> Faculty promoting of conversations has closed. Students are currently voting on conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </p><br><hr>
-                    {% elif validation['end'] %}
+                    {% elif validation['results'] %}
                         <p class="lead text-center font-weight-bold"> The current cycle has ended. Click below to see the current list of student-nominated conversations. </p>
                         <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fResults">View Results</a><br><br><hr>
                     {% else %}
