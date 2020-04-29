@@ -278,14 +278,43 @@ class Database:
                                         speakers[i][5], speakers[i][6], speakers[i][7], speakers[i][8]))
         return speaker_list
 
-    
+    def getConversation(self, converseid):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM conversation WHERE converseid = $1;" \
+                "EXECUTE stmt('" + str(converseid) + "');"
+        
+        conversation = Database.connectDB(self, query)
+        
+        if not conversation:
+            conversation = 0
+        else:
+            conversation = conversation[0]
+            print(conversation)
+            conzip = json.loads(conversation[3])
+            speakers = []
+            descrips = []
+            links = []
+            images = []
+            
+            
+            for converse in conzip.values():
+                speakers.append(converse[0])
+                descrips.append(converse[1])
+                links.append(converse[2])
+                images.append(converse[3])
+                
+            
+            conversation = Conversation(conversation[0], conversation[1], conversation[2], speakers, descrips, links, images, conversation[4],conversation[5],conversation[6])
+            
+        return conversation
+        
+
     def getConversations(self, promoted):
         if promoted == 0:
             query = "SELECT * FROM conversation WHERE faculty = '0'"
         else:
             query = "SELECT * FROM conversation WHERE faculty != '0'"
         conversations = Database.connectDB(self, query)
-        print(conversations)
         
         conversation_list = []
         
@@ -300,7 +329,6 @@ class Database:
             
             
             for converse in conzip.values():
-                print(converse)
                 speakers.append(converse[0])
                 descrips.append(converse[1])
                 links.append(converse[2])
@@ -391,6 +419,21 @@ class Database:
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE conversation SET endorsements = endorsements + $1 WHERE converseid = $2;" \
                 "EXECUTE stmt(" + str(count) + ", '" + str(converseid) + "');"
+
+        Database.connectDB(self, query)
+        
+    # allows the student with netid netid to endorse the speaker with speakid speakid with count number of endorsements
+    def fpromote(self, netid, converseid):
+
+        query = "PREPARE stmt(text) AS " \
+                "UPDATE conversation SET faculty = $1 WHERE converseid = $2;" \
+                "EXECUTE stmt('" + netid.strip() + "', '" + str(converseid) + "');"
+
+        Database.connectDB(self, query)
+
+        query = "PREPARE stmt(text) AS " \
+                "UPDATE faculty SET endorsements = 1 WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
 
         Database.connectDB(self, query)
 
@@ -516,7 +559,7 @@ class Database:
         query = 'SELECT ccids FROM cycle'
         result = Database.connectDB(self, query)
         if not result:
-            ccids = 0
+            ccids = 1
         else:
             ccids = int(result[0][0])
 

@@ -129,6 +129,7 @@ def cyclevalidation(cycle):
     return validation
 
 def uservalidation(username, database):
+    
     student = database.getStudent(username)
     if student:
         return "undergraduates"
@@ -615,9 +616,12 @@ def dismiss_flag():
 
     return redirect('aReports')
 
+
 @app.route('/ssearch', methods=['GET'])
+@login_required
 def ssearch():
     try:
+        username = current_user.id
         # Name is the name that the user types in the search bar
         name = request.args.get('name')
         if name is None:
@@ -625,7 +629,11 @@ def ssearch():
 
         database = Database()
         speakers = database.searchEndorsements(name)
-
+        for speaker in speakers:
+            if (speaker.getNetid()) == username.strip():
+                speakers.remove(speaker)  
+        if name == '':
+            shuffle(speakers)
         html = render_template('sresults.html', speakers=speakers)
         response = make_response(html)
     except Exception as e:
@@ -635,6 +643,7 @@ def ssearch():
     return response
 
 @app.route('/adminsearch', methods=['GET'])
+@login_required
 def adminsearch():
     try:
         name = request.args.get('name')
@@ -643,7 +652,6 @@ def adminsearch():
 
         database = Database()
         info = database.searchAdminLogs(name)
-        admins = database.returnAdmins()
         html = render_template('adminresults.html',
                                 info=info)
         response = make_response(html)
@@ -668,6 +676,12 @@ def sEndorse():
     else:
         hasendorsed = 0
     speakers = database.getSpeakers()
+    
+    for speaker in speakers:
+       
+        if (speaker.getNetid()) == username.strip():
+            speakers.remove(speaker)  
+    shuffle(speakers)
     html = render_template('sEndorse.html',
                            username= username,
                            cycle= cycle,
@@ -749,7 +763,6 @@ def ccnominate_flask():
     database = Database()
 
     cycle = database.getCycle()
-    validation = cyclevalidation(cycle)
     remaining = database.remainingccNominations(username)
 
     names = request.form.getlist('name')
@@ -879,17 +892,27 @@ def fpromote_flask():
     database = Database()
     cycle = database.getCycle()
     cyclevalidation(cycle)
+   
     promoted = request.form['conversationid']
+    print(promoted)
+    conversation = database.getConversation(promoted)
+    already = int(conversation.getFaculty())
+    faculty = database.getFaculty(username)
 
-    # faculty = database.getFaculty(username)
-
-    # if faculty.getEndorsements():
-    #     return redirect('fHome')
+    if faculty.getPromotions():
+        return redirect('fHome')
     
-    # database.ccendorse(username, converseid, 1)
-    # Please add the code for the fpromote system. I can't find it in the database.
+    else:
+        if already:
+            print(conversation.getFaculty())
+            print("Already Promoted")
+            return ('', 204)
+        else:
+            database.fpromote(username, promoted)
+            return redirect('fResults')    
+        
 
-    return redirect('fPromote')
+        
 
 
 
@@ -941,6 +964,12 @@ def scEndorse():
     else:
         hasendorsed = 0
     conversations = database.getConversations(1)
+    
+    for conversation in conversations:
+       
+        if (conversation.getNetid()) == username.strip():
+            conversations.remove(conversation)  
+    shuffle(conversations)
     html = render_template('scEndorse.html',
                            username= username,
                            cycle= cycle,
@@ -972,7 +1001,7 @@ def fPromote():
         validation = cyclevalidation(cycle)
         faculty = database.getFaculty(username)
         if faculty:
-            haspromoted = faculty.getEndorsements()
+            haspromoted = faculty.getPromotions()
         else:
             haspromoted = 0
         conversations = database.getConversations(0)

@@ -1,14 +1,14 @@
 class Faculty:
-    def __init__(self,  netid, endorsements):
+    def __init__(self,  netid, promotions):
         self._netid = netid
-        self._endorsements = endorsements
+        self._promotions = promotions
     
 
     def getNetid(self):
         return self._netid
 
 
-    def getEndorsements(self):
-        return self._endorsements
+    def getPromotions(self):
+        return self._promotions
 
   
