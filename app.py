@@ -482,6 +482,7 @@ def new_cycle():
     today = date.today()
     database.addLog(today, username, 2, str(argdict["End Date"]))
 
+    print('here')
     database.createCycle(name=argdict["Name of Voting Cycle"],
                          datecreated=datecreated,
                          admin=admin,
