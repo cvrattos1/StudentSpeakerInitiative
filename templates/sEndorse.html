@@ -21,7 +21,7 @@
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
 						{% if speakers|length > 0 %}
-							<p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr>
+							<p class="lead text-center font-weight-bold">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them, with the exception of the speakers that you nominated. </p><hr>
 							<div class="row row-cols-2 justify-content-center text-center">
 								{%for speaker in speakers: %}
 								<div class="col-auto mb-3">
@@ -230,7 +230,7 @@
 		{  
 		   let search = $('#searchBar').val();
 		   search = encodeURIComponent(search);
-		   let url = '/ssearch?name=' + search;
+		   let url = '/ssearch?name=' + search ;
 		   if (request != null)
 			  request.abort();
 		   request = $.ajax(

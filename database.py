@@ -77,6 +77,18 @@ class Database:
         faculty = Faculty(netid, result[0][1])
         return faculty
     
+    def getSpecial(self, netid):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT * FROM admin WHERE netid = $1;" \
+                "EXECUTE stmt('" + netid.strip() + "');"
+        
+        result = Database.connectDB(self, query)
+
+        if not result:
+            return None
+        faculty = Faculty(netid, result[0][1])
+        return faculty
+    
     def makeStudent(self, netid):
 
         query = "PREPARE stmt(text) AS " \

@@ -129,34 +129,44 @@ def cyclevalidation(cycle):
     return validation
 
 def uservalidation(username, database):
-    
-    student = database.getStudent(username)
-    if student:
-        return "undergraduates"
-    faculty = database.getFaculty(username)
-    if faculty:
-        return "faculty"
     undergrad = pustatus.isUndergraduate(ldapserver, username)
     if undergrad:
-        database.makeStudent(username)
+        student = database.getStudent(username)
+        if not student:
+            database.makeStudent(username)
         return "undergraduates"
     fac = pustatus.isFaculty(ldapserver, username)
     if fac:
-        database.makeFaculty(username)
+        faculty = database.getFaculty(username)
+        if not faculty:
+            database.makeFaculty(username)
         return "faculty"
-    return "other"
+    special = database.getSpecial(username)
+    if special:
+        student = database.getStudent(username)
+        if not student:
+            database.makeStudent(username)
+        faculty = database.getFaculty(username)
+        if not faculty:
+            database.makeFaculty(username)
+        return "special"
 
 
 def checkuser(role, pageType):
 
-    if role != pageType:
-        return False
-    else:
+    if role == pageType:
         return True
+    
+    elif role == "special":
+        return True
+    
+    else:
+        return False
 
 
 @login_manager.user_loader
 def load_user(user_id):
+    print("here")
     database = Database()
     role = uservalidation(user_id, database)
     return userAccount(user_id, role)
@@ -676,11 +686,6 @@ def sEndorse():
     else:
         hasendorsed = 0
     speakers = database.getSpeakers()
-    
-    for speaker in speakers:
-       
-        if (speaker.getNetid()) == username.strip():
-            speakers.remove(speaker)  
     shuffle(speakers)
     html = render_template('sEndorse.html',
                            username= username,
