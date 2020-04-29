@@ -581,6 +581,9 @@ class Database:
         query='DELETE FROM students'
         Database.connectDB(self, query)
 
+
+        if not rollthresh:
+            rollthresh = 0;
         query = "PREPARE stmt(text, date, text, int, int, int, int, int, int, date, date, date, date, date, int) AS " \
                 "INSERT INTO cycle VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);" \
                 "EXECUTE stmt('" + str(name) + "', '" + str(datecreated).strip() + "', '" + str(admin).strip() + "', " + str(ids) \

@@ -69,7 +69,6 @@
                      {% elif validation['results'] %}
                         {% if conversations|length > 0 %}
                         <h3 class="text-center"> Here are the results of the vote!</h3><hr><br>
-                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
                                 {%for conversation in conversations: %}
                                     <div class="card text-center" style="border-width: thin; border-color: #F58025">
                                         <div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -91,7 +90,6 @@
                                         </div>
                                     </div><br>
                                 {% endfor %}
-                            </div>
                         {% else %}
                         <hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no conversations made it into the voting block. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr> 
                         {% endif %}
