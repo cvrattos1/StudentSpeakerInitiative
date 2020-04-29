@@ -83,17 +83,17 @@
                                 <div class="input-group col-sm-9 mb-4" id="votes">
                                     <div class="custom-control custom-radio col-sm-4">
                                         <input type="radio" class="custom-control-input" name="votenum" value="unlimited" id="unlimitvot" onclick="handleTextBoxNom(3)" required>
-                                        <label class="custom-control-label" for="unlimitvot">Unlimited Votes</label><br>
+                                        <label class="custom-control-label" for="unlimitvot">Unlimited</label><br>
                                     </div>
                                     <div class="custom-control custom-radio col-sm-8">
                                         <input type="radio" class="custom-control-input" name="votenum" value="limited" id="limitvot" onclick="handleTextBoxNom(3)">
-                                        <label class="custom-control-label" for="limitvot">Limited Votes</label>
+                                        <label class="custom-control-label" for="limitvot">Limited</label>
                                         <input type="number" class="form-control" placeholder="Number" name="votetext" id="votetext" disabled="disabled" min="1" required>
                                     </div>
                                 </div>
 
-                                <label class="font-weight-bold col-sm-3" for="threshold">Endorsement Threshold: </label>
-                                <input class="form-control col-sm-9 mb-4" type="number" placeholder="Number" name="threshold" min="1" required>
+                                <label class="font-weight-bold col-sm-3" for="endorsethresh">Endorsement Threshold: </label>
+                                <input class="form-control col-sm-9 mb-4" type="number" placeholder="Number" name="endorsethresh" min="1" required>
 
                                 <label class="font-weight-bold col-sm-12 mb-2 pt-4" style="border-top: solid thin rgba(0, 0, 0, 0.1)" for="rollover">Rollover from Previous Cycle: </label>
                                 <label class="col-sm-3" for="rolloverthresh">Threshold:</label>
@@ -122,6 +122,9 @@
                                 
                                 <label class="col-sm-3 font-weight-bold" for="votingdate">Vote Start Date: </label>
                                 <input type="date" class="form-control col-sm-9 mb-4" name="votingdate" required> <br>
+
+                                <label class="col-sm-3 font-weight-bold" for="resultsdate">Voting End Date: </label>
+                                <input type="date" class="form-control col-sm-9 mb-4" name="resultsdate" required> <br>
 
                                 <label class="col-sm-3 font-weight-bolder" for="enddate">Cycle End Date: </label>
                                 <input type="date" class="form-control col-sm-9 mb-4" name="enddate" required> 

@@ -16,11 +16,13 @@
     <body class="bg-light">
         {% include 'aHeader.html' %}
         <div class="container-fluid">
-            {% if exists == 0: %}
-                <br><p class="lead text-center font-weight-bold"> There is no current cycle. Please start a cycle. </p>
-            {% else: %}
-                <br><p class="lead text-center font-weight-bold">These are the current standings of the candidates in the voting block.</p><hr>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
+            <br>
+            {% if cycle.getName() %}
+                {% if validation['nominating'] or validation['endorsing'] %}
+                    <hr><br><p class="lead text-center font-weight-bold">The voting process hasn't started yet. Please wait until the nomination and endorsement processes have finished to see the speakers' standings.</p><br><hr>
+                {% elif validation['voting'] or validation['results'] %}
+                <br><p class="lead text-center font-weight-bold">These are the current standings of the speakers in the voting block.</p><hr>
+                <div class="row row-cols-2 text-center mx-auto justify-content-center">
                   {%for speaker in speakers: %}
                     <div class="col-auto mb-3">
                         <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
@@ -29,13 +31,20 @@
                                 <h4 class="card-title">{{speaker.getName()}}</h4>
                                 <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
                                 <p class="card-text"> Link: {{speaker.getLinks()}}</p>
-                                <p class="card-text"> Vote Count: {{speaker.getVotes()}}</p>
+                            </div>
+                            <div class="card-footer">
+                                <p class="card-text font-weight-bold"> Vote Count: {{speaker.getVotes()}}</p>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-              </div>
-            {% endif %}
+              </div><hr><br>
+              {% else %}
+                    <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                {% endif %}
+            {% else: %}
+                <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+            {% endif %} 
         </div>
         <script>
             $(document.getElementById("aVotes")).addClass("active");

@@ -18,11 +18,7 @@
         <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
-                {% if validation['voting'] %}
-                    <p class="lead text-center font-weight-bold"> Nominations are now closed. Please vote.</p><hr>
-                {% elif validation['endorsing']%}                
-                     <p class="lead text-center font-weight-bold"> Nominations are now closed. Please endorse.</p><hr>
-                {% elif validation['nominating'] %}    
+                {% if validation['nominating'] %}    
                      {% if remaining %}
                         <p class="lead text-center font-italic font-weight-regular">This is your opportunity to nominate a conversation that you would like to create on our campus; fill out the fields below and press "submit" to nominate a conversation! You have this many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a conversation that you have nominated. </p><hr>
                             <!--form-->
@@ -67,9 +63,15 @@
                      {% else %}
                         <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of conversations.</p><hr>
                      {% endif %}
+                {% elif validation['voting'] %}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please vote.</p><hr>
+                {% elif validation['endorsing']%}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please endorse.</p><br><hr>
+                {% else %}
+                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
                 {% endif %}
             {% else %}
-                <p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
+                    <hr><br><p class="lead text-center font-weight-bold">Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
             {% endif %}
         </div>
     </body>

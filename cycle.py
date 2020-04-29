@@ -1,6 +1,7 @@
 UNLIMITED_VALUE = 2147483647
 class Cycle:
-    def __init__(self,  name, datecreated, admin, ids, nominatenum, endorsenum, votenum, threshold, nomdate, endorsedate, datevoting, dateend):
+    def __init__(self,  name, datecreated, admin, ids, nominatenum, endorsenum, votenum, endorsethresh, rollthresh,
+                nomdate, endorsedate, votingdate, resultsdate, enddate):
         self._name = name
         self._datecreated = datecreated
         self._admin = admin
@@ -8,11 +9,13 @@ class Cycle:
         self._nominatenum = nominatenum
         self._endorsenum = endorsenum
         self._votenum = votenum
-        self._threshold = threshold
+        self._endorsethresh = endorsethresh
+        self._rollthresh = rollthresh
         self._nomdate = nomdate
         self._endorsedate = endorsedate
-        self._datevoting = datevoting
-        self._dateend = dateend
+        self._votingdate = votingdate
+        self._resultsdate = resultsdate
+        self._enddate = enddate
 
     def getName(self):
         return self._name
@@ -42,7 +45,10 @@ class Cycle:
         return self._votenum
 
     def getThreshold(self):
-        return self._threshold
+        return self._endorsethresh
+
+    def getRolloverThreshold(self):
+        return self._rollthresh
     
     def getDateNom(self):
         return self._nomdate
@@ -51,7 +57,10 @@ class Cycle:
         return self._endorsedate
     
     def getDateVoting(self):
-        return self._datevoting
+        return self._votingdate
+
+    def getDateResults(self):
+        return self._resultsdate
 
     def getDateEnd(self):
-        return self._dateend
+        return self._enddate

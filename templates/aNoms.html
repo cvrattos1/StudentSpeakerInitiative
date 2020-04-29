@@ -16,27 +16,33 @@
     <body class="bg-light">
         {% include 'aHeader.html' %}
         <div class="container-fluid">
-            {% if exists == 0: %}
-                <br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p>
-            {% else: %}
-                <br><p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
-                            {%for speaker in speakers: %}
-                                <div class="col-auto mb-3">
-                                    <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
-                                        <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
-                                        <div class="card-body">
-                                            <h4 class="card-title">{{speaker.getName()}}</h4>
-                                            <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
-                                            <p class="card-text"> Link: {{speaker.getLinks()}}</p>
-                                            <p class="card-text"> Endorsment Count: {{speaker.getEndorsements()}}</p>
+            <br>
+           {% if cycle.getName() %}
+                {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
+                <p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
+                    <div class="row row-cols-2 text-center mx-auto justify-content-center">
+                                {%for speaker in speakers: %}
+                                    <div class="col-auto mb-3">
+                                        <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+                                            <img data-src={{speaker.getImgLink()}} alt="" class="card-img-top cld-responsive">
+                                            <div class="card-body">
+                                                <h4 class="card-title">{{speaker.getName()}}</h4>
+                                                <p class="card-text"> Description: {{speaker.getDescrip()}}</p>
+                                                <p class="card-text"> Link: {{speaker.getLinks()}}</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p class="card-text font-weight-bold"> Endorsment Count: {{speaker.getEndorsements()}}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                </div>
+                                {% endfor %}
+                    </div><hr><br>
+                {% else %}
+                    <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                {% endif %}
+            {% else: %}
+                <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
             {% endif %}
-            </div>
         </div>
         <script>
             $(document.getElementById("aNoms")).addClass("active");

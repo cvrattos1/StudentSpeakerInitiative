@@ -14,52 +14,72 @@
 		<title>Students' Speaker Initiative</title>
 	</head>
 	<body class="bg-light">
-		{% include 'sHeader.html' %}
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="fHome">Students' Speaker Initiative</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav d-flex justify-content-end w-100">
+					<li class="nav-item">
+						<a class="nav-link" href="fPromote" id="fPromote">Promote A Conversation</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="fResults" id="fResults">View Results</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 		<div class="container-fluid">
+			<br>
 				{% if cycle.getName() %}
-					{% if validation['voting'] %}
-						<br><p class="lead text-center font-weight-bold"> Students are currently voting.</p><hr>
-					{% elif validation['nominating'] %}
-    					{% if haspromoted %}
-        				<br><p class="lead text-center font-weight-bold"> You have already promoted a conversation.</p><hr>
-        				{% else %}
-            				{% if conversations|length > 0 %}
-        						<br><p class="lead text-center font-italic">These are the current student-nominated conversations. You have until {{cycle.getDateEndorse()}} to promote one.</p><hr><br>
-        							<form action="fpromote_flask" method= "post" name= "fpromte_form" id="fpromte_form">
-    								{%for conversation in conversations: %}
-    									<div class="card text-center" style="border-width: 2px; border-color: #F58025">
-    										<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
-    										<div class="card-body">
-    											<div class="row text-center mx-auto justify-content-center">
-    												{% for speaker in conversation.getSpeakers() %}
-    													<div class="col-auto mx-auto mb-3">
-    														<div class="card h-100" style="width: 18rem;">
-    															<div class="card-body">
-    																<h4 class="card-title font-weight-bold">{{speaker[0]}}</h4>
-    																<p class="card-text"> Descripition: {{speaker[1]}} </p>
-    																<a class="card-link" href=" {{speaker[2]}}" target="_blank"> Link to Works/Biography</a>
-    															</div>
-    														</div>
-    													</div>
-    													{% endfor %}
-    											</div>
-    										</div>
-    										 <div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
-    										 <input type="submit" class="custom-control-input" name="submit" id={{conversation.getConverseId()}} value={{conversation.getConverseId()}}>
-    										 <label class="custom-control-label" for={{conversation.getConverseId()}}>Promote</label>
-    										 </div>
-    									</div>
-    									<br>
-    										 {% endfor %}
-    									</form>
-        								<hr><br>
-        					{% else %}
-                                <br><p class="lead text-center font-weight-bold"> There are no student-nominated conversations at this time!</p><hr>
-                            {% endif %}	
-                        {% endif %}		
-					
+					{% if validation['nominating'] %}
+						{% if haspromoted %}
+						<br><p class="lead text-center font-weight-bold"> You have already promoted a conversation.</p><hr>
+						{% else %}
+							{% if conversations|length > 0 %}
+								<br><p class="lead text-center font-italic">These are the current student-nominated conversations. You have until {{cycle.getDateEndorse()}} to promote one.</p><hr><br>
+									{%for conversation in conversations: %}
+										<div class="card text-center" style="border-width: 2px; border-color: #F58025">
+											<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
+											<div class="card-body">
+												<div class="row text-center mx-auto justify-content-center">
+													{% for speaker in conversation.getSpeakers() %}
+														<div class="col-auto mx-auto mb-3">
+															<div class="card h-100" style="width: 18rem;">
+																<div class="card-body">
+																	<h4 class="card-title font-weight-bold" id="name">{{speaker[0]}}</h4>
+																	<p class="card-text"> Descripition: {{speaker[1]}} </p>
+																	<a class="card-link" href=" {{speaker[2]}}" target="_blank"> Link to Works/Biography</a>
+																</div>
+															</div>
+														</div>
+														{% endfor %}
+												</div>
+											</div>
+											<div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
+												<button type="button" class="promoteButton btn bg-primary font-weight-bold text-light" data-toggle="modal" data-conversationid="{{conversation.getConverseId()}}" data-target="#confirmModal" data-speakers="{{conversation.getNames()}}">
+												Promote This Conversation</button>
+											</div>
+										</div>
+										<br>
+											 {% endfor %}
+										<hr><br>
+							{% else %}
+								<hr><br><p class="lead text-center font-weight-bold"> There are no student-nominated conversations at this time!</p><br><hr>
+							{% endif %} 
+						{% endif %}     
 					{% elif validation['endorsing'] %}
-							<br><p class="lead text-center font-weight-bold">Students are currently voting on faculty-promoted conversations.</p><hr>
+							<hr><br><p class="lead text-center font-weight-bold">Students are currently voting on faculty-promoted conversations.</p><br><hr>
+					{% elif validation['voting'] %}
+						<hr><br><p class="lead text-center font-weight-bold"> Students are currently voting.</p><hr>
+					{% elif validation['results'] %}
+						<hr><br><p class="lead text-center font-weight-bold">The current cycle has ended, and the results of the vote are available.</p><br><hr>
+					{% else %}
+						<hr><br><p class="lead text-center font-weight-bold"> There is no current cycle. Please come back later to promote conversations!</p><br><hr>
 						
 					{% endif %}
 
@@ -68,81 +88,112 @@
 				{% endif %}
 			</div>
 		</div>
+
+		<div class="modal" id="confirmModal">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-content">
+				  
+					<!-- Modal Header -->
+					<div class="modal-header">
+					  <h4 class="modal-title text-center">Confirm Promotion</h4>
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					
+					<!-- Modal body -->
+					<div class="modal-body text-center">
+					  <p class="font-italic"> You are about to promote a conversation with: </p>
+					  <p id="names" class="font-weight-bold"></p>
+				  	</div>
+				  	<form action="fpromote_flask" method= "post" name= "fpromote_form" id="fpromote_form">
+						<div class="modal-footer form-group justify-content-between">
+							<input type="hidden" name="conversationid" id="conversationid">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
+							<input type="submit" class="btn btn-primary" value="Confirm Submission"> 
+						</div>
+					</form>
+				</div>
+			  </div>
+
 		<script type="text/javascript">
 
-		function endorseValidation(){
+		function promoteSetup(){
 			let cycleName = '{{cycle.getName()}}';
 			if (cycleName != '') {
 							//triggered when modal is about to be shown
-				$(document).on("click", ".reportButton", function() {
+				$(document).on("click", ".promoteButton", function() {
 					//get data-id attribute of the clicked element
-					var conversationid = $(this).data('conversationid');
-					$(".modal-body #reportSpeaker").val(conversationid);
-				});
-				let endorseForm = document.getElementById("ccendorse_form");
-				if (endorseForm) {
-					let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
-					$(endorseForm).submit(function(event) {
-						
-						let checkedcount=0;
-						for (let i=0; i<checkgroup.length; i++)
-							checkedcount+=(checkgroup[i].checked)? 1 : 0;
-						if (checkedcount==0){
-							alert("You have not endorsed any conversations.");
-							event.preventDefault();
-						}
-					});
-
-					let limit='{{cycle.getEndorseNum()}}';
-					if (limit != 'unlimited'){
-						for (let i=0; i<checkgroup.length; i++){
-							checkgroup[i].onclick=function(){
-							let checkedcount=0
-							for (let i=0; i<checkgroup.length; i++)
-								checkedcount+=(checkgroup[i].checked)? 1 : 0;
-							if (checkedcount>limit){
-								alert("You can only endorse a maximum of "+limit+" conversation(s).")
-								this.checked=false
-								}
-							}
-						};
+					let conversationid = $(this).data('conversationid');
+					let speakers = $(this).parent().parent().find('h4');
+					names = $(speakers[0]).html();
+					for (let i=1; i<speakers.length; i++) {
+						names += "<br>" + $(speakers[i]).html();
 					}
-				}
+					$("p[id='names']").html(names);
+					$("input[id='conversationid']").val(conversationid);
+				});
+			//  let endorseForm = document.getElementById("ccendorse_form");
+			//  if (endorseForm) {
+			//      let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
+			//      $(endorseForm).submit(function(event) {
+						
+			//          let checkedcount=0;
+			//          for (let i=0; i<checkgroup.length; i++)
+			//              checkedcount+=(checkgroup[i].checked)? 1 : 0;
+			//          if (checkedcount==0){
+			//              alert("You have not endorsed any conversations.");
+			//              event.preventDefault();
+			//          }
+			//      });
+
+			//      let limit='{{cycle.getEndorseNum()}}';
+			//      if (limit != 'unlimited'){
+			//          for (let i=0; i<checkgroup.length; i++){
+			//              checkgroup[i].onclick=function(){
+			//              let checkedcount=0
+			//              for (let i=0; i<checkgroup.length; i++)
+			//                  checkedcount+=(checkgroup[i].checked)? 1 : 0;
+			//              if (checkedcount>limit){
+			//                  alert("You can only endorse a maximum of "+limit+" conversation(s).")
+			//                  this.checked=false
+			//                  }
+			//              }
+			//          };
+			//      }
+			//  }
 			}
 		}                       
 
-        function handleResponse(response)
-         { 
-        	$('#ccendorse_form').html(response);
-        }
-         
-        let request = null;
-                       
-        function getResults()
-        {    
-           let search = $('#searchBar').val();
-            
-           let url = '/ccsearch?name=' + search;
-           if (request != null)
-              request.abort();
-           request = $.ajax(
-           {
-        	    type: "GET",
-                url: url,
-                success: handleResponse
-            });
-         }
+		function handleResponse(response)
+		 { 
+			$('#ccendorse_form').html(response);
+		}
+		 
+		let request = null;
+					   
+		function getResults()
+		{    
+		   let search = $('#searchBar').val();
+			
+		   let url = '/ccsearch?name=' + search;
+		   if (request != null)
+			  request.abort();
+		   request = $.ajax(
+		   {
+				type: "GET",
+				url: url,
+				success: handleResponse
+			});
+		 }
 
-        function setup()
-         {
-            $('#searchBar').focus();
-            $(document.getElementById("scEndorse")).addClass("active");
-			$(document.getElementById("navConvo")).addClass("active");
-            getResults();
-            endorseValidation();
-         }
-         
-        $('document').ready(setup);
+		function setup()
+		 {
+			// $('#searchBar').focus();
+			// $(document.getElementById("fPromote")).addClass("active");
+			// getResults();
+			promoteSetup();
+		 }
+		 
+		$('document').ready(setup);
 		</script>
 	</body>
 </html>
