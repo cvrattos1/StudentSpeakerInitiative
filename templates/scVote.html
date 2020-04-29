@@ -88,6 +88,9 @@
                                             {% endfor %}
                                             </div>
                                         </div>
+                                        <div class="card-footer">
+											<p class="card-text text-center font-weight-bold lead"> Received {{conversation.getVotes()}} vote(s).</p>
+										</div>
                                     </div><br>
                                 {% endfor %}
                         {% else %}
