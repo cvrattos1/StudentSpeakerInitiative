@@ -11,6 +11,7 @@ import psycopg2
 from student import Student
 from speaker import Speaker
 from cycle import Cycle
+from faculty import Faculty
 from report import Report
 from conversation import Conversation
 import cloudinary as Cloud
@@ -386,7 +387,7 @@ class Database:
         Database.connectDB(self, query)
 
         query = 'INSERT INTO conversation VALUES (\'' + str(new_ccid) + '\', \'' + str(netid).strip() + '\', \'' + str(cycle) + '\', \'' \
-                + conzip + '\', 0, 0, 0)'
+                + conzip + '\', 0, 0, none)'
         print (query)        
         Database.connectDB(self, query)
         
