@@ -15,11 +15,18 @@
 	</head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <div class="container-fluid">
+        <style>
+            .card-img-top {
+                width: 100%;
+                height: 18rem;
+                object-fit: cover;
+            }
+        </style>
+        <div class="container-fluid text-center">
             <br>
            {% if cycle.getName() %}
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
-                <p class="lead text-center font-weight-bold">These are the currently nominated speakers and their endorsement counts.</p><hr>
+                <h4>These are the currently nominated speakers and their endorsement counts.</h4><hr>
                     <div class="row row-cols-2 text-center mx-auto justify-content-center">
                                 {%for speaker in speakers: %}
                                     <div class="col-auto mb-3">
@@ -38,10 +45,10 @@
                                 {% endfor %}
                     </div><hr><br>
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                    <hr><br><h3>There is no current cycle. Please start a cycle.</h3><br><hr>
                 {% endif %}
             {% else: %}
-                <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                <hr><br><h3>There is no current cycle. Please start a cycle.</h3><br><hr>
             {% endif %}
         </div>
         <script>

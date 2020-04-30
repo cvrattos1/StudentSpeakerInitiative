@@ -33,15 +33,15 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="container-fluid">
+		<div class="container-fluid text-center">
 			<br>
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
 						{% if haspromoted %}
-						<br><p class="lead text-center font-weight-bold"> You have already promoted a conversation.</p><hr>
+							<hr><br><h3>You have already promoted a conversation.</h3><br><hr>
 						{% else %}
 							{% if conversations|length > 0 %}
-								<br><p class="lead text-center font-italic">These are the current student-nominated conversations. You have until {{cycle.getDateEndorse()}} to promote one.</p><hr><br>
+								<h4>These are the current student-nominated conversations. You have until {{cycle.getDateEndorse()}} to promote one.</h4><hr>
 									{%for conversation in conversations: %}
 										<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 											<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -69,22 +69,22 @@
 											 {% endfor %}
 										<hr><br>
 							{% else %}
-								<hr><br><p class="lead text-center font-weight-bold"> There are no student-nominated conversations at this time!</p><br><hr>
+								<hr><br><h3> There are no student-nominated conversations at this time!</h3><br><hr>
 							{% endif %} 
 						{% endif %}     
 					{% elif validation['endorsing'] %}
-							<hr><br><p class="lead text-center font-weight-bold">Students are currently voting on faculty-promoted conversations.</p><br><hr>
+							<hr><br><h3>Students are currently endorsing faculty-promoted conversations.</h3><br><hr>
 					{% elif validation['voting'] %}
-						<hr><br><p class="lead text-center font-weight-bold"> Students are currently voting.</p><hr>
+						<hr><br><h3> Students are currently voting on faculty-promoted conversations.</p><br><hr>
 					{% elif validation['results'] %}
-						<hr><br><p class="lead text-center font-weight-bold">The current cycle has ended, and the results of the vote are available.</p><br><hr>
+						<hr><br><h3>The current cycle has ended, and the results of the vote are available.</h3><br><hr>
 					{% else %}
-						<hr><br><p class="lead text-center font-weight-bold"> There is no current cycle. Please come back later to promote conversations!</p><br><hr>
+						<hr><br><h3> There is no current cycle. Please come back later to promote conversations!</h3><br><hr>
 						
 					{% endif %}
 
 				{% else %}
-					  <br><p class="lead text-center font-weight-bold">There is no current cycle. Please come back later.</p><hr>
+					  <hr><br><h3>There is no current cycle. Please come back later.</h3><br><hr>
 				{% endif %}
 			</div>
 		</div>
@@ -131,35 +131,6 @@
 					$("p[id='names']").html(names);
 					$("input[id='conversationid']").val(conversationid);
 				});
-			//  let endorseForm = document.getElementById("ccendorse_form");
-			//  if (endorseForm) {
-			//      let checkgroup = document.getElementById("ccendorse_form").elements.namedItem("check");
-			//      $(endorseForm).submit(function(event) {
-						
-			//          let checkedcount=0;
-			//          for (let i=0; i<checkgroup.length; i++)
-			//              checkedcount+=(checkgroup[i].checked)? 1 : 0;
-			//          if (checkedcount==0){
-			//              alert("You have not endorsed any conversations.");
-			//              event.preventDefault();
-			//          }
-			//      });
-
-			//      let limit='{{cycle.getEndorseNum()}}';
-			//      if (limit != 'unlimited'){
-			//          for (let i=0; i<checkgroup.length; i++){
-			//              checkgroup[i].onclick=function(){
-			//              let checkedcount=0
-			//              for (let i=0; i<checkgroup.length; i++)
-			//                  checkedcount+=(checkgroup[i].checked)? 1 : 0;
-			//              if (checkedcount>limit){
-			//                  alert("You can only endorse a maximum of "+limit+" conversation(s).")
-			//                  this.checked=false
-			//                  }
-			//              }
-			//          };
-			//      }
-			//  }
 			}
 		}                       
 

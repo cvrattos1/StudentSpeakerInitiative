@@ -38,17 +38,17 @@
                 <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
                 <hr><br>
                     {% if validation['nominating'] %}
-                        <p class="lead text-center font-weight-bold"> Students are currently nominating conversations. You may promote one student-nominated conversation per cycle. Click below to see the current list of student-nominated conversations. </p>
+                        <h4> Students are currently nominating conversations. You may promote one student-nominated conversation per cycle. Click below to see the current list of student-nominated conversations. </h4>
                         <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fPromote">Promote a Conversation</a><br><br><hr>
                     {% elif validation['endorsing']%}
-                        <p class="lead text-center font-weight-bold"> Faculty promotion of conversations has closed. Students are currently endorsing faculty-promoted conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </p><br><hr>
+                        <h3> Faculty promotion of conversations has closed. Students are currently endorsing faculty-promoted conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </h4><br><hr>
                     {% elif validation['voting'] %}
-                        <p class="lead text-center font-weight-bold"> Faculty promoting of conversations has closed. Students are currently voting on conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </p><br><hr>
+                        <h3> Faculty promoting of conversations has closed. Students are currently voting on conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </h3><br><hr>
                     {% elif validation['results'] %}
-                        <p class="lead text-center font-weight-bold"> The current cycle has ended. Click below to see the current list of student-nominated conversations. </p>
+                        <h4> The current cycle has ended. Click below to see the current list of student-nominated conversations. </h4>
                         <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fResults">View Results</a><br><br><hr>
                     {% else %}
-                        <p class="lead text-center font-weight-bold"> There is no current cycle. Please come back later to promote conversations!</p><br><hr>
+                        <h3> There is no current cycle. Please come back later to promote conversations!</h3><br><hr>
                     {% endif %} 
             </div>
         </div>

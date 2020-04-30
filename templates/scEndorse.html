@@ -15,12 +15,12 @@
 	</head>
 	<body class="bg-light">
 		{% include 'sHeader.html' %}
-		<div class="container-fluid">
+		<div class="container-fluid text-center">
 				<br>
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
         				{% if conversations|length > 0 %}
-    						<p class="lead text-center font-italic">These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </p><hr><br>
+    						<h4>These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </h4><hr>
     							{%for conversation in conversations: %}
     								<div class="card text-center" style="border-width: medium; border-color: #F58025">
     									<div class="card-header">
@@ -46,14 +46,14 @@
     								{% endfor %}
     								<hr><br>
     					{% else %}
-                            <hr><br><p class="lead text-center font-weight-bold"> There are no student-nominated, faculty-promoted conversations at this time!</p><br><hr>
+                            <hr><br><h3> There are no student-nominated, faculty-promoted conversations at this time!</h3><br><hr>
                         {% endif %}		
 					
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
-							<hr><br><p class="lead text-center font-weight-bold">Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</p><br><hr>
+							<hr><br><h3>Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</h3><br><hr>
 						{% elif conversations|length > 0 %}
-							<p class="lead text-center font-italic">These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </p><hr><br>
+							<h4>These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </h4><hr>
 								{%for conversation in conversations: %}
 									<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 										<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -85,16 +85,16 @@
                                     </nav>
                             <br><hr><br>
 						{% elif conversations|length <= 0  %}
-							<hr><br><p class="lead text-center font-weight-bold"> Unfortunately, no panels made it into the endorsement block. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
+							<hr><br><h4> Unfortunately, no panels made it into the endorsement block. Please come back later to participate in selecting a conversation panel for our campus.</h4><br><hr>
 						{% endif %}
 								
 					{% elif validation['voting'] %}
-                        <hr><br><p class="lead text-center font-weight-bold"> Endorsements are now closed. Please vote.</p><br><hr>
+                        <hr><br><h3> Endorsements are now closed. Please vote.</h3><br><hr>
                     {% else %}
-                        <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
+                        <hr><br><h3>Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.</h3><br><hr>
                     {% endif %}
                 {% else %}
-                      <hr><br><p class="lead text-center font-weight-bold">Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.<br><hr>
+                      <hr><br><h3>Endorsements are closed. Please come back later to participate in selecting a conversation panel for our campus.</h3><br><hr>
                 {% endif %}
 			</div>
 

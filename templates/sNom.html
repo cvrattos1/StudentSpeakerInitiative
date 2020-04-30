@@ -20,7 +20,7 @@
             {% if cycle.getName() %}
                 {% if validation['nominating'] %}    
                      {% if remaining %}
-                        <p class="lead text-center font-weight-bold">This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</p><hr>
+                        <h4>This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</h4><hr>
                         <div lass="container">
                             <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
                                 <div class="card text-center " style="border-width: thin; border-color: #F58025">
@@ -43,17 +43,17 @@
                              <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>
                         </div>
                      {% else %}
-                        <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of speakers.</p><hr>
+                        <hr><br><h3>You have already nominated your allowed amount of speakers.</h3><br><hr>
                      {% endif %}
                 {% elif validation['voting'] %}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please vote.</p><hr>
+                    <hr><br><h3> Nominations are closed. Please vote.</h3><br><hr>
                 {% elif validation['endorsing']%}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please endorse.</p><br><hr>
+                    <hr><br><h3> Nominations are closed. Please endorse.</h3><br><hr>
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
+                    <hr><br><h3> Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</h3><br><hr>
                 {% endif %}
             {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold">Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</p><br><hr>
+                    <hr><br><h3>Nominations are closed. Please come back later to participate in selecting a speaker for our campus!</h3><br><hr>
             {% endif %}
         </div>
         <script>

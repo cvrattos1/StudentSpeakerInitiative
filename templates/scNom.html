@@ -20,7 +20,7 @@
             {% if cycle.getName() %}
                 {% if validation['nominating'] %}    
                      {% if remaining %}
-                        <p class="lead text-center font-italic font-weight-regular">This is your opportunity to nominate a conversation that you would like to create on our campus; fill out the fields below and press "submit" to nominate a conversation! You have this many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a conversation that you have nominated. </p><hr>
+                        <h4>This is your opportunity to nominate a conversation that you would like to create on our campus; fill out the fields below and press "submit" to nominate a conversation! You have this many nominations left: {{ remaining }}. Nominations are not retractable and you cannot endorse a conversation that you have nominated. </h4><hr>
                             <!--form-->
                         <button type="button" href="#" class="newSpeaker btn btn-success btn-lg">
                             <span class="fas fa-plus"></span> Add New Speaker
@@ -61,17 +61,17 @@
                             <br><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit">
                         </form>
                      {% else %}
-                        <p class="lead text-center font-weight-bold">You have already nominated your allowed amount of conversations.</p><hr>
+                        <hr><br><h3>You have already nominated your allowed amount of conversations.</h3><br><hr>
                      {% endif %}
                 {% elif validation['voting'] %}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please vote.</p><hr>
+                    <hr><br><h3> Nominations are closed. Please vote.</h3><br><hr>
                 {% elif validation['endorsing']%}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please endorse.</p><br><hr>
+                    <hr><br><h3> Nominations are closed. Please endorse.</h3><br><hr>
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
+                    <hr><br><h3> Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</h3><br><hr>
                 {% endif %}
             {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold">Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</p><br><hr>
+                    <hr><br><h3>Nominations are closed. Please come back later to participate in selecting a conversation panel for our campus.</h3><br><hr>
             {% endif %}
         </div>
     </body>

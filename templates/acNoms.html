@@ -15,13 +15,19 @@
 	</head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <div class="container-fluid">
+        <style>
+            .card-img-top {
+                width: 100%;
+                height: 18rem;
+                object-fit: cover;
+            }
+        </style>
+        <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                     {% if promotedconversations|length > 0 %}
-                        <h4 class="text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-promoted.</h4>
-                        <hr><br>
+                        <h4 class="text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-promoted.</h4><hr>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in promotedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
@@ -43,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <p class="lead card-text font-weight-bold"> Student Endorsment Count: {{conversation.getEndorsements()}}</p>
+                                    <h4 class="card-text"> Student Endorsment Count: {{conversation.getEndorsements()}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +60,7 @@
 
                     {% if conversations|length > 0 %}
                         <h4 class="text-center font-weight-bold">These are the current student-nominated conversations that are waiting for a faculty promotion.</h4>
-                        <br><hr><br>
+                        <br><hr>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in conversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
@@ -81,10 +87,10 @@
                     <hr><br>
                     {% endif %}
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                    <hr><br><h3>There is no current cycle. Please start a cycle.</h3><br><hr>
                 {% endif %}
             {% else: %}
-                <hr><br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a cycle.</p><br><hr>
+                <hr><br><h3>There is no current cycle. Please start a cycle.</h3><br><hr>
             {% endif %}                                                                            	
         <script>
             $(document.getElementById("acNoms")).addClass("active");

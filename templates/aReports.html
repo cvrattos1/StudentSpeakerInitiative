@@ -15,44 +15,48 @@
     </head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <div class="container-fluid">
+        <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] %}
-                    <p class="lead text-center font-weight-bold">These are the nominated speakers that have been flagged for additional review.
-                    You may either dismiss the report or accept the report (which deletes the speaker). </p><hr><br>
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 text-center mx-auto justify-content-center">
-                        {% for i in range(length): %}
-                            {% if speakers[i]: %}
-                                <div class="col-auto mb-3">
-                                    <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
-                                        <div class="card-body">
-                                            <h4 class="card-title">{{speakers[i].getName()}}</h4>
-                                            <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
-                                            <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
-                                        </div>
-                                        <div class="card-footer">
-                                             <form class="form-group" action="dismiss_flag" method = "put">
-                                                <input type="submit" class="form-control btn btn-success" id="status" name="dismiss" value="Dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker is removed from the current cycle.">
-                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                            </form>
-                                            <form class="form-group" action="remove_nomination" method = "put">
-                                                <input type="submit" class="form-control btn btn-danger" id="status" name="remove" value="Approve" data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
-                                                <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
-                                            </form>
+                    {% if length == 0 %}
+                        <hr><br><h3>There are currently no reports pending review.</h3><br><hr>
+                    {% else %}
+                        <h4>These are the nominated speakers that have been flagged for additional review.
+                        You may either dismiss the report or accept the report. </h4><hr>
+                        <div class="row row-cols-2 text-center mx-auto justify-content-center">
+                            {% for i in range(length): %}
+                                {% if speakers[i]: %}
+                                    <div class="col-auto mb-3">
+                                        <div class="card h-100" style="width: 18rem; border-width: thin; border-color: #F58025">
+                                            <div class="card-body">
+                                                <h4 class="card-title">{{speakers[i].getName()}}</h4>
+                                                <p class="card-text"> Report by: {{reports[i].getNetid()}}</p>
+                                                <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                 <form class="form-group" action="dismiss_flag" method = "put">
+                                                    <input type="submit" class="form-control btn btn-success" id="status" name="dismiss" value="Dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker remains in the current cycle.">
+                                                    <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                                </form>
+                                                <form class="form-group" action="remove_nomination" method = "put">
+                                                    <input type="submit" class="form-control btn btn-danger" id="status" name="remove" value="Approve" data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
+                                                    <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                                {% endif %}
+                            {% endfor %}
                     </div><hr><br>
+                    {% endif %}
                 {% elif validation['endorsing'] or validation['voting'] or validation['results'] %}
-                    <hr><br><p class="lead text-center font-weight-bold"> Nominations have ended. You may no longer review reports for this cycle.</p><br><hr>  
+                    <hr><br><h3> Nominations have ended. You may no longer review reports for this cycle.</h3><br><hr>  
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold"> There is no current cycle. Please start a new cycle.</p><br><hr>  
+                    <hr><br><h3> There is no current cycle. Please start a new cycle.</h3><br><hr>  
                 {% endif %}
              {% else %}
-                <br><p class="lead text-center font-weight-bold">There is no current cycle. Please start a new cycle.</p>
+                <hr><br><h3> There is no current cycle. Please start a new cycle.</h3><br><hr>  
             {% endif %}
         </div>
         <script type="text/javascript">
