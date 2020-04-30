@@ -1019,7 +1019,7 @@ def ccvote_flask():
 	database = Database()
 	cycle = database.getCycle()
 	cyclevalidation(cycle)
-	voted = request.form.getlist('check')
+	voted = request.form.getlist('number')
 	converseid = request.form.getlist('converseid')
 	student = database.getStudent(username)
 
