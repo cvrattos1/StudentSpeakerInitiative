@@ -371,16 +371,31 @@ def nominate_flask():
 
 		return response
 
-	result = Cloud.uploader.upload(argdict['Image'], use_filename='true', filename=(argdict['Image'].filename), folder='SSI', width=400, height=500, crop="limit")
-	imglink = result['secure_url']
-
 	if remaining:
+		# upload image to cloudinary
+		result = Cloud.uploader.upload(argdict['Image'], use_filename='true', filename=(argdict['Image'].filename), folder='SSI', width=400, height=500, crop="limit")
+		imglink = result['secure_url']
+
+		# store speaker info in database
 		database.nominate(username,
 						  cycle.getName(),
 						  argdict['Name of Nomination'],
 						  argdict['Description'],
 						  argdict['Link to works'],
 						  imglink)
+
+		# send confirmation email
+		try:
+			recipient = username[:-1] + "@princeton.edu"
+			msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
+			msg.body = "Dear Student,\n\nYour nomination of " + argdict['Name of Nomination'] + " has been submitted. Thank you for your input.\n\nSincerely,\nThe Students' Speaker Initiative"
+			msg.subject = "Students' Speakers Initiative Flag"
+			mail.send(msg)
+			print('Mail sent to ' + recipient)
+		except Exception as e:
+			print(str(e))
+			print(username[:-1] + "@princeton.edu")
+
 
 	return redirect('sEndorse')
 
@@ -673,13 +688,12 @@ def flag_flask():
 	try:
 		recipient = username[:-1] + "@princeton.edu"
 		msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
-		msg.body = "Dear Student,\n\nYour flag request has been submitted to the Students' Speakers Initiative comittee for review. Thank you for your feedback.\n\nSincerely,\nThe Students' Speakers Initiative"
+		msg.body = "Dear Student,\n\nYour flag request has been submitted to the Students' Speaker Initiative comittee for review. Thank you for your feedback.\n\nSincerely,\nThe Students' Speaker Initiative"
 		msg.subject = "Students' Speakers Initiative Flag"
 		mail.send(msg)
 		print('Mail sent to ' + recipient)
 	except Exception as e:
 		print(str(e))
-		print("NOOOOOO")
 		print(username[:-1] + "@princeton.edu")
 
 	return redirect('sEndorse')
@@ -899,10 +913,29 @@ def ccnominate_flask():
 
 	conzip = json.dumps(conversation)
 
+	emailString = ''
+	count = 1
+	for name in names:
+		emailString = emailString + "Speaker" + str(count) + ": " + name + "\n"
+		count = count + 1
+
 	if remaining:
+		# nominate conversation
 		database.ccnominate(username,
 						cycle.getName(),
 						conzip)
+
+		# send confirmation email
+		try:
+			recipient = username[:-1] + "@princeton.edu"
+			msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
+			msg.body = "Dear Student,\n\nYour panel nomination has been submitted. Thank you for your input.\n\nPanel:\n" + emailString + "\nSincerely,\nThe Students' Speaker Initiative"
+			msg.subject = "Students' Speakers Initiative Flag"
+			mail.send(msg)
+			print('Mail sent to ' + recipient)
+		except Exception as e:
+			print(str(e))
+			print(username[:-1] + "@princeton.edu")
 
 	return redirect('scEndorse')
 	#-------------------------------------------------------------------------
