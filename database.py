@@ -17,12 +17,13 @@ from conversation import Conversation
 import cloudinary as Cloud
 import cloudinary.uploader
 import json
+from urllib.parse import urlparse
 
 UNLIMITED_VALUE = 2147483647
 
-cloudinary.config(cloud_name='dqp1yoed2',
-                  api_key='129874246392789',
-                  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
+cloudinary.config(cloud_name=os.environ['CLOUD_NAME'],
+                  api_key=os.environ['API_KEY'],
+                  api_secret=os.environ['API_SECRET'])
 
 class Database:
 
