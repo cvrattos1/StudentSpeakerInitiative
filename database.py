@@ -17,12 +17,13 @@ from conversation import Conversation
 import cloudinary as Cloud
 import cloudinary.uploader
 import json
+from urllib.parse import urlparse
 
 UNLIMITED_VALUE = 2147483647
 
-cloudinary.config(cloud_name='dqp1yoed2',
-                  api_key='129874246392789',
-                  api_secret='wovIZCIrF_S2yEE5mM1b2ha5lao')
+cloudinary.config(cloud_name=os.environ['CLOUD_NAME'],
+                  api_key=os.environ['API_KEY'],
+                  api_secret=os.environ['API_SECRET'])
 
 class Database:
 
@@ -524,6 +525,20 @@ class Database:
 
         imagelink = Database.connectDB(self, query)
         return imagelink
+
+    # deletes the image associated with a particular speakid from cloudinary. Returns a success/failure status
+    def deleteImage(self, speakid):
+        query = "PREPARE stmt(text) AS " \
+                "SELECT imglink FROM speakers WHERE speakid = $1;" \
+                "EXECUTE stmt('" + str(speakid) + "');"
+
+        url = Database.connectDB(self, query)
+        parsed = urlparse(url)
+        result = parsed.path.split('/')[6]
+        result = 'SSI/' + result
+        result = result[:-4]
+        deleted = Cloud.uploader.destroy(result)
+        return deleted
 
     # allows the student with netid netid to nominate a new speaker by providing the speaker’s firstname, lastname, descrip. Returns the speakid of the new speaker.
     def nominate(self, netid, cycle, name, descrip, links, imglink):
