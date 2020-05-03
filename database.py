@@ -86,8 +86,8 @@ class Database:
 
         if not result:
             return None
-        faculty = Faculty(netid, result[0][1])
-        return faculty
+        
+        return True
     
     def makeStudent(self, netid):
 
@@ -466,6 +466,11 @@ class Database:
                 "EXECUTE stmt('" + str(speakid) + "');"
 
         Database.connectDB(self, query)
+        
+    def deleteReports(self):
+
+        query='DELETE FROM reports'
+        Database.connectDB(self, query)
 
     def removeNomination(self, speakid):
 
@@ -580,8 +585,14 @@ class Database:
 
         query='DELETE FROM students'
         Database.connectDB(self, query)
-
-
+        
+        query='DELETE FROM faculty'
+        Database.connectDB(self, query)
+        
+        query='DELETE FROM reports'
+        Database.connectDB(self, query)
+        
+        
         if not rollthresh:
             rollthresh = 0;
         query = "PREPARE stmt(text, date, text, int, int, int, int, int, int, date, date, date, date, date, int) AS " \
