@@ -526,20 +526,6 @@ class Database:
         imagelink = Database.connectDB(self, query)
         return imagelink
 
-    # deletes the image associated with a particular speakid from cloudinary. Returns a success/failure status
-    def deleteImage(self, speakid):
-        query = "PREPARE stmt(text) AS " \
-                "SELECT imglink FROM speakers WHERE speakid = $1;" \
-                "EXECUTE stmt('" + str(speakid) + "');"
-
-        url = Database.connectDB(self, query)
-        parsed = urlparse(url)
-        result = parsed.path.split('/')[6]
-        result = 'SSI/' + result
-        result = result[:-4]
-        deleted = Cloud.uploader.destroy(result)
-        return deleted
-
     # allows the student with netid netid to nominate a new speaker by providing the speaker’s firstname, lastname, descrip. Returns the speakid of the new speaker.
     def nominate(self, netid, cycle, name, descrip, links, imglink):
         query = 'SELECT ids FROM cycle'

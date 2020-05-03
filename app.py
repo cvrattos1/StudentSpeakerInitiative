@@ -52,6 +52,16 @@ mail = Mail(app)
 
 ldapserver = pustatus.ServerConnection(os.environ['LDAP_USERNAME'], os.environ['MAIL_PASSWORD'])
 
+# deletes the image associated with a particular speakid from cloudinary. Returns a success/failure status
+def deleteImage(imagelink):
+
+    url = Database.connectDB(self, query)
+    parsed = urlparse(url)
+    result = parsed.path.split('/')[6]
+    result = 'SSI/' + result
+    result = result[:-4]
+    deleted = Cloud.uploader.destroy(result)
+    return deleted
 
 def filllist(username, database, request):
     finallist = []
@@ -700,6 +710,9 @@ def remove_nomination():
     today = date.today()
     speakerinfo = database.getSpeaker(speakerid)    # returns Speaker object
     database.addLog(today, username, 4, speakerinfo.getName())
+
+    imagelink = database.getImage(speakerid)
+    deleteImage(imagelink)
 
     database.removeNomination(speakerid)
 
