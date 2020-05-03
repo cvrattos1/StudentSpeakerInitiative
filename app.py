@@ -201,18 +201,11 @@ def aboutdevelopers():
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
-	try:
-	   logout_user()
-	   casClient = CASClient()
-	   casClient.authenticate()
-	   casClient.logout()
-	   return redirect('/')
-	except Exception as e:
-		errorDate = datetime.datetime.today()
-		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
-		html = render_template('error.html')
-		response = make_response(html)
-		return response
+	logout_user()
+	casClient = CASClient()
+	casClient.authenticate()
+	casClient.logout()
+	return redirect('/')
 
 
 @app.route('/sHome', methods=['GET', 'POST'])
@@ -230,7 +223,6 @@ def sHome():
 			useraccount = userAccount(username, role)
 			login_user(useraccount)
 			cycle = database.getCycle()
-			print('cycle ' + str(cycle))
 			validation = cyclevalidation(cycle)
 			html = render_template('sHome.html',
 								   username=username,
@@ -239,13 +231,12 @@ def sHome():
 								   )
 			response = make_response(html)
 
-			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+	return response
 
 @app.route('/fHome', methods=['GET', 'POST'])
 def fHome():
@@ -258,7 +249,6 @@ def fHome():
 		if not check:
 			return loginfail(username, pageType)
 			
-
 		else:
 			useraccount = userAccount(username, role)
 			login_user(useraccount)
@@ -277,13 +267,12 @@ def fHome():
 								   )
 			response = make_response(html)
 
-			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+	return response
 
 
 @app.route('/fResults', methods=['GET'])
@@ -1394,14 +1383,13 @@ def aHome():
 							   validation=validation
 							   )
 		response = make_response(html)
-
-		return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+
+	return response
 
 
 @app.route('/aNoms', methods=['GET'])
