@@ -4,8 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -31,7 +29,7 @@
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                     <h2 class="font-italic">Information for Current Cycle: {{ cycle.getName() }}</h2>
                     <p class="font-italic">Created on: <strong>{{cycle.getDateCreated()}}</strong> by <strong>{{ cycle.getAdmin()}}</strong>.<hr>
-                    Number of nominations: <strong>{{ cycle.getNominateNum() }}</strong>. <br>
+                    Number of Nominations: <strong>{{ cycle.getNominateNum() }}</strong>. <br>
                     Number of Endorsements: <strong>{{ cycle.getEndorseNum()}}</strong>.<br>
                     Number of Votes: <strong>{{ cycle.getVoteNum() }}</strong>. <br>
                     The endorsement threshold is <strong>{{ cycle.getThreshold() }}</strong>.<br>
@@ -41,10 +39,10 @@
                     Voting begins on <strong>{{ cycle.getDateVoting()}}</strong>. <br>
                     Voting ends and results are shown on <strong>{{ cycle.getDateResults()}}</strong>. <br><hr>
                     <strong> This cycle ends on {{ cycle.getDateEnd() }}.</strong> </p>
-                    <a type='button' class="btn btn-lg btn-primary font-weight-bold text-light mb-4" href="aCreateCycle">Create a new cycle</a>
+                    <a class="btn btn-lg btn-primary font-weight-bold text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% else %}
-                    <p class="lead font-weight-bold text-center">There is no current cycle.</p><br>
-                    <a type='button' class="btn btn-lg font-weight-bold btn-primary text-light mb-4" href="aCreateCycle">Create a new cycle</a>
+                    <p class="lead font-weight-bold text-center">There is currently no active cycle. The most recent cycle ended on {{cycle.getDateEnd()}}.</p><br>
+                    <a class="btn btn-lg font-weight-bold btn-primary text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% endif %}
             </div>
             <br>
@@ -72,8 +70,13 @@
             <br><br>
         </div>
         <script>
-            $(document.getElementById("aHome")).addClass("active");
-            $(document.getElementById("navAdmin")).addClass("active");
+            function setup()
+            {
+                $(document.getElementById("aHome")).addClass("active");
+                $(document.getElementById("navAdmin")).addClass("active");
+            }
+
+            $('document').ready(setup);
         </script>
     </body>
 </html>

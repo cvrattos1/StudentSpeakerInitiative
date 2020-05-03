@@ -5,8 +5,6 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-		<link href="./static/styles.css" rel="stylesheet"> -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -22,7 +20,7 @@
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav d-flex justify-content-end w-100">
 					<li class="nav-item">
-						<a class="nav-link" href="fPromote" id="fPromote">Promote A Conversation</a>
+						<a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="fResults" id="fResults">View Results</a>
@@ -37,11 +35,11 @@
 			<br>
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
-						{% if haspromoted %}
-							<hr><br><h3>You have already promoted a conversation.</h3><br><hr>
+						{% if hasapproved %}
+							<hr><br><h3>You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h3><br><hr>
 						{% else %}
 							{% if conversations|length > 0 %}
-								<h4>These are the current student-nominated conversations. You have until {{cycle.getDateEndorse()}} to promote one.</h4><hr>
+								<h4>These are the current student-nominated conversations that have not yet been approved by a faculty member.<br> You have until {{cycle.getDateEndorse()}} to approve one of these conversations.</h4><hr><br>
 									{%for conversation in conversations: %}
 										<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 											<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -61,8 +59,8 @@
 												</div>
 											</div>
 											<div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
-												<button type="button" class="promoteButton btn bg-primary font-weight-bold text-light" data-toggle="modal" data-conversationid="{{conversation.getConverseId()}}" data-target="#confirmModal" data-speakers="{{conversation.getNames()}}">
-												Promote This Conversation</button>
+												<button type="button" class="approveButton btn btn-lg bg-primary font-weight-bold text-light" data-toggle="modal" data-conversationid="{{conversation.getConverseId()}}" data-target="#confirmModal" data-speakers="{{conversation.getNames()}}">
+												Approve This Conversation</button>
 											</div>
 										</div>
 										<br>
@@ -73,13 +71,14 @@
 							{% endif %} 
 						{% endif %}     
 					{% elif validation['endorsing'] %}
-							<hr><br><h3>Students are currently endorsing faculty-promoted conversations.</h3><br><hr>
+							<hr><br><h3>You may not approve a conversation at this time because students are currently endorsing faculty-approved conversations.</h3><br><hr>
 					{% elif validation['voting'] %}
-						<hr><br><h3> Students are currently voting on faculty-promoted conversations.</p><br><hr>
+						<hr><br><h3> You may not approve a conversation at this time because students are currently voting on faculty-approved conversations.</p><br><hr>
 					{% elif validation['results'] %}
-						<hr><br><h3>The current cycle has ended, and the results of the vote are available.</h3><br><hr>
+						<hr><br><h3>You may not approve a conversation at this time because voting has already ended for this cycle. The final results of the vote are now available!</h3>
+						<br><a class="btn btn-lg btn-success font-weight-bold" href="fResults">View Results This Cycle</a><br><br><hr>
 					{% else %}
-						<hr><br><h3> There is no current cycle. Please come back later to promote conversations!</h3><br><hr>
+						<hr><br><h3> There is no current cycle. Please come back later to approved conversations!</h3><br><hr>
 						
 					{% endif %}
 
@@ -93,78 +92,55 @@
 			<div class="modal-dialog modal-dialog-scrollable">
 				<div class="modal-content">
 				  
-					<!-- Modal Header -->
 					<div class="modal-header">
-					  <h4 class="modal-title text-center">Confirm Promotion</h4>
+					  <h4 class="modal-title text-center">Confirm Approval</h4>
 					  <button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					
-					<!-- Modal body -->
 					<div class="modal-body text-center">
-					  <p class="font-italic"> You are about to promote a conversation with: </p>
-					  <p id="names" class="font-weight-bold"></p>
+					  <p class="font-weight-bold"> You are about to approve a conversation with: </p>
+					  <p id="names" class="font-italic"></p>
 				  	</div>
-				  	<form action="fpromote_flask" method= "post" name= "fpromote_form" id="fpromote_form">
+				  	<form action="fapprove_flask" method= "post" name= "approve_form" id="approve_form">
 						<div class="modal-footer form-group justify-content-between">
 							<input type="hidden" name="conversationid" id="conversationid">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
-							<input type="submit" class="btn btn-primary" value="Confirm Submission"> 
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Approval</button>
+							<button class="btn btn-primary" id="submitButton">Confirm Approval</button>
 						</div>
 					</form>
 				</div>
 			  </div>
 
 		<script type="text/javascript">
+			function approveValidation(){
+				let cycleName = '{{cycle.getName()}}';
+				if (cycleName != '') {
+								//triggered when modal is about to be shown
+					$(document).on("click", ".approveButton", function() {
+						//get data-id attribute of the clicked element
+						let conversationid = $(this).data('conversationid');
+						let speakers = $(this).parent().parent().find('h4');
+						names = $(speakers[0]).html();
+						for (let i=1; i<speakers.length; i++) {
+							names += "<br>" + $(speakers[i]).html();
+						}
+						$("p[id='names']").html(names);
+						$("input[id='conversationid']").val(conversationid);
+					});
+				}
+			}                       
 
-		function promoteSetup(){
-			let cycleName = '{{cycle.getName()}}';
-			if (cycleName != '') {
-							//triggered when modal is about to be shown
-				$(document).on("click", ".promoteButton", function() {
-					//get data-id attribute of the clicked element
-					let conversationid = $(this).data('conversationid');
-					let speakers = $(this).parent().parent().find('h4');
-					names = $(speakers[0]).html();
-					for (let i=1; i<speakers.length; i++) {
-						names += "<br>" + $(speakers[i]).html();
-					}
-					$("p[id='names']").html(names);
-					$("input[id='conversationid']").val(conversationid);
-				});
-			}
-		}                       
-
-		function handleResponse(response)
-		 { 
-			$('#ccendorse_form').html(response);
-		}
-		 
-		let request = null;
-					   
-		function getResults()
-		{    
-		   let search = $('#searchBar').val();
-			
-		   let url = '/ccsearch?name=' + search;
-		   if (request != null)
-			  request.abort();
-		   request = $.ajax(
-		   {
-				type: "GET",
-				url: url,
-				success: handleResponse
-			});
-		 }
-
-		function setup()
-		 {
-			// $('#searchBar').focus();
-			// $(document.getElementById("fPromote")).addClass("active");
-			// getResults();
-			promoteSetup();
-		 }
-		 
-		$('document').ready(setup);
+			function setup()
+			 {
+			 	$(document.getElementById("fApprove")).addClass("active");
+			 	$(document.getElementById("approve_form")).on("submit", function(){
+	                    $(document.getElementById("submitButton")).prop("disabled", true);
+	                    $(document.getElementById("submitButton")).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+	                })
+				approveValidation();
+			 }
+			 
+			$('document').ready(setup);
 		</script>
 	</body>
 </html>

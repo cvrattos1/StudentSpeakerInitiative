@@ -5,8 +5,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -30,25 +28,7 @@
                             {% endfor %}
                         </select>
                         <div id="resultsSpan">
-                        <!-- {%for row in info: %}
-                            <p class="lead">{{row[0]}}: {{row[1]}}
-                            {%if row[2]|int() == 0|int(): %}
-                                added admin with id {{row[3]}}
-                            {%elif row[2]|int() == 1|int(): %}
-                                removed admin with id
-                                {{row[3]}}
-                            {%elif row[2]|int() == 2|int(): %}
-                                created new cycle
-                                to be ended on {{row[3]}}
-                            {%elif row[2]|int() == 3|int(): %}
-                                dismissed request of review
-                                for speaker {{row[3]}}
-                            {%elif row[2]|int() == 4|int(): %}
-                                accepted a report and removed
-                                the speaker {{row[3]}}
-                            {% endif %}
-                            </p>
-                        {% endfor %} -->
+                        <!-- This is where the admin logs will go -->
                         </div>
                     </div>
                 </div>
@@ -98,8 +78,4 @@
         $('document').ready(setup);  
         </script>
     </body>
-
-
-
-
 </html>

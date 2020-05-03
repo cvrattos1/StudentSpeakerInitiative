@@ -4,14 +4,19 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
+        <style>
+          .card-img-top {
+            width: 100%;
+            height: 18rem;
+            object-fit: cover;
+          }
+        </style>
     </head>
     <body class="bg-light">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -22,7 +27,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex justify-content-end w-100">
                     <li class="nav-item">
-                        <a class="nav-link" href="fPromote" id="fPromote">Promote A Conversation</a>
+                        <a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="fResults" id="fResults">View Results</a>
@@ -37,12 +42,12 @@
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] %}
-                    <hr><br><h4>The voting has not yet completed. Please return on {{cycle.getDateResults()}} to see the results.</h4><br><hr>
+                    <hr><br><h4>The results are not yet available. Please return on {{cycle.getDateResults()}} to see the results.</h4><br><hr>
                 {% elif validation['results'] %}
-                    {% if promotedconversations|length > 0 %}
-                        <h3 class="text-center"> Here are the results of the vote!</h3><hr><br>
+                    {% if approvedconversations|length > 0 %}
+                        <h3 class="text-center"> Here are the results of the vote!</h3><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p><hr><br>
                         <div class="text-center mx-auto justify-content-center">
-                        {%for conversation in promotedconversations: %}
+                        {%for conversation in approvedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
                                 <div class="card-header"><h3 class="card-title text-center font-italic">Conversation Between:</h3></div>
                                 <div class="card-body">
@@ -62,28 +67,33 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <p class="card-text font-weight-bold"> Number of Votes: {{conversation.getVotes()}}</p>
+                                    <p class="card-text lead font-weight-bold"> Number of Votes: {{conversation.getVotes()}}</p>
                                 </div>
                             </div>
                         </div>
                         <br>
                         {% endfor %}
-                    <hr><br>
+                        <hr><br>
                     {% else %}
-                        <hr><br><p class="lead text-center font-weight-bold">Unfortunately, no conversations made it into the voting block.</p><br><hr>
+                        <hr><br><h3>Unfortunately, no conversations made it into the voting block.</h3><br><hr>
                     {% endif %}
                 {% else %}
-                    <hr><br><p class="lead text-center font-weight-bold">There is no current cycle..</p><br><hr>
+                    <hr><br><h3>There is currently no active cycle.</h3><br><hr>
                 {% endif %}
             {% else: %}
-                <hr><br><p class="lead text-center font-weight-bold">There is no current cycle.</p><br><hr>
+                <hr><br><h3>There is currently no active cycle.</h3><br><hr>
             {% endif %}
         </div>
         <script>
-            $(document.getElementById("fResults")).addClass("active");
-            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
-            // Call
-            cl.responsive();
+            function setup()
+            {
+                let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+                cl.responsive();
+                $(document.getElementById("fResults")).addClass("active");
+
+            }
+         
+            $('document').ready(setup);
         </script>
     </body>
 </html>

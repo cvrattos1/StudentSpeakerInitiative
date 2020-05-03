@@ -5,8 +5,6 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -15,14 +13,14 @@
 	</head>
     <body class="bg-light">
         {% include 'sHeader.html' %}
-        <div class="container-fluid">
+        <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] %}    
                      {% if remaining %}
                         <h4>This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</h4><hr>
-                        <div lass="container">
-                            <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data">
+                        <div class="container">
+                            <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data" autocomplete="off">
                                 <div class="card text-center " style="border-width: thin; border-color: #F58025">
                                     <div class="justify-content-center card-body form-group">
                                         <h2 class="text-center font-weight-bold">Speaker Information:</h2><br>
@@ -37,10 +35,10 @@
                                           <label class="custom-file-label text-left text-secondary" for="img">Select Image of Speaker</label>
                                         </div>
                                     </div>
-                                    <div class="card-footer"><input type="submit" class="btn btn-lg bg-primary text-light" value = "Submit"></div>
+                                    <div class="card-footer"><button class="btn btn-lg bg-primary text-light" id="submitButton">Submit Nomination</button></div>
                                 </div>
                              </form>
-                             <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a candidate that you have nominated.  </p>
+                             <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a speaker that you have nominated.</p><hr><br>
                         </div>
                      {% else %}
                         <hr><br><h3>You have already nominated your allowed amount of speakers.</h3><br><hr>
@@ -57,31 +55,21 @@
             {% endif %}
         </div>
         <script>
-        // Changes appropriate navBar buttons to active
-        $(document.getElementById("sNom")).addClass("active");
-        $(document.getElementById("navSpeaker")).addClass("active");
-
-        $(".custom-file-input").on("change", function() {
-          var fileName = $(this).val().split("\\").pop();
-          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-        // Makes sure that no fields are empty.
-        let nomForm = document.getElementById("nom_form");
-        if (nomForm) {
-            $(nomForm).submit(function(event) {
-                let formElements = nomForm.elements;
-                let emptyVal = 0;
-                for (let i=0; i<formElements.length; i++){
-                    if (formElements[i].value == ""){
-                        emptyVal = 1;
-                    }
-                }
-                if (emptyVal) {
-                    alert("Please fill out all fields.");
-                    event.preventDefault();
-                }
-            });
-        }
+            function setup()
+            {
+                $(document.getElementById("sNom")).addClass("active");
+                $(document.getElementById("navSpeaker")).addClass("active");
+                $(document.getElementById("nom_form")).on("submit", function(){
+                    $(document.getElementById("submitButton")).prop("disabled", true);
+                    $(document.getElementById("submitButton")).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+                })
+                $(".custom-file-input").on("change", function() {
+                  var fileName = $(this).val().split("\\").pop();
+                  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                });
+             }
+             
+            $('document').ready(setup);
         </script>
     </body>
 </html>

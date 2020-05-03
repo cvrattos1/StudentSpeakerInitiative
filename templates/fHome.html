@@ -5,8 +5,6 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -22,7 +20,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex justify-content-end w-100">
                     <li class="nav-item">
-                        <a class="nav-link" href="fPromote" id="fPromote">Promote A Conversation</a>
+                        <a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="fResults" id="fResults">View Results</a>
@@ -34,23 +32,40 @@
             </div>
         </nav>
         <div class="container-fluid text-center">
-            <div>
-                <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
-                <hr><br>
-                    {% if validation['nominating'] %}
-                        <h4> Students are currently nominating conversations. You may promote one student-nominated conversation per cycle. Click below to see the current list of student-nominated conversations. </h4>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fPromote">Promote a Conversation</a><br><br><hr>
+            <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
+            <hr><br>
+            {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
+                <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025"><br>
+                	<h2 class="font-italic">Information for Current Cycle: "{{ cycle.getName() }}"</h2><hr>
+                    {% if validation['nominating'] %} 
+	                    <p class="lead">For this cycle, you may approve <strong>1 conversation</strong>. You have until {{cycle.getDateEndorse()}} to approve a conversation. Once a conversation is approved, students will be able to endorse and vote on it. Results of the final vote will be available after the endorsement and voting steps have completed.<hr></p>
+                    	{% if hasapproved %}
+	                        <h4> You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h4><br>
+	                    {% else %} 
+	                    	<h4> You may approve a conversation at this time. Please use the button below to approve a conversation.</h4>
+	                		<br><a class="btn btn-lg btn-success font-weight-bold" href="fApprove">Approve A Conversation</a><br><br>
+	                	{% endif %} 
                     {% elif validation['endorsing']%}
-                        <h3> Faculty promotion of conversations has closed. Students are currently endorsing faculty-promoted conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </h4><br><hr>
+                    	{% if hasapproved %}
+	                        <h4> Students are now endorsing faculty-approved conversations, including the conversation that you approved! Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h4><br>
+	                    {% else %} 
+	                    	<h4> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse()}}. Unfortunately, this means that you may not approve a conversation for this cycle at this time. If you would like to see the results of this cycle, please come back on {{cycle.getDateVoting() }}. </h4><br>
+	                    {% endif %} 
                     {% elif validation['voting'] %}
-                        <h3> Faculty promoting of conversations has closed. Students are currently voting on conversations. Please come back on {{cycle.getDateVoting() }} to see the results. </h3><br><hr>
+                        {% if hasapproved %}
+	                        <h4> Students are now voting on the conversations that received enough endorsements to move into the final voting block. Please come back on {{cycle.getDateResults()}} to see the results of the vote!</h4><br>
+	                    {% else %} 
+	                    	<h4> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse()}}. Unfortunately, this means that you cannot approve a conversation for this cycle. If you would like to see the results of this cycle, please come back on {{cycle.getDateResults() }}. </h4><br>
+	                    {% endif %} 
                     {% elif validation['results'] %}
-                        <h4> The current cycle has ended. Click below to see the current list of student-nominated conversations. </h4>
-                        <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="fResults">View Results</a><br><br><hr>
-                    {% else %}
-                        <h3> There is no current cycle. Please come back later to promote conversations!</h3><br><hr>
-                    {% endif %} 
-            </div>
-        </div>
+                        <h4> The results of this cycle are finally available! Please click on the button below to see them. </h4>
+                        <br><a class="btn btn-lg btn-success" href="fResults">View Results This Cycle</a><br><hr>
+                        <p class="font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p><br>
+                    {% endif %}
+                	</div><hr>
+            {% else %}
+                <h3> There is currently no active cycle. Please come back later to approve conversations!</h3><br><hr>
+            {% endif %} 
+    	</div>
     </body>
 </html>

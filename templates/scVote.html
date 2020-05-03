@@ -4,17 +4,12 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
-	</head>
-    <body class="bg-light">
-        {% include 'sHeader.html' %}
         <style>
             .card-img-top {
                 width: 100%;
@@ -22,6 +17,9 @@
                 object-fit: cover;
             }
         </style>
+	</head>
+    <body class="bg-light">
+        {% include 'sHeader.html' %}
         <div class="container-fluid text-center">
             <br>
                 {% if cycle.getName() %}
@@ -32,7 +30,7 @@
                             <hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</h3><br><hr>
                         {% else %}
                             <h4>These are the current conversation panels. The voting period ends on {{ cycle.getDateEnd()}}. You have this many votes: {{cycle.getVoteNum()}}. </h4><hr>
-                            <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form">
+                            <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form" autocomplete="off">
                                         {%for conversation in conversations: %}
                                             	<div class="card text-center" style="border-width: thin; border-color: #F58025">
                                             		<div class="card-header"><h3 class="card-title text-center font-italic">Conversation Between:</h3></div>
@@ -73,7 +71,7 @@
                         {% endif %}
                      {% elif validation['results'] %}
                         {% if conversations|length > 0 %}
-                        <h4> Here are the results of the vote!</h4><hr>
+                        <h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p>
                                 {%for conversation in conversations: %}
                                     <div class="card text-center" style="border-width: thin; border-color: #F58025">
                                         <div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -132,67 +130,94 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="errorModal">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Error</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p id="error" class="lead"></p>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-danger mx-auto" data-dismiss="modal">Dismiss This Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script type="text/javascript">
-            $(document.getElementById("scVote")).addClass("active");
-            $(document.getElementById("navConvo")).addClass("active");
-
-            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
-            cl.responsive();
             
             let voteList = []
+            function voteValidation() {
+                let cycleName = '{{cycle.getName()}}';
+                if (cycleName != '') {
 
-            let cycleName = '{{cycle.getName()}}';
-            if (cycleName != '') {
+                    $(document).on("click", ".submit", function(e) {
+                            if (voteList.length==0){
+                                $('#errorModal').modal("show");
+                                $("p[id='error']").html("You have not voted for any conversations.");
+                                return false;
+                            }
+                            else {
+                                // disable button
+                              $(this).prop("disabled", true);
+                              // add spinner to button
+                              $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+                              document.getElementById("ccvote_form").submit();
+                            }
 
-                $(document).on("click", ".submit", function(e) {
-                        if (voteList.length==0){
-                            alert("You have not voted for any conversations.");
-                            return false;
+                    });
+                    
+                    $(document).on("click", ".voteButton", function(e) {
+                        if (Object.keys(voteList).length==0){
+                            $('#errorModal').modal("show");
+                            $("p[id='error']").html("You have not voted for any conversations.");
                         }
                         else {
-                            // disable button
-                          $(this).prop("disabled", true);
-                          // add spinner to button
-                          $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-                          document.getElementById("ccvote_form").submit();
+                            $('#confirmModal').modal("show")
+                            let namesArray = Object.values(voteList);
+
+                            names = namesArray[0]
+                            for (let i=1; i<namesArray.length; i++){
+                                names += "<br>" + namesArray[i];
+                            }
+
+                            $("p[id='names']").html(names);
                         }
 
-                });
-                
-                $(document).on("click", ".voteButton", function(e) {
-                    if (Object.keys(voteList).length==0){
-                        alert("You have not voted for any conversations.");
-                    }
-                    else {
-                        $('#confirmModal').modal("show")
-                        let namesArray = Object.values(voteList);
+                    });
 
-                        names = namesArray[0]
-                        for (let i=1; i<namesArray.length; i++){
-                            names += "<br>" + namesArray[i];
-                        }
+                    let voteForm = document.getElementById("ccvote_form");
+                    if (voteForm) {
+                        let numgroup = document.getElementById("ccvote_form").elements.namedItem("number");
+                        $(document).on('keydown','input', function(e){
+                                    if (e.shiftKey === true ) {
+                                        if (e.which == 9) {
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                    if (e.which > 57) {
+                                        return false;
+                                    }
+                                    if (e.which==32) {
+                                        return false;
+                                    }
+                                    return true;
+                                });
 
-                        $("p[id='names']").html(names);
-                    }
-
-                });
-
-                let voteForm = document.getElementById("ccvote_form");
-                if (voteForm) {
-                    let numgroup = document.getElementById("ccvote_form").elements.namedItem("number");
-                    let limit='{{cycle.getVoteNum()}}';
-                    if (limit != 'unlimited'){
                         $(document).on('change','input', function(){
                             let current = $(this).val();
                             let conversationid = this.id
                             let speakers = $(this).parent().parent().find('h4');
-
                             if (current == 0){
                                 delete voteList[conversationid];
                             }
                             else if (current < 0){
                                 $(this).val(0);
-                                alert("A speaker cannot have a negative number of votes.")
+                                $('#errorModal').modal("show");
+                                $("p[id='error']").html("A speaker cannot have a negative number of votes.")
                                 delete voteList[conversationid];
                             }
                             else {
@@ -200,28 +225,46 @@
                                 for (let i=1; i<speakers.length; i++) {
                                     names += ", " + $(speakers[i]).html();
                                 }
-
-                                let numcount=0
-                                for (let i=0; i<numgroup.length; i++)
-                                    if ($(numgroup[i]).val()) {
-                                        numcount += parseInt($(numgroup[i]).val());
+                                let limit='{{cycle.getVoteNum()}}';
+                                if (limit != 'unlimited'){
+                                    let numcount=0
+                                    for (let i=0; i<numgroup.length; i++)
+                                        if ($(numgroup[i]).val()) {
+                                            numcount += parseInt($(numgroup[i]).val());
+                                        }
+                                    if (parseInt(numcount) > parseInt(limit)){
+                                        let max = parseInt(limit) - (parseInt(numcount) - current);
+                                        if (max > 0) 
+                                            voteList[conversationid]=names;
+                                        else {
+                                            delete voteList[conversationid];
+                                        }
+                                        $(this).val(max);
+                                        $('#errorModal').modal("show");
+                                        $("p[id='error']").html("You can only us a maximum of "+limit+" vote(s).")
                                     }
-                                if (parseInt(numcount) > parseInt(limit)){
-                                    let max = parseInt(limit) - (parseInt(numcount) - current);
-                                    if (max > 0) 
-                                        voteList[conversationid]=names;
-                                    else {
-                                        delete voteList[conversationid];
-                                    }
-                                    $(this).val(max);
-                                    alert("You can only us a maximum of "+limit+" vote(s).")
+                                    else voteList[conversationid]=names;
                                 }
                                 else voteList[conversationid]=names;
                             }
                         });
+                        
                     }
                 }
-            }   
+            }
+
+            function setup()
+             {
+                let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+                cl.responsive();
+
+                $(document.getElementById("scVote")).addClass("active");
+                $(document.getElementById("navConvo")).addClass("active");
+
+                voteValidation();
+             }
+             
+            $('document').ready(setup);  
         </script>
     </body>
 </html>

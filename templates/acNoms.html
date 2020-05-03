@@ -4,34 +4,32 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.3.0/cloudinary-core-shrinkwrap.min.js"></script>
         <title>Students' Speaker Initiative</title>
+        <style>
+          .card-img-top {
+            width: 100%;
+            height: 18rem;
+            object-fit: cover;
+          }
+        </style>
 	</head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <style>
-            .card-img-top {
-                width: 100%;
-                height: 18rem;
-                object-fit: cover;
-            }
-        </style>
         <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
-                    {% if promotedconversations|length > 0 %}
-                        <h4 class="text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-promoted.</h4><hr>
+                    {% if approvedconversations|length > 0 %}
+                        <h4 class="text-center font-weight-bold">These are the current conversations that were student-nominated and have also been faculty-approved.</h4><hr>
                         <div class="text-center mx-auto justify-content-center">
-                        {%for conversation in promotedconversations: %}
+                        {%for conversation in approvedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
-                                <div class="card-header"><h4 class="card-title text-center font-italic">Faculty-Promoted Conversation Between:</h4></div>
+                                <div class="card-header"><h4 class="card-title text-center font-italic">Faculty-Approved Conversation Between:</h4></div>
                                 <div class="card-body">
                                     <div class="row text-center mx-auto justify-content-center">
                                         {% for speaker in conversation.getSpeakers() %}
@@ -59,12 +57,12 @@
                     {% endif %}
 
                     {% if conversations|length > 0 %}
-                        <h4 class="text-center font-weight-bold">These are the current student-nominated conversations that are waiting for a faculty promotion.</h4>
+                        <h4 class="text-center font-weight-bold">These are the current student-nominated conversations that are waiting for a faculty approval.</h4>
                         <br><hr>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in conversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
-                                <div class="card-header"><h4 class="card-title text-center font-italic">Unpromoted Conversation Between:</h4></div>
+                                <div class="card-header"><h4 class="card-title text-center font-italic">Unapproved Conversation Between:</h4></div>
                                 <div class="card-body">
                                     <div class="row text-center mx-auto justify-content-center">
                                         {% for speaker in conversation.getSpeakers() %}
@@ -93,11 +91,15 @@
                 <hr><br><h3>There is no current cycle. Please start a cycle.</h3><br><hr>
             {% endif %}                                                                            	
         <script>
-            $(document.getElementById("acNoms")).addClass("active");
-            $(document.getElementById("navConvo")).addClass("active");
-            let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
-            // Call
-            cl.responsive();
+            function setup()
+            {
+                let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
+                cl.responsive();
+                $(document.getElementById("acNoms")).addClass("active");
+                $(document.getElementById("navConvo")).addClass("active");
+            }
+
+            $('document').ready(setup);
         </script>
     </body>
 </html>

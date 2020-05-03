@@ -5,8 +5,6 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie-edge">
-<!--         <script src="./static/script.js" defer></script>
-        <link href="./static/styles.css" rel="stylesheet"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -16,36 +14,144 @@
     <body class="bg-light">
     	{% include 'sHeader.html' %}
         <div class="container-fluid text-center">
-            <div>
-                <br><h2 class="font-weight-bold">Welcome to the student homepage!</h2>
-                <br><hr><br>
-                {% if validation['nominating'] %}
-                    <h4> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
-                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</h4><br><hr><br>
-                    <p class="lead text-center font-weight-bold"> Currently nominations are underway. Click one of the buttons below to nominate.</p>
-                    <a type='button' class="btn btn-lg btn-outline-dark" href="sNom">Nominate Speaker(s)</a>
-                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scNom">Nominate Conversation(s)</a><br>
-                {% elif validation['endorsing']%}
-                    <h4> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
-                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</h4><br><hr><br>
-                    <p class="lead text-center font-weight-bold"> Currently endorsements are underway. Click one of the buttons below to endorse.</p>
-                    <a type='button' class="btn btn-lg btn-outline-dark" href="sEndorse">Endorse Speaker(s)</a>
-                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scEndorse">Endorse Conversation(s)</a><br>
-                {% elif validation['voting'] %}
-                    <h4> You have {{cycle.getNominateNum()}} nomination(s) and {{ cycle.getEndorseNum()}} endorsement(s). The threshold for
-                    a speaker to be eligible as a candidate in the voting process is {{ cycle.getThreshold() }}. You are allowed {{ cycle.getVoteNum() }} vote(s).</h4><br><hr><br>
-                    <p class="lead text-center font-weight-bold"> Currently voting is underway. Click one of the buttons below to vote.</p>
-                    <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Vote for Speaker(s)</a>
-                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Vote for Conversation(s)</a><br>
-                {% elif validation['results'] %}
-                    <p class="lead text-center font-weight-bold"> The cycle "{{cycle.getName()}}" has ended. Click one of the buttons below to view the results.</p><br>
-                    <a type='button' class="btn btn-lg btn-outline-dark" href="sVote">Results for Speakers</a>
-                    <br><br><a type='button' class="btn btn-lg btn-outline-dark" href="scVote">Results for Conversations</a><br>
-                {% else %}
-                    <h4> There is currently no active cycle. Please come back later to participate in selecting a speaker for our campus!</p>
-                {% endif %}
-                <br><hr>
-            </div>
+            <br><h2 class="font-weight-bold">Welcome to the student homepage!</h2>
+            <hr>
+            {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
+            <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025"><br>
+                    <h2 class="font-italic">Information for Current Cycle: "{{ cycle.getName() }}"</h2><hr>
+                    For this cycle, you have <strong>{{ cycle.getNominateNum() }} nomination(s)</strong>for both the speakers and conversations;
+                    you have <strong>{{ cycle.getEndorseNum()}} endorsement(s)</strong>nto use for both the speakers and conversations;
+                    and you have <strong>{{ cycle.getVoteNum() }} vote(s)</strong> to distribute among the speakers and conversations in the final voting blocks. <hr>
+                    In order to move into the final voting block, a speaker or conversation must receive at least <strong>{{ cycle.getThreshold() }} endorsement(s)</strong>.<hr>
+
+                    {% if validation['nominating'] %}
+                        <strong>Nomininations are currently underway!</strong><br>
+                        Nominations will close and endorsements will open on <strong>{{ cycle.getDateEndorse()}}</strong>.<br>
+                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting()}}</strong>.<br>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>.<br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
+                        <div class="btn-group-lg flex-wrap" role="group" aria-label="Navigate group">
+                            <div class="btn-group mb-4" data-toggle="tooltip" data-placement="top" title="Click one of the buttons below to begin nominating.">
+                                <button type="button" id="nombutton" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Nominations
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="nombutton">
+                                    <a class="dropdown-item" href="sNom">Nominate Speaker(s)</a>
+                                    <a class="dropdown-item" href="scNom">Nominate Conversation(s)</a>
+                                </div>
+                            </div>
+                        <div class="btn-group mb-4" data-toggle="tooltip" data-placement="top" title="The endorsement process has not yet begun; however, you may view the currently nominated speakers and conversations at this time">
+                            <button type="button" id="endorsebutton" class="btn btn-info btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Endorsements
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="endorsebutton">
+                                <a class="dropdown-item" href="sEndorse">View Speakers</a>
+                                <a class="dropdown-item" href="scEndorse">View Conversations</a>
+                            </div>
+                        </div>
+                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Voting is currently unavailable. Voting will open on {{cycle.getDateVoting() }}.">
+                            <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
+                        </div>
+                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                            <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
+                        </div>
+                      </div>
+
+                    {% elif validation['endorsing'] %}
+                        Nomininations have closed. <br>
+                        <strong>Endorsements are currently underway!</strong>.<br>
+                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting()}}</strong>. <br>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>. <br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
+                        <div class="btn-group-lg" role="group" aria-label="Navigate group">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, nominations closed on {{cycle.getDateEndorse() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
+                            </div>
+                            <div class="btn-group mb-4" role="group" data-toggle="tooltip" data-placement="top" title="Click one of the buttons below to begin endorsing.">
+                                <button type="button" id="endorsebutton" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Endorsements
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="endorsebutton">
+                                    <a class="dropdown-item" href="sEndorse">Endorse Speaker(s)</a>
+                                    <a class="dropdown-item" href="scEndorse">Endorse Conversation(s)</a>
+                                </div>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Voting has not yet begun; voting will begin on {{cycle.getDateVoting() }}">
+                                <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                                <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
+                            </div>
+                        </div>
+                    {% elif validation['voting'] %}
+                        Nomininations and endorsements have closed. <br>
+                        <strong>Voting is currently underway!</strong>.<br>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>. <br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
+                        <div class="btn-group-lg" role="group" aria-label="Navigate group">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, nominations closed on {{cycle.getDateEndorse() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, endorsements closed on {{cycle.getDateVoting() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Endorsements</p>
+                            </div>
+                            <div class="btn-group mb-4" role="group" data-toggle="tooltip" data-placement="top" title="Click one of the buttons below to begin voting.">
+                                <button type="button" id="votebutton" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Votes
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="votebutton">
+                                    <a class="dropdown-item" href="sVote">Vote For Speaker(s)</a>
+                                    <a class="dropdown-item" href="scVote">Vote For Conversation(s)</a>
+                                </div>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                                <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
+                            </div>
+                        </div>
+                    {% elif validation['results'] %}
+                        Nomininations, endorsements, and voting have closed. <br>
+                        <strong>The results of the vote are now available!</strong><br>
+                        This cycle will end, and results will become unavailable on {{ cycle.getDateEnd() }}.</p><hr>
+                        <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
+                        <div class="btn-group-lg" role="group" aria-label="Navigate group">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, nominations closed on {{cycle.getDateEndorse() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, endorsements closed on {{cycle.getDateVoting() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Endorsements</p>
+                            </div>
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="Unfortunately, voting closed on {{cycle.getDateResults() }}.">
+                                <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
+                            </div>
+                            <div class="btn-group mb-4" role="group" data-toggle="tooltip" data-placement="top" title="Click one of the buttons below to see the results.">
+                                <button type="button" id="resbutton" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    See Results
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="resbutton">
+                                    <a class="dropdown-item" href="sVote">Results For Speaker(s)</a>
+                                    <a class="dropdown-item" href="scVote">Results For Conversation(s)</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+            </div><br><hr><br>
+            {% else %}
+                <br><h3> There is currently no active cycle. The most recent cycle ended on {{cycle.getDateEnd()}}. Please check back later to participate in selecting speakers and conversation panels for our campus!</h3><br><hr>
+            {% endif %}
+
         </div>
+        <script type="text/javascript">
+            function setup()
+            {
+                $(document).ready(function(){
+                  $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });   
+                });
+            }
+         
+            $('document').ready(setup);
+        </script>
     </body>
 </html>
