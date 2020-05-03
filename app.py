@@ -210,9 +210,9 @@ def logout():
 
 @app.route('/sHome', methods=['GET', 'POST'])
 def sHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "undergraduates"
-		username = CASClient().authenticate()
 		database = Database()
 		role = uservalidation(username, database)
 		check = checkuser(role, pageType)
@@ -240,9 +240,9 @@ def sHome():
 
 @app.route('/fHome', methods=['GET', 'POST'])
 def fHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "faculty"
-		username = CASClient().authenticate()
 		database = Database()
 		role = uservalidation(username, database)
 		check = checkuser(role, pageType)
@@ -1365,9 +1365,9 @@ def sAdminLogs():
 # Should add another layer of authentication
 @app.route('/aHome', methods=['GET'])
 def aHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "admin"
-		username = CASClient().authenticate()
 		database = Database()
 
 		if database.adminAuthenticate(username) == 0:
