@@ -1,5 +1,7 @@
 # app.py
 from random import shuffle
+from urllib.parse import urlparse
+
 from flask import Flask, request, jsonify
 from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
@@ -201,25 +203,18 @@ def aboutdevelopers():
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
-	try:
-	   logout_user()
-	   casClient = CASClient()
-	   casClient.authenticate()
-	   casClient.logout()
-	   return redirect('/')
-	except Exception as e:
-		errorDate = datetime.datetime.today()
-		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
-		html = render_template('error.html')
-		response = make_response(html)
-		return response
+	logout_user()
+	casClient = CASClient()
+	casClient.authenticate()
+	casClient.logout()
+	return redirect('/')
 
 
 @app.route('/sHome', methods=['GET', 'POST'])
 def sHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "undergraduates"
-		username = CASClient().authenticate()
 		database = Database()
 		role = uservalidation(username, database)
 		check = checkuser(role, pageType)
@@ -230,7 +225,6 @@ def sHome():
 			useraccount = userAccount(username, role)
 			login_user(useraccount)
 			cycle = database.getCycle()
-			print('cycle ' + str(cycle))
 			validation = cyclevalidation(cycle)
 			html = render_template('sHome.html',
 								   username=username,
@@ -239,25 +233,23 @@ def sHome():
 								   )
 			response = make_response(html)
 
-			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+	return response
 
 @app.route('/fHome', methods=['GET', 'POST'])
 def fHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "faculty"
-		username = CASClient().authenticate()
 		database = Database()
 		role = uservalidation(username, database)
 		check = checkuser(role, pageType)
 		if not check:
 			return loginfail(username, pageType)
-
 
 		else:
 			useraccount = userAccount(username, role)
@@ -277,13 +269,12 @@ def fHome():
 								   )
 			response = make_response(html)
 
-			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+	return response
 
 
 @app.route('/fResults', methods=['GET'])
@@ -1376,9 +1367,9 @@ def sAdminLogs():
 # Should add another layer of authentication
 @app.route('/aHome', methods=['GET'])
 def aHome():
+	username = CASClient().authenticate()
 	try:
 		pageType = "admin"
-		username = CASClient().authenticate()
 		database = Database()
 
 		if database.adminAuthenticate(username) == 0:
@@ -1394,14 +1385,13 @@ def aHome():
 							   validation=validation
 							   )
 		response = make_response(html)
-
-		return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
 		html = render_template('error.html')
 		response = make_response(html)
-		return response
+
+	return response
 
 
 @app.route('/aNoms', methods=['GET'])
