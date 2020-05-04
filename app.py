@@ -1236,11 +1236,10 @@ def scEndorse():
 			else:
 				hasendorsed = 0
 			conversations = database.getConversations(1)
-
-			for conversation in conversations:
-
-				if (conversation.getNetid()) == username.strip():
-					conversations.remove(conversation)
+			if not validation["nominating"]:
+				for conversation in conversations:
+					if (conversation.getNetid()) == username.strip():
+						conversations.remove(conversation)
 			shuffle(conversations)
 			html = render_template('scEndorse.html',
 								   username= username,
