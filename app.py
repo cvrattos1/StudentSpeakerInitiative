@@ -1,5 +1,7 @@
 # app.py
 from random import shuffle
+from urllib.parse import urlparse
+
 from flask import Flask, request, jsonify
 from flask import make_response, redirect, render_template, url_for
 from CASClient import CASClient
@@ -81,7 +83,7 @@ def cyclevalidation(cycle):
 		  nominating = False
 		  endorsing = False
 		  voting = False
-		  results = False 
+		  results = False
 
 		elif cycle.getDateResults() <= datetime.date.today():
 		  nominating = False
@@ -93,13 +95,13 @@ def cyclevalidation(cycle):
 		  nominating = False
 		  endorsing = False
 		  voting = True
-		  results = False 
+		  results = False
 
 		elif cycle.getDateEndorse() <= datetime.date.today():
 		  nominating = False
 		  endorsing = True
 		  voting = False
-		  results = False 
+		  results = False
 
 		elif cycle.getDateNom() <= datetime.date.today():
 		  nominating = True
@@ -111,16 +113,16 @@ def cyclevalidation(cycle):
 		  nominating = False
 		  endorsing = False
 		  voting = False
-		  results = False 
+		  results = False
 	else:
 		nominating = False
 		endorsing = False
 		voting = False
-		results = False 
+		results = False
 
 
 	validation = {"nominating":nominating,"endorsing":endorsing, "voting": voting, "results": results }
-	
+
 	if not validation["nominating"]:
 		database.deleteReports()
 	return validation
@@ -148,20 +150,20 @@ def uservalidation(username, database):
 			database.makeFaculty(username)
 		return "faculty"
 	return "other"
-	
+
 
 
 def checkuser(role, pageType):
 
 	if role == pageType:
 		return True
-	
+
 	elif role == "special":
 		return True
-	
+
 	else:
 		return False
-	
+
 def loginfail(username, pageType):
 	html = render_template('loginfail.html',
 								   username=username,
@@ -248,7 +250,7 @@ def fHome():
 		check = checkuser(role, pageType)
 		if not check:
 			return loginfail(username, pageType)
-			
+
 		else:
 			useraccount = userAccount(username, role)
 			login_user(useraccount)
@@ -289,9 +291,9 @@ def fResults():
 		else:
 			cycle = database.getCycle()
 			validation = cyclevalidation(cycle)
-		
+
 			approvedconversations = database.getConversations(1)
-		
+
 			html = render_template('fResults.html',
 								   username=username,
 								   approvedconversations = approvedconversations,
@@ -299,7 +301,7 @@ def fResults():
 								   cycle=cycle
 								   )
 			response = make_response(html)
-		
+
 			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -320,7 +322,7 @@ def sNom():
 		check = checkuser(current_user.role, pageType)
 		if not check:
 			loginfail(username, pageType)
-		else: 
+		else:
 			cycle = database.getCycle()
 			if cycle.getName():
 				remaining = database.remainingNominations(username)
@@ -336,9 +338,9 @@ def sNom():
 								   cycle=cycle,
 								   remaining=remaining,
 								   validation=validation)
-		
+
 			print("validation: " + str(validation['voting']) + str(validation['endorsing']) + str(validation['nominating']))
-		
+
 			response = make_response(html)
 			return response
 	except Exception as e:
@@ -374,7 +376,7 @@ def nominate_flask():
 			if not value :
 				wrongarg.append(key)
 				argerror = True
-	
+
 		if (argerror):
 			errorMsg = None
 			for error in wrongarg:
@@ -393,14 +395,14 @@ def nominate_flask():
 									descrip = argdict['Description'],
 									links = argdict['Link to works'])
 			response = make_response(html)
-	
+
 			return response
 
 		if remaining:
 			# upload image to cloudinary
 			result = Cloud.uploader.upload(argdict['Image'], use_filename='true', filename=(argdict['Image'].filename), folder='SSI', width=400, height=500, crop="limit")
 			imglink = result['secure_url']
-	
+
 			# store speaker info in database
 			database.nominate(username,
 							  cycle.getName(),
@@ -408,20 +410,20 @@ def nominate_flask():
 							  argdict['Description'],
 							  argdict['Link to works'],
 							  imglink)
-	
+
 			# send confirmation email
 			try:
 				recipient = username[:-1] + "@princeton.edu"
 				msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
 				msg.body = "Dear Student,\n\nYour nomination of " + argdict['Name of Nomination'] + " has been submitted. Thank you for your input.\n\nSincerely,\nThe Students' Speaker Initiative"
-				msg.subject = "Students' Speakers Initiative Flag"
+				msg.subject = "Students' Speakers Initiative Nomination Confirmation"
 				mail.send(msg)
 				print('Mail sent to ' + recipient)
 			except Exception as e:
 				print(str(e))
 				print(username[:-1] + "@princeton.edu")
-	
-	
+
+
 		return redirect('sEndorse')
 
 
@@ -554,19 +556,19 @@ def nextstep_flask():
 			endorsedate = datetime.date.today()
 			votingdate = cycle.getDateVoting();
 			resultsdate = cycle.getDateResults();
-			enddate = cycle.getDateEnd(); 
+			enddate = cycle.getDateEnd();
 		elif (validation['endorsing']):
 			nomdate = datetime.date.today() - timedelta(days=2)
 			endorsedate = datetime.date.today() - timedelta(days=1)
 			votingdate = datetime.date.today();
 			resultsdate = cycle.getDateResults();
-			enddate = cycle.getDateEnd(); 
+			enddate = cycle.getDateEnd();
 		elif (validation['voting']):
 			nomdate = datetime.date.today() - timedelta(days=3)
 			endorsedate = datetime.date.today() - timedelta(days=2)
 			votingdate = datetime.date.today() - timedelta(days=1)
 			resultsdate = datetime.date.today();
-			enddate = cycle.getDateEnd(); 
+			enddate = cycle.getDateEnd();
 		elif (validation['results']):
 			nomdate = datetime.date.today() - timedelta(days=4)
 			endorsedate = datetime.date.today() - timedelta(days=3)
@@ -614,7 +616,7 @@ def prevstep_flask():
 			endorsedate = datetime.date.today() + timedelta(days=1)
 			votingdate = datetime.date.today() + timedelta(days=2)
 			resultsdate = datetime.date.today() + timedelta(days=3)
-			enddate = datetime.date.today() + timedelta(days=4) 
+			enddate = datetime.date.today() + timedelta(days=4)
 		elif (validation['voting']):
 			nomdate = cycle.getDateNom()
 			endorsedate = datetime.date.today();
@@ -672,7 +674,7 @@ def endorse_flask():
 			cycle = database.getCycle()
 			endorsed = request.form.get('list')
 			endorsed = endorsed.split(',')
-		
+
 			student = database.getStudent(username)
 			if student.getEndorsements():
 				return redirect('sHome')
@@ -680,7 +682,7 @@ def endorse_flask():
 				if len(endorsed) > int(cycle.getEndorseNum()):
 					#some error
 					return redirect('sEndorse')
-		
+
 			for speakid in endorsed:
 				database.endorse(username,speakid, 1)
 			return redirect('sEndorse')
@@ -707,12 +709,12 @@ def vote_flask():
 			cycle = database.getCycle()
 			voted = request.form.getlist('number')
 			speakids = request.form.getlist('speakid')
-		
+
 
 			student = database.getStudent(username)
 			if student.getVotes():
 				return redirect('sHome')
-		
+
 			error = False
 			if cycle.getVoteNum() != 'unlimited':
 				count = 0
@@ -722,10 +724,10 @@ def vote_flask():
 							count += int(vote)
 						else:
 							error = True
-		
+
 				if count > int(cycle.getVoteNum()) or error == True:
 					return redirect('sVote')
-		
+
 			for i in range(len(voted)):
 				if voted[i] != '':
 					database.vote(username, speakids[i], voted[i])
@@ -753,7 +755,7 @@ def flag_flask():
 			cycle = database.getCycle()
 			reason = request.args.get('reason')
 			speakerid = request.args.get('speakerid')
-		
+
 			database.flag(username, speakerid, reason)
 			try:
 				recipient = username[:-1] + "@princeton.edu"
@@ -765,7 +767,7 @@ def flag_flask():
 			except Exception as e:
 				print(str(e))
 				print(username[:-1] + "@princeton.edu")
-		
+
 			return redirect('sEndorse')
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -839,11 +841,11 @@ def ssearch():
 			name = request.args.get('name')
 			if name is None:
 				name = ''
-	
+
 			speakers = database.searchEndorsements(name)
 			for speaker in speakers:
 				if (speaker.getNetid()) == username.strip():
-					speakers.remove(speaker)  
+					speakers.remove(speaker)
 			if name == '':
 				shuffle(speakers)
 			html = render_template('sresults.html', speakers=speakers)
@@ -876,7 +878,7 @@ def adminsearch():
 @app.route('/sEndorse', methods=['GET'])
 @login_required
 def sEndorse():
-	try: 
+	try:
 		pageType = "undergraduates"
 		database = Database()
 		username = current_user.id
@@ -903,7 +905,7 @@ def sEndorse():
 								   hasendorsed = hasendorsed
 								   )
 			response = make_response(html)
-		
+
 			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -929,7 +931,7 @@ def sVote():
 			cycle = database.getCycle()
 			user = database.getStudent(username)
 			validation = cyclevalidation(cycle)
-		
+
 			if cycle.getName():
 				speakers = database.getEndorsed(cycle.getThreshold())
 				if user:
@@ -939,7 +941,7 @@ def sVote():
 			else:
 				speakers = None
 				hasvoted = None
-		
+
 			html = render_template('sVote.html',
 								   username=username,
 								   cycle=cycle,
@@ -948,8 +950,8 @@ def sVote():
 								   hasvoted = hasvoted
 								   )
 			response = make_response(html)
-		
-		
+
+
 			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -987,7 +989,7 @@ def scNom():
 								   cycle=cycle,
 								   remaining=remaining,
 								   validation = validation)
-		
+
 			response = make_response(html)
 			return response
 	except Exception as e:
@@ -1013,13 +1015,13 @@ def ccnominate_flask():
 
 			cycle = database.getCycle()
 			remaining = database.remainingccNominations(username)
-		
+
 			names = request.form.getlist('name')
 			descrips = request.form.getlist('descrip')
 			links = request.form.getlist('links')
 			files = request.files.getlist("file")
-		
-		
+
+
 			spkrCount = len(names)
 			argerror = False
 			# Checks that there is an equal number of inputs for each of the fields
@@ -1031,17 +1033,17 @@ def ccnominate_flask():
 				if spkrCount < 2 or spkrCount > 4:
 					print("Failed ccnomination: unacceptable number of speakers")
 					return redirect('scNom')
-		
+
 			# Checks that none of the files are empty; if not empty, uploads the image to cloudinary and appends it to images.
 			images = []
 			for file in files:
 				if file.filename == '':
 					print("Failed ccnomination: empty file")
 					return redirect('scNom')
-		
+
 				result = Cloud.uploader.upload(file, use_filename='true', filename=(file.filename), folder='SSI')
 				images.append(result['secure_url'])
-		
+
 			conversation = {}
 			for i in range(spkrCount):
 				if names[i] == '' or descrips[i] == '' or links[i] == '':
@@ -1049,34 +1051,34 @@ def ccnominate_flask():
 					return redirect('scNom')
 				spkr = [ names[i], descrips[i], links[i], images[i] ]
 				conversation.update({str(i):spkr})
-		
-		
+
+
 			conzip = json.dumps(conversation)
-		
+
 			emailString = ''
 			count = 1
 			for name in names:
 				emailString = emailString + "Speaker" + str(count) + ": " + name + "\n"
 				count = count + 1
-		
+
 			if remaining:
 				# nominate conversation
 				database.ccnominate(username,
 								cycle.getName(),
 								conzip)
-		
+
 				# send confirmation email
 				try:
 					recipient = username[:-1] + "@princeton.edu"
 					msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
 					msg.body = "Dear Student,\n\nYour panel nomination has been submitted. Thank you for your input.\n\nPanel:\n" + emailString + "\nSincerely,\nThe Students' Speaker Initiative"
-					msg.subject = "Students' Speakers Initiative Flag"
+					msg.subject = "Students' Speakers Initiative Nomination Confirmation"
 					mail.send(msg)
 					print('Mail sent to ' + recipient)
 				except Exception as e:
 					print(str(e))
 					print(username[:-1] + "@princeton.edu")
-		
+
 		return redirect('scEndorse')
 
 	except Exception as e:
@@ -1102,10 +1104,10 @@ def ccendorse_flask():
 		else:
 			cycle = database.getCycle()
 			cyclevalidation(cycle)
-		
+
 			endorsed = request.form.get('list')
 			endorsed = endorsed.split(',')
-		
+
 			student = database.getStudent(username)
 			if student.getccEndorsements():
 				return redirect('sHome')
@@ -1113,10 +1115,10 @@ def ccendorse_flask():
 				if len(endorsed) > int(cycle.getEndorseNum()):
 					#some error
 					return redirect('scEndorse')
-		
+
 			for converseid in endorsed:
 				database.ccendorse(username, converseid, 1)
-		
+
 			return redirect('scEndorse')
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -1141,15 +1143,15 @@ def fapprove_flask():
 		else:
 			cycle = database.getCycle()
 			cyclevalidation(cycle)
-			 
+
 			approved = request.form['conversationid']
 			conversation = database.getConversation(approved)
 			already = conversation.getFaculty()
 			faculty = database.getFaculty(username)
-		  
+
 			if faculty.getPromotions():
 				return redirect('fHome')
-			  
+
 			else:
 				if already != "0":
 					print(conversation.getFaculty())
@@ -1166,7 +1168,7 @@ def fapprove_flask():
 		response = make_response(html)
 		return response
 
-		
+
 
 @app.route('/ccvote_flask' , methods=['POST'])
 @login_required
@@ -1185,10 +1187,10 @@ def ccvote_flask():
 			voted = request.form.getlist('number')
 			converseid = request.form.getlist('converseid')
 			student = database.getStudent(username)
-		
+
 			if student.getccVotes():
 				return redirect('sHome')
-		
+
 			error = False
 			if cycle.getVoteNum() != 'unlimited':
 				count = 0
@@ -1198,10 +1200,10 @@ def ccvote_flask():
 							count += int(vote)
 						else:
 							error = True
-		
+
 				if count > int(cycle.getVoteNum()) or error == True:
 					return redirect('scVote')
-		
+
 			for i in range(len(voted)):
 				if voted[i] != '':
 					database.ccvote(username, converseid[i], voted[i])
@@ -1234,11 +1236,11 @@ def scEndorse():
 			else:
 				hasendorsed = 0
 			conversations = database.getConversations(1)
-			
+
 			for conversation in conversations:
-			   
+
 				if (conversation.getNetid()) == username.strip():
-					conversations.remove(conversation)  
+					conversations.remove(conversation)
 			shuffle(conversations)
 			html = render_template('scEndorse.html',
 								   username= username,
@@ -1248,7 +1250,7 @@ def scEndorse():
 								   hasendorsed = hasendorsed
 								   )
 			response = make_response(html)
-		
+
 			return response
 	except Exception as e:
 		errorDate = datetime.datetime.today()
@@ -1312,7 +1314,7 @@ def scVote():
 			cycle = database.getCycle()
 			student = database.getStudent(username)
 			validation = cyclevalidation(cycle)
-		
+
 			if cycle.getName():
 				conversations = database.getccEndorsed(cycle.getThreshold())
 				if student:
@@ -1322,7 +1324,7 @@ def scVote():
 			else:
 				conversations = None
 				hasvoted = None
-		
+
 			html = render_template('scVote.html',
 								   username=username,
 								   cycle=cycle,
@@ -1571,7 +1573,7 @@ def aReports():
 
 @app.route('/addAdmin', methods=['GET'])
 def addAdmin():
-	try: 
+	try:
 		newAdmin = request.args.get('newAdmin')
 		print("HERE" + newAdmin)
 		username = CASClient().authenticate()
