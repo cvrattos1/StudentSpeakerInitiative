@@ -473,16 +473,6 @@ class Database:
     # ---------------------------------------------------------------------
     def endorse(self, netid, speakid, count):
 
-        query = "PREPARE stmt(text) AS " \
-                "SELECT endorsements FROM students WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        endorsements = int(Database.connectDB(self, query)[0][0])
-        query = "SELECT endorsenum FROM cycle"
-        allowance = int(Database.connectDB(self, query)[0][0])
-
-        if endorsements + count > allowance:
-            raise Exception("Not allowed.")
-
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET endorsements = endorsements + $1 WHERE netid = $2;" \
                 "EXECUTE stmt(" + str(count) + ", '" + netid.strip() + "');"
@@ -500,16 +490,6 @@ class Database:
     # speakid speakid with count number of endorsements
     # ---------------------------------------------------------------------
     def ccendorse(self, netid, converseid, count):
-
-        query = "PREPARE stmt(text) AS " \
-                "SELECT ccendorsements FROM students WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        endorsements = int(Database.connectDB(self, query)[0][0])
-        query = "SELECT endorsenum FROM cycle"
-        allowance = int(Database.connectDB(self, query)[0][0])
-
-        if endorsements + count > allowance:
-            raise Exception("Not allowed.")
 
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE students SET ccendorsements = ccendorsements + $1 WHERE netid = $2;" \
@@ -546,14 +526,6 @@ class Database:
     # speakid speakid for reason reason
     # ---------------------------------------------------------------------
     def flag(self, netid, speakid, reason):
-
-        query = "PREPARE stmt(text) AS " \
-                "SELECT * FROM speakers WHERE speakid = $1;" \
-                "EXECUTE stmt('" + str(speakid) + "');"
-        exists = Database.connectDB(self, query)
-
-        if not exists:
-            raise Exception("Invalid speakid")
 
         query = "PREPARE stmt(text) AS " \
                 "INSERT INTO reports VALUES($1, $2, $3);" \
@@ -602,16 +574,6 @@ class Database:
     # ---------------------------------------------------------------------
     def vote(self, netid, speakid, count):
 
-        query = "PREPARE stmt(text) AS " \
-                "SELECT votes FROM students WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        votes = int(Database.connectDB(self, query)[0][0])
-        query = "SELECT votenum FROM cycle"
-        allowance = int(Database.connectDB(self, query)[0][0])
-
-        if (votes + int(count)) > allowance:
-            raise Exception("Not allowed.")
-
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE speakers SET votes = votes + $1 WHERE speakid = $2;" \
                 "EXECUTE stmt(" + str(count) + ", '" + str(speakid) + "');"
@@ -630,14 +592,6 @@ class Database:
     # ---------------------------------------------------------------------
     def ccvote(self, netid, converseid, count):
 
-        query = "PREPARE stmt(text) AS " \
-                "SELECT ccvotes FROM students WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        votes = int(Database.connectDB(self, query)[0][0])
-        query = "SELECT votenum FROM cycle"
-        allowance = int(Database.connectDB(self, query)[0][0])
-        if (int(votes) + int(count)) > allowance:
-            raise Exception("Not allowed.")
         query = "PREPARE stmt(int, text) AS " \
                 "UPDATE conversation SET votes = votes + $1 WHERE converseid = $2;" \
                 "EXECUTE stmt(" + str(count) + ", '" + str(converseid) + "');"
@@ -670,18 +624,6 @@ class Database:
     def nominate(self, netid, cycle, name, descrip, links, imglink):
         query = 'SELECT ids FROM cycle'
         new_speakid = int(Database.connectDB(self, query)[0][0])
-
-        query = "PREPARE stmt(text) AS " \
-                "SELECT nominations FROM speakers WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        nominations = int(Database.connectDB(self, query)[0][0])
-
-        query = 'SELECT nominatenum FROM cycle'
-        allowance = int(Database.connectDB()[0][0])
-
-        if nominations >= allowance:
-            raise Exception("Not allowed.")
-
         query = "UPDATE cycle SET ids = ids + 1"
         Database.connectDB(self, query)
 
@@ -707,18 +649,6 @@ class Database:
     def ccnominate(self, netid, cycle, conzip):
         query = 'SELECT ccids FROM cycle'
         new_ccid = int(Database.connectDB(self, query)[0][0])
-
-        query = "PREPARE stmt(text) AS " \
-                "SELECT ccnominations FROM speakers WHERE netid = $1;" \
-                "EXECUTE stmt('" + str(netid).strip() + "');"
-        nominations = int(Database.connectDB(self, query)[0][0])
-
-        query = 'SELECT nominatenum FROM cycle'
-        allowance = int(Database.connectDB()[0][0])
-
-        if nominations >= allowance:
-            raise Exception("Not allowed.")
-
         query = "UPDATE cycle SET ccids = ccids + 1"
         Database.connectDB(self, query)
 
