@@ -416,7 +416,7 @@ def nominate_flask():
 				recipient = username[:-1] + "@princeton.edu"
 				msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
 				msg.body = "Dear Student,\n\nYour nomination of " + argdict['Name of Nomination'] + " has been submitted. Thank you for your input.\n\nSincerely,\nThe Students' Speaker Initiative"
-				msg.subject = "Students' Speakers Initiative Flag"
+				msg.subject = "Students' Speakers Initiative Nomination Confirmation"
 				mail.send(msg)
 				print('Mail sent to ' + recipient)
 			except Exception as e:
@@ -1072,7 +1072,7 @@ def ccnominate_flask():
 					recipient = username[:-1] + "@princeton.edu"
 					msg = Message("Hello",sender="ssidev@princeton.edu",recipients=[recipient])
 					msg.body = "Dear Student,\n\nYour panel nomination has been submitted. Thank you for your input.\n\nPanel:\n" + emailString + "\nSincerely,\nThe Students' Speaker Initiative"
-					msg.subject = "Students' Speakers Initiative Flag"
+					msg.subject = "Students' Speakers Initiative Nomination Confirmation"
 					mail.send(msg)
 					print('Mail sent to ' + recipient)
 				except Exception as e:
