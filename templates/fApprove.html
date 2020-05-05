@@ -114,7 +114,7 @@
 
 			function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("fApprove")).addClass("btn-success btn-outline-light font-weight-bold");
+                    $(document.getElementById("fApprove")).addClass("btn-success border-light font-weight-bold");
                     $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {

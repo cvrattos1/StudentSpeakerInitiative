@@ -275,14 +275,14 @@
                 else if ("{{validation['voting']}}" == "True") {
                     $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
                     $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success btn-outline-light font-weight-bold");
+                    $(document.getElementById("navVote")).addClass("btn-success border-light font-weight-bold");
                     $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
                     $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
                     $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
                     $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success btn-outline-light font-weight-bold");
+                    $(document.getElementById("navResults")).addClass("btn-success border-light font-weight-bold");
                 }
                 else {
                     $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
