@@ -56,9 +56,7 @@ ldapserver = pustatus.ServerConnection(os.environ['LDAP_USERNAME'], os.environ['
 
 # deletes the image associated with a particular speakid from cloudinary. Returns a success/failure status
 def deleteImage(imagelink):
-
-	url = Database.connectDB(self, query)
-	parsed = urlparse(url)
+	parsed = urlparse(imagelink)
 	result = parsed.path.split('/')[6]
 	result = 'SSI/' + result
 	result = result[:-4]
@@ -789,6 +787,7 @@ def remove_nomination():
 		database.addLog(today, username, 4, speakerinfo.getName())
 
 		imagelink = database.getImage(speakerid)
+		imagelink = imagelink[0][0]
 		deleteImage(imagelink)
 
 		database.removeNomination(speakerid)
