@@ -71,7 +71,7 @@
                         {% endif %}
                      {% elif validation['results'] %}
                         {% if conversations|length > 0 %}
-                        <h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd().strftime("%b %d, %Y") }}.</p>
+                        <h3> Here are the results of the vote!</h3><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd().strftime("%b %d, %Y") }}.</p><hr>
                                 {%for conversation in conversations: %}
                                     <div class="card text-center" style="border-width: thin; border-color: #F58025">
                                         <div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -96,6 +96,7 @@
 										</div>
                                     </div><br>
                                 {% endfor %}
+                                <hr><br>
                         {% else %}
                         <hr><br><h3> Unfortunately, no conversations made it into the voting block. Please come back later to participate in selecting a conversation panel for our campus.</h3><br><hr> 
                         {% endif %}
@@ -253,13 +254,46 @@
                 }
             }
 
+            function navbarUpdate(){
+                if ("{{validation['nominating']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['endorsing']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['voting']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navVote")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['results']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navResults")).addClass("btn-success font-weight-bold");
+                }
+                else {
+                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+            }
+
             function setup()
              {
                 let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
                 cl.responsive();
 
                 $(document.getElementById("scVote")).addClass("active");
-                $(document.getElementById("navConvo")).addClass("active");
+                navbarUpdate();
 
                 voteValidation();
              }

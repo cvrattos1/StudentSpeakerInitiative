@@ -1,35 +1,48 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="sHome">Students' Speaker Initiative</a>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand btn btn-dark round-lg font-weight-bold pr-0 pl-0" href="sHome">Students' Speaker Initiative</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav d-flex justify-content-end w-100">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navSpeaker" data-toggle="dropdown">
-                Bring a Speaker
+            <li class="nav-item dropdown mr-1 mb-1 mt-1">
+                <a class="nav-link text-white dropdown-toggle btn pt-1 pb-1" href="#" id="navNom" data-toggle="dropdown" style="border-width: medium;">
+                Nominate
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" id="sNom" href="sNom">Nominate a Speaker</a>
-                    <a class="dropdown-item" id="sEndorse" href="sEndorse">Endorse Speakers</a>
-                    <a class="dropdown-item" id="sVote" href="sVote">Vote for Speakers</a>
+                    <a class="dropdown-item" id="sNom" href="sNom">Nominate Speaker(s)</a>
+                    <a class="dropdown-item" id="scNom" href="scNom">Nominate Panel(s)</a>
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navConvo" data-toggle="dropdown">
-                    Create a Conversation
+            <li class="nav-item dropdown mr-1 mb-1 mt-1">
+                <a class="nav-link text-white dropdown-toggle btn pt-1 pb-1" href="#" id="navEndorse" data-toggle="dropdown" style="border-width: medium;">
+                Endorse
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" id="scNom" href="scNom">Nominate a Panel</a>
-                    <a class="dropdown-item" id="scEndorse" href="scEndorse">Endorse Panels</a>
-                    <a class="dropdown-item" id="scVote" href="scVote">Vote for Panels</a>
+                    <a class="dropdown-item" id="sEndorse" href="sEndorse">Endorse Speaker(s)</a>
+                    <a class="dropdown-item" id="scEndorse" href="scEndorse">Endorse Panel(s)</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="sAdminLogs" href="sAdminLogs">Admin Logs</a>
+            <li class="nav-item dropdown mr-1 mb-1 mt-1">
+                <a class="nav-link text-white dropdown-toggle btn pt-1 pb-1" href="#" id="navVote" data-toggle="dropdown" style="border-width: medium;">
+                Vote
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" id="sVote" href="sVote">Vote For Speaker(s)</a>
+                    <a class="dropdown-item" id="scVote" href="scVote">Vote For Panel(s)</a>
+                </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="logout">Logout</a>
+            <li class="nav-item dropdown mr-1 mb-1 mt-1">
+                <a class="nav-link text-white dropdown-toggle btn pt-1 pb-1" href="#" id="navResults" data-toggle="dropdown" style="border-width: medium;">
+                Results
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" id="sResults" href="sVote">Speaker Results</a>
+                    <a class="dropdown-item" id="scResults" href="scVote">Panel Results</a>
+                </div>
+            </li>
+            <li class="nav-itemmb-1 mt-1">
+                <a class="nav-link font-weight-bold btn btn-light text-dark pt-1 pb-1" href="logout" style="border-width: medium;">Logout</a>
             </li>
         </ul>
     </div>

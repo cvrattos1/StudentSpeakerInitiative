@@ -1349,10 +1349,12 @@ def sAdminLogs():
 		database = Database()
 		info = database.returnAdminLogs()
 		admins = database.returnAdmins()
+		validation = cyclevalidation(database.getCycle())
 
 		html = render_template('sAdminLogs.html',
 								admins=admins,
-								info=info)
+								info=info,
+								validation=validation)
 		response = make_response(html)
 		return response
 	except Exception as e:
