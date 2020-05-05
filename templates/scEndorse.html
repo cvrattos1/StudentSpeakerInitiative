@@ -101,7 +101,7 @@
                 <div class="modal-content">
 	               	<div class="modal-header">
 	                   	<h4 class="modal-title text-center">Confirm Endorsements</h4>
-	                   	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	                   	<button type="button" class="close closeModal">&times;</button>
 	                </div>
 	                <div class="modal-body text-center">
 	                    <p class="font-weight-bold"> You have selected the following conversations: </p>
@@ -111,7 +111,7 @@
 	                <form action="ccendorse_flask" method= "post" name="ccendorse_form" id="ccendorse_form">
 	                    <div class="modal-footer form-group justify-content-between">
 	                        <input type="hidden" name="list" id="list">
-	                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
+	                        <button type="button" class="btn btn-danger closeModal">Cancel Submission</button>
 	                        <button type="button" class="submit btn btn-primary" name="submitEndorse">Confirm Submission</button>
 	                    </div>
 	                </form>
@@ -124,13 +124,13 @@
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <h3 class="modal-title">Error</h3>
-	                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+	                    <button type="button" class="close closeModal">&times;</button>
 	                </div>
 	                <div class="modal-body text-center">
 	                    <p id="error" class="lead"></p>
 	                </div>
 	                <div class="modal-footer">
-	                        <button type="button" class="btn btn-danger mx-auto" data-dismiss="modal">Dismiss This Message</button>
+	                        <button type="button" class="btn btn-danger mx-auto closeModal">Dismiss This Message</button>
 	                </div>
 	            </div>
 	        </div>
@@ -139,7 +139,10 @@
 		<script type="text/javascript">
 			let checkList = [];
 			function endorseValidation(){
-				
+				$(document).on("click", ".closeModal", function() {
+						$('.modal').modal('hide');
+				})
+
 				$(document).on("click", ".submit", function(e) {
 						if (Object.keys(checkList).length==0){
 							$('#errorModal').modal("show");
@@ -147,9 +150,13 @@
 							return false;
 						}
 						else {
-					      $(this).prop("disabled", true);
-					      $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-					      document.getElementById("ccendorse_form").submit();
+							$('#confirmModal').data('bs.modal')._config.backdrop = 'static'
+							$('#confirmModal').data('bs.modal')._config.keyboard = 'static'
+							$('.closeModal').prop("disabled", true)
+
+					      	$(this).prop("disabled", true);
+					      	$(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+					      	document.getElementById("ccendorse_form").submit();
 						}
 
 				});
@@ -220,7 +227,7 @@
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
                     $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navEndorse")).addClass("btn-success btn-outline-light font-weight-bold");
                     $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
                     $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
                 }

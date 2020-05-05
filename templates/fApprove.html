@@ -12,34 +12,16 @@
 		<title>Students' Speaker Initiative</title>
 	</head>
 	<body class="bg-light">
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-			<a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="fHome">Students' Speaker Initiative</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="collapsibleNavbar">
-				<ul class="navbar-nav d-flex justify-content-end w-100">
-					<li class="nav-item">
-						<a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="fResults" id="fResults">View Results</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="logout">Logout</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
+		{% include 'fHeader.html' %}
 		<div class="container-fluid text-center">
 			<br>
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
 						{% if hasapproved %}
-							<hr><br><h3>You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h3><br><hr>
+							<hr><br><h3>You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results of this cycle.</h3><br><hr>
 						{% else %}
 							{% if conversations|length > 0 %}
-								<h4>These are the current student-nominated conversations that have not yet been approved by a faculty member.<br> You have until {{cycle.getDateEndorse()}} to approve one of these conversations.</h4><hr><br>
+								<h4>These are the current student-nominated conversations that have not yet been approved by a faculty member.<br> You have until {{cycle.getDateEndorse().strftime("%b %d, %Y")}} to approve one of these conversations.</h4><hr><br>
 									{%for conversation in conversations: %}
 										<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 											<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -76,7 +58,7 @@
 						<hr><br><h3> You may not approve a conversation at this time because students are currently voting on faculty-approved conversations.</p><br><hr>
 					{% elif validation['results'] %}
 						<hr><br><h3>You may not approve a conversation at this time because voting has already ended for this cycle. The final results of the vote are now available!</h3>
-						<br><a class="btn btn-lg btn-success font-weight-bold" href="fResults">View Results This Cycle</a><br><br><hr>
+						<br><a class="btn btn-lg btn-success font-weight-bold" href="fResults">View Results For This Cycle</a><br><br><hr>
 					{% else %}
 						<hr><br><h3> There is no current cycle. Please come back later to approved conversations!</h3><br><hr>
 						
@@ -128,16 +110,35 @@
 						$("input[id='conversationid']").val(conversationid);
 					});
 				}
-			}                       
+			}
+
+			function navbarUpdate(){
+                if ("{{validation['nominating']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-success btn-outline-light font-weight-bold");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['results']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-success font-weight-bold");
+                }
+                else {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+            }             
 
 			function setup()
 			 {
-			 	$(document.getElementById("fApprove")).addClass("active");
 			 	$(document.getElementById("approve_form")).on("submit", function(){
 	                    $(document.getElementById("submitButton")).prop("disabled", true);
 	                    $(document.getElementById("submitButton")).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
 	                })
 				approveValidation();
+				navbarUpdate()
 			 }
 			 
 			$('document').ready(setup);

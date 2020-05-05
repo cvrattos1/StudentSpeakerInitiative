@@ -21,7 +21,8 @@
                         <hr><br><h3>There are currently no reports pending review.</h3><br><hr>
                     {% else %}
                         <h4>These are the nominated speakers that have been flagged for additional review.
-                        You may either dismiss the report or accept the report. </h4><hr>
+                        You may either dismiss the report or accept the report. </h4>
+                        <p class="font-italic"> Please note: Reports may only be reviewed during the nomination period, which ends on {{cycle.getDateNom().strftime('%b %d, %Y')}}. </p><hr>
                         <div class="row row-cols-2 text-center mx-auto justify-content-center">
                             {% for i in range(length): %}
                                 {% if speakers[i]: %}
@@ -33,12 +34,15 @@
                                                 <p class="card-text"> Reason for Report: {{reports[i].getReason()}}</p>
                                             </div>
                                             <div class="card-footer">
-                                                 <form class="form-group" action="dismiss_flag" method = "put">
-                                                    <input type="submit" class="form-control btn btn-success" id="status" name="dismiss" value="Dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker remains in the current cycle.">
+                                                 <form class="form-group dismissForm" action="dismiss_flag" method = "put">
+                                                    <button class="form-control btn btn-success dismissButton" name="dismiss" data-toggle="tooltip" data-placement="top" title="If this report is dismissed, this speaker remains in the current cycle.">Dismiss
+                                                    </button>
                                                     <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
                                                 </form>
-                                                <form class="form-group" action="remove_nomination" method = "put">
-                                                    <input type="submit" class="form-control btn btn-danger" id="status" name="remove" value="Approve" data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
+                                                <form class="form-group approveForm" action="remove_nomination" method = "put">
+                                                    <button class="form-control btn btn-danger approveButton" id="status" name="remove"data-toggle="tooltip" data-placement="top" title="If this report is approved, this speaker is removed from the current cycle.">
+                                                    Approve
+                                                    </button>
                                                     <input type="hidden" id="speakerid" name="speakerid" value={{reports[i].getSpeakid()}}>
                                                 </form>
                                             </div>
@@ -49,7 +53,7 @@
                     </div><hr><br>
                     {% endif %}
                 {% elif validation['endorsing'] or validation['voting'] or validation['results'] %}
-                    <hr><br><h3> Nominations have ended. You may no longer review reports for this cycle.</h3><br><hr>  
+                    <hr><br><h3> Nominations ended on {{cycle.getDateNom().strftime('%b %d, %Y')}}. You may no longer review reports for this cycle.</h3><br><hr>  
                 {% else %}
                     <hr><br><h3> There is no current cycle. Please start a new cycle.</h3><br><hr>  
                 {% endif %}
@@ -61,10 +65,20 @@
             function setup()
             {
                 $(document.getElementById("aReports")).addClass("active");
-                $(document.getElementById("navSpeaker")).addClass("active");
-                $(document).ready(function(){
-                  $('[data-toggle="tooltip"]').tooltip();   
-                });
+                $(document.getElementById("navSpeaker")).addClass("border-light");
+                $('[data-toggle="tooltip"]').tooltip({trigger : 'hover'});
+                $(".dismissForm").on("submit", function(e) {
+                        $(".dismissButton").prop("disabled", true);
+                        $(".approveButton").prop("disabled", true);
+                          // add spinner to button
+                        $(this).find(".dismissButton").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Dismissing...')
+                })
+                $(".approveForm").on("submit", function(e) {
+                        $(".dismissButton").prop("disabled", true);
+                        $(".approveButton").prop("disabled", true);
+                          // add spinner to button
+                        $(this).find(".approveButton").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Approving...')
+                })
             }
 
             $('document').ready(setup);

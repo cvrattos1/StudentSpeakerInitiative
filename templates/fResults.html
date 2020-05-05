@@ -19,33 +19,15 @@
         </style>
     </head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="fHome">Students' Speaker Initiative</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item">
-                        <a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="fResults" id="fResults">View Results</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'fHeader.html' %}
         <div class="container-fluid text-center">
             <br>
             {% if cycle.getName() %}
                 {% if validation['nominating'] or validation['endorsing'] or validation['voting'] %}
-                    <hr><br><h4>The results are not yet available. Please return on {{cycle.getDateResults()}} to see the results.</h4><br><hr>
+                    <hr><br><h4>The results are not yet available. Please return on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results.</h4><br><hr>
                 {% elif validation['results'] %}
                     {% if approvedconversations|length > 0 %}
-                        <h3 class="text-center"> Here are the results of the vote!</h3><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p><hr><br>
+                        <h3 class="text-center"> Here are the results of the vote!</h3><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd().strftime("%b %d, %Y")}}.</p><hr><br>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in approvedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
@@ -85,11 +67,30 @@
             {% endif %}
         </div>
         <script>
+            function navbarUpdate(){
+                if ("{{validation['nominating']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['results']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light btn-success font-weight-bold");
+                }
+                else {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+            } 
+
             function setup()
             {
                 let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
                 cl.responsive();
-                $(document.getElementById("fResults")).addClass("active");
+                navbarUpdate();
 
             }
          

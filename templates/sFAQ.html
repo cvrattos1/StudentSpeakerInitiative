@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <title>Students' Speaker Initiative</title>
+    </head>
+
+    <body class="bg-light">
+        {% include 'sHeader.html' %}
+        <div class="container-fluid h-100">
+            <div class="container" style="border: solid medium #F58025;"><br>
+                <h2> title </h2><hr>
+                <p>Content</p>
+            </div>
+        </div><br><hr><br>
+
+        <script type="text/javascript">
+
+        function navbarUpdate(){
+                if ("{{validation['nominating']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['endorsing']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['voting']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navVote")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['results']}}" == "True") {
+                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("navResults")).addClass("btn-success font-weight-bold");
+                }
+                else {
+                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                }
+            }
+
+        $('document').ready(navbarUpdate);  
+        </script>
+    </body>
+</html>

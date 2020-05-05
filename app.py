@@ -55,7 +55,7 @@ mail = Mail(app)
 ldapserver = pustatus.ServerConnection(os.environ['LDAP_USERNAME'], os.environ['MAIL_PASSWORD'])
 
 # deletes the image associated with a particular speakid from cloudinary. Returns a success/failure status
-def deleteImage(imagelink):
+def deleteImage(self, imagelink):
 
 	url = Database.connectDB(self, query)
 	parsed = urlparse(url)
@@ -514,8 +514,9 @@ def new_cycle():
 		rolloverVot = request.args.get('rollovervot')
 
 		database.adjustDatabase(rolloverNom, rolloverEnd, rolloverVot, rolloverThresh)
-		today = date.today()
-		database.addLog(today, username, 2, str(argdict["End Date"]))
+		today = datetime.datetime.today()
+		formatEndDate = datetime.datetime.strptime(argdict["End Date"], '%Y-%m-%d').strftime('%b %d, %Y')
+		database.addLog(today, username, 2, formatEndDate)
 
 		database.createCycle(name=argdict["Name of Voting Cycle"],
 							 datecreated=datecreated,
@@ -784,7 +785,7 @@ def remove_nomination():
 		username = current_user.id
 		database = Database()
 		speakerid = request.args.get('speakerid')
-		today = date.today()
+		today = datetime.datetime.today()
 		speakerinfo = database.getSpeaker(speakerid)    # returns Speaker object
 		database.addLog(today, username, 4, speakerinfo.getName())
 
@@ -812,7 +813,7 @@ def dismiss_flag():
 		speakerid = request.args.get('speakerid')
 		database.dismissFlag(speakerid)
 
-		today = date.today()
+		today = datetime.datetime.today()
 		speakerinfo = database.getSpeaker(speakerid)
 		database.addLog(today, username, 3, speakerinfo.getName())
 
@@ -1160,7 +1161,7 @@ def fapprove_flask():
 					return redirect('fHome')
 				else:
 					database.fpromote(username, approved)
-					return redirect('fResults')
+					return redirect('fHome')
 	except Exception as e:
 		errorDate = datetime.datetime.today()
 		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
@@ -1581,7 +1582,7 @@ def addAdmin():
 		database = Database()
 		if database.adminAuthenticate(newAdmin) != 1:  # can't double add
 			database.addAdmin(newAdmin)
-			today = date.today()                       # add action to DB
+			today = datetime.datetime.today()   # add action to DB
 			database.addLog(today, username, 0, newAdmin)
 		return redirect(url_for('aHome'))
 	except Exception as e:
@@ -1599,7 +1600,7 @@ def removeAdmin():
 		database = Database()
 		if database.returnCount('admin') != 1 and oldAdmin != "":  # can't delete last admin or empty admin
 			database.removeAdmin(oldAdmin)
-			today = date.today()                       # add action to DB
+			today = datetime.datetime.today()                       # add action to DB
 			database.addLog(today, username, 1, oldAdmin)
 		return redirect(url_for('aHome'))
 	except Exception as e:

@@ -1,19 +1,23 @@
-{%for row in info: %}
-    <p class="lead">{{row[0]}}: {{row[1]}}
-    {%if row[2]|int() == 0|int(): %}
-        added admin with id {{row[3]}}
-    {%elif row[2]|int() == 1|int(): %}
-        removed admin with id
-        {{row[3]}}
-    {%elif row[2]|int() == 2|int(): %}
-        created new cycle
-        to be ended on {{row[3]}}
-    {%elif row[2]|int() == 3|int(): %}
-        dismissed request of review
-        for speaker {{row[3]}}
-    {%elif row[2]|int() == 4|int(): %}
-        accepted a report and removed
-        the speaker {{row[3]}}
-    {% endif %}
-    </p>
-{% endfor %}
+{%if info|length == 0 %}
+    <p class="lead text-center"> There are no logs to show!</p>
+{% else %}
+    {%for row in info: %}
+        <p class="lead">{{row[0].strftime("%c")}}: {{row[1]}}
+        {%if row[2]|int() == 0|int(): %}
+            added admin with id {{row[3]}}
+        {%elif row[2]|int() == 1|int(): %}
+            removed admin with id
+            {{row[3]}}
+        {%elif row[2]|int() == 2|int(): %}
+            created new cycle
+            to be ended on {{row[3]}}
+        {%elif row[2]|int() == 3|int(): %}
+            dismissed request of review
+            for speaker {{row[3]}}
+        {%elif row[2]|int() == 4|int(): %}
+            accepted a report and removed
+            the speaker {{row[3]}}
+        {% endif %}
+        </p>
+    {% endfor %}
+{% endif %}

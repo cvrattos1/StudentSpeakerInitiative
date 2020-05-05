@@ -23,7 +23,7 @@
 								{%for speaker in speakers: %}
 								<div class="col-auto mb-3">
 									<div class="card h-100" style="width: 18rem; border-width: medium; border-color: #F58025">
-										<div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal" data={{speaker.getSpeakid()}}>
+										<div class="card-header"> <button type="button" class="reportButton float-right btn btn-sm bg-danger text-light" data-toggle="modal" data-speakid={{speaker.getSpeakid()}} data-target="#reportModal" data-name="{{speaker.getName()}}">
 											Report</button></div>
 										<div class="card-body">
 											<h4 class="card-title">{{speaker.getName()}}</h4>
@@ -69,21 +69,21 @@
 		</div>
 
 		<div class="modal" id="reportModal">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-dialog-scrollable">
 				<div class="modal-content">
 					<div class="modal-header">
 					  <h4 class="modal-title">Report This Speaker</h4>
-					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <button type="button" class="close closeReport">&times;</button>
 					</div>      
 					<div class="modal-body text-center">
-					  Please give a reason for why you would like to flag this speaker for admin review.<br><br>
-					  	<form action="flag_flask" id="flag_form" method = "put">
-							<div class="form-group">
-								<input type="hidden" name="speakerid" value="" id="speakerid">
-								<input type="text" placeholder="Reason for Report" class="form-control" id="reason" name="reason" required>
-								<br>
-								<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-								<input type="submit" class="submitFlag btn btn-primary" name="flag"> 
+						<p class="font-italic text-left"> By reporting this speaker, you are indicating that this speaker is not fit to be a candidate for this cycle. Reasons for this may include: the speaker is a fictional character, the speaker's link is fraudulent, etc. After a speaker is reported, an admin will review the report and may either dismiss the report (which means the speaker will remain a candidate for this cycle) or approve the report (which means the speaker will be removed from this cycle). <br><br><strong> After submitting a report, you will receive a confirmation email.</strong></p>
+					  	<form action="flag_flask" id="flag_form" method="put" autocomplete="off">
+					  		<div class="modal-footer m-0 p-0">
+							<p class="text-center mx-auto">Please give a reason for why you would like to report <br><strong><span id="reportName"></span></strong>.</p>
+							<input type="hidden" name="speakerid" value="" id="speakerid">
+							<input type="text" placeholder="Reason for Report" class="form-control mb-2 mx-auto" id="reason" name="reason" required>
+							<button type="button" class="btn btn-danger mr-auto mb-0 closeReport">Cancel Report</button>
+							<button class="submitReport btn btn-primary mb-0" name="flag">Submit Report</button>
 							</div>
 						</form>
 					</div>
@@ -97,16 +97,16 @@
 				  <div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title text-center">Confirm Endorsements</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<button type="button" class="close closeModal">&times;</button>
 					</div>
 					<div class="modal-body text-center">
-						<p class="font-weight-bold"> You have selected the following speakers for endorsement: </p>
+						<p class="font-weight-bold"> You You have selected the following speakers for endorsement: </p>
 						<p id="names" class="font-italic"></p>
 					</div>
-					<form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form" autocomplete="off">
+					<form action="endorse_flask" method= "post" name= "endorse_form" id="endorse_form">
 						<div class="modal-footer form-group justify-content-between">
 							<input type="hidden" name="list" id="list">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel Submission</button>
+							<button type="button" class="btn btn-danger closeModal">Cancel Submission</button>
 							<button type="button" class="submit btn btn-primary" name="submitEndorse">Confirm Submission</button>
 						</div>
 					</form>
@@ -119,13 +119,13 @@
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <h3 class="modal-title">Error</h3>
-	                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+	                    <button type="button" class="close closeModal" data-dismiss="modal">&times;</button>
 	                </div>
 	                <div class="modal-body text-center">
 	                    <p id="error" class="lead"></p>
 	                </div>
 	                <div class="modal-footer">
-	                    <button type="button" class="btn btn-danger mx-auto" data-dismiss="modal">Dismiss This Message</button>
+	                    <button type="button" class="btn btn-danger mx-auto closeModal">Dismiss This Message</button>
 	                </div>
 	            </div>
 	        </div>
@@ -139,10 +139,16 @@
 					//triggered when modal is about to be shown
 					$(document).on("click", ".reportButton", function() {
 						//get data-speakid attribute of the clicked element
-						let speakerid = $(this).attr('data-speakid')
+						let speakerid = $(this).attr('data-speakid');
+						let name = $(this).attr('data-name');
 						$("input[id='speakerid']").val(speakerid);
+						$("span[id='reportName']").html(name);
 					});
 				}
+					$(document).on("click", ".closeReport", function() {
+						$('#reportModal').modal('hide');
+						$("input[id='reason']").val("");
+					})
 
 					$(document).on("click", ".endorseButton", function(e) {
 						if (Object.keys(checkList).length==0){
@@ -165,6 +171,23 @@
 
 					});
 
+
+					$(document).on("click", ".submitReport", function(e) {
+						// disable button
+						$('#reportModal').data('bs.modal')._config.backdrop = 'static'
+						$('#reportModal').data('bs.modal')._config.keyboard = 'static'
+						$('.closeReport').prop("disabled", true)
+
+					    $(this).prop("disabled", true);
+					    $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...')
+					    document.getElementById("flag_form").submit();
+
+					})
+
+					$(document).on("click", ".closeModal", function() {
+						$('.modal').modal('hide');
+					})
+
 					$(document).on("click", ".submit", function(e) {
 						if (Object.keys(checkList).length==0){
 							$('#errorModal').modal("show");
@@ -172,11 +195,14 @@
 							return false;
 						}
 						else {
+							$('#confirmModal').data('bs.modal')._config.backdrop = 'static'
+							$('#confirmModal').data('bs.modal')._config.keyboard = 'static'
+							$('.closeModal').prop("disabled", true)
 							// disable button
-					      $(this).prop("disabled", true);
-					      // add spinner to button
-					      $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...')
-					      document.getElementById("endorse_form").submit();
+						    $(this).prop("disabled", true);
+						    // add spinner to button
+						    $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...')
+						    document.getElementById("endorse_form").submit();
 						}
 
 					});
@@ -237,6 +263,8 @@
 				});
 			 }
 
+
+
 			 function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
                     $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
@@ -246,7 +274,7 @@
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
                     $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
+                    $(document.getElementById("navEndorse")).addClass("btn-success btn-outline-light font-weight-bold");
                     $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
                     $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
                 }
@@ -274,7 +302,6 @@
 			{
 				$(document.getElementById("sEndorse")).addClass("active");
 				navbarUpdate();
-
 				$('#searchBar').focus();
 				$('#searchBar').on('input', getResults);
 				getResults();

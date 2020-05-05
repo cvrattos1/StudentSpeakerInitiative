@@ -12,60 +12,133 @@
         <title>Students' Speaker Initiative</title>
 	</head>
     <body class="bg-light">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="fHome">Students' Speaker Initiative</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav d-flex justify-content-end w-100">
-                    <li class="nav-item">
-                        <a class="nav-link" href="fApprove" id="fApprove">Approve A Conversation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="fResults" id="fResults">View Results</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {% include 'fHeader.html' %}
         <div class="container-fluid text-center">
             <br><h2 class="font-weight-bold">Welcome to the faculty homepage!</h2>
             <hr><br>
             {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
                 <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025"><br>
-                	<h2 class="font-italic">Information for Current Cycle: "{{ cycle.getName() }}"</h2><hr>
+                	<h2 class="font-italic">How It Works:</h2><hr>
+                    <p class="lead text-left">Right now students are nominating which conversation panels they would like to see on campus. These panels can range from anything between academic debate to popular culture discussions. However, before any of these panels can come to campus, they first need to be approved by a faculty member like you! If a panel doesn't have faculty approval, students won't even be able to vote for it in the final vote. By approving a conversation panel, you are giving your stamp of approval and allowing that panel to move on to the next stages of the cycle and helping students have a say in who they would like to see on campus.</p><hr>
+                    <p class="font-italic text-left"> For this cycle, you may approve <strong>1</strong> conversation, and you have until {{cycle.getDateEndorse().strftime("%b %d, %Y")}} to do so. Once a conversation is approved, the conversation will be able to move to the next steps of the cycle. If you would like to see the results of the final vote, they will be available on {{cycle.getDateResults().strftime('%b %d, %Y') }}.</p><hr>
                     {% if validation['nominating'] %} 
-	                    <p class="lead">For this cycle, you may approve <strong>1 conversation</strong>. You have until {{cycle.getDateEndorse()}} to approve a conversation. Once a conversation is approved, students will be able to endorse and vote on it. Results of the final vote will be available after the endorsement and voting steps have completed.<hr></p>
                     	{% if hasapproved %}
-	                        <h4> You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h4><br>
+                            <h5> Thank your participating in this cycle! You participation is greatly appreciated.</h5><br>
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You have already approved a conversation for this cycle.">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                                </div>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                    {% else %} 
-	                    	<h4> You may approve a conversation at this time. Please use the button below to approve a conversation.</h4>
-	                		<br><a class="btn btn-lg btn-success font-weight-bold" href="fApprove">Approve A Conversation</a><br><br>
+                            <h5> You may approve a conversation panel at this time.</h5><br>
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <a href="fApprove" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4" data-toggle="tooltip" data-placement="top" title="Click this button to approve a conversation panel!">
+                                        Approve A Panel
+                                </a>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                	{% endif %} 
                     {% elif validation['endorsing']%}
                     	{% if hasapproved %}
-	                        <h4> Students are now endorsing faculty-approved conversations, including the conversation that you approved! Please come back on {{cycle.getDateResults()}} to see the results of this cycle.</h4><br>
+	                        <h5> Students are now endorsing faculty-approved conversations, including the conversation that you approved! Please come back on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results of this cycle.</h5><br>
+
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You have already approved a conversation for this cycle.">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                                </div>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                    {% else %} 
-	                    	<h4> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse()}}. Unfortunately, this means that you may not approve a conversation for this cycle at this time. If you would like to see the results of this cycle, please come back on {{cycle.getDateVoting() }}. </h4><br>
+	                    	<h5> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse().strftime('%b %d, %Y')}}. Unfortunately, this means that you cannot participate in this cycle. Please come back later to help students select who they would like to see on campus!</h5><br>
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You may not approve a conversation at this time.">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                                </div>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                    {% endif %} 
                     {% elif validation['voting'] %}
                         {% if hasapproved %}
-	                        <h4> Students are now voting on the conversations that received enough endorsements to move into the final voting block. Please come back on {{cycle.getDateResults()}} to see the results of the vote!</h4><br>
+	                        <h5> Students are now voting on the conversations that received enough endorsements to move into the final voting block. Please come back on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results of the vote!</h5><br>
+                            <br>
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You have already approved a conversation for this cycle.">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                                </div>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                    {% else %} 
-	                    	<h4> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse()}}. Unfortunately, this means that you cannot approve a conversation for this cycle. If you would like to see the results of this cycle, please come back on {{cycle.getDateResults() }}. </h4><br>
+                            <h5> The period in which faculty can approve conversations closed on {{cycle.getDateEndorse().strftime('%b %d, %Y')}}. Unfortunately, this means that you cannot participate in this cycle. Please come back later to help students select who they would like to see on campus!</h5><br>
+                            <div class="btn-group-lg flex-wrap mb-4">
+                                <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You may not approve a conversation at this time.">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                                </div>
+                                <div class="btn btn-lg btn-outline-dark font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">View Results</p>
+                                </div>
+                            </div>
 	                    {% endif %} 
                     {% elif validation['results'] %}
-                        <h4> The results of this cycle are finally available! Please click on the button below to see them. </h4>
-                        <br><a class="btn btn-lg btn-success" href="fResults">View Results This Cycle</a><br><hr>
-                        <p class="font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p><br>
+                        <h5> The results of this cycle are finally available! Please click on the button below to see them. </h5>
+                        <div class="btn-group-lg flex-wrap mb-4">
+                            <div class="btn btn-lg btn-outline-danger font-weight-bold disabled" data-toggle="tooltip" data-placement="top" title="You may not approve a conversation panel at this time. Panel approval ended on {{cycle.getDateEndorse().strftime('%b %d, %Y') }}">
+                                    <p class="m-0 pb-0 pr-4 pl-4">Approve A Panel</p>
+                            </div>
+                            <a href="fResults" class="btn btn-success btn-lg font-weight-bold pr-4 pl-4" data-toggle="tooltip" data-placement="top" title="Click this button to view the results of the vote!">
+                                View Results
+                            </a>
+                        </div>  
                     {% endif %}
                 	</div><hr>
             {% else %}
-                <h3> There is currently no active cycle. Please come back later to approve conversations!</h3><br><hr>
+                <h4> There is currently no active cycle. Please come back later to help students select who they would like to see on campus!</h4><br><hr>
             {% endif %} 
     	</div>
+        <script>
+            function navbarUpdate(){
+                if ("{{validation['nominating']}}" == "True") {
+                    if ("{{hasapproved}}" == "1") {
+                        $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                        $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                    }
+                    else {
+                        $(document.getElementById("fApprove")).addClass("btn-success font-weight-bold");
+                        $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                    }
+                }
+                else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+                else if ("{{validation['results']}}" == "True") {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
+                    $(document.getElementById("fResults")).addClass("btn-success font-weight-bold");
+                }
+                else {
+                    $(document.getElementById("fApprove")).addClass("btn-outline-light disabled");
+                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                }
+            } 
+
+            function setup()
+            {
+                $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });   
+                navbarUpdate();
+
+            }
+         
+            $('document').ready(setup);
+        </script>
     </body>
 </html>

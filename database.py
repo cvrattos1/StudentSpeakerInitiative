@@ -899,7 +899,7 @@ class Database:
     # Creates a new log
     # ---------------------------------------------------------------------
     def addLog(self, date, netid, action, info):
-        query = "PREPARE stmt(date, text, int, text) AS " \
+        query = "PREPARE stmt(timestamp, text, int, text) AS " \
                 "INSERT INTO adminlogs VALUES($1, $2, $3, $4);" \
                 "EXECUTE stmt('" + str(date) + "', '" + netid.strip() + "', " + str(
             action) + ", '" + info.strip() + "');"
