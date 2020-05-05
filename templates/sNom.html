@@ -18,7 +18,7 @@
             {% if cycle.getName() %}
                 {% if validation['nominating'] %}    
                      {% if remaining %}
-                        <h4>This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have this many nominations left: {{ remaining }}.</h4><hr>
+                        <h4>This is your opportunity to nominate a speaker you would like to invite to our campus! Please fill out all the fields below and press submit to nominate a speaker of your choice. You have {{ remaining }} nominations remaining.</h4><hr>
                         <div class="container">
                             <form action="nominate_flask" id="nom_form" method = "post" enctype="multipart/form-data" autocomplete="off">
                                 <div class="card text-center " style="border-width: thin; border-color: #F58025">

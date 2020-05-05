@@ -13,7 +13,7 @@
 	</head>
     <body class="bg-light">
     	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a type="button" class="navbar-brand btn btn-dark round-lg font-weight-bold" href="sHome">Students' Speaker Initiative</a>
+            <a class="navbar-brand btn btn-dark round-lg font-weight-bold" href="sHome">Students' Speaker Initiative</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,18 +33,44 @@
             <hr>
             {% if validation['nominating'] or validation['endorsing'] or validation['voting'] or validation['results'] %}
             <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025"><br>
-                    <h2 class="font-italic">Information for Current Cycle: "{{ cycle.getName() }}"</h2><hr>
-                    For this cycle, you have <strong>{{ cycle.getNominateNum() }} nomination(s)</strong>for both the speakers and conversations;
-                    you have <strong>{{ cycle.getEndorseNum()}} endorsement(s)</strong>nto use for both the speakers and conversations;
-                    and you have <strong>{{ cycle.getVoteNum() }} vote(s)</strong> to distribute among the speakers and conversations in the final voting blocks. <hr>
-                    In order to move into the final voting block, a speaker or conversation must receive at least <strong>{{ cycle.getThreshold() }} endorsement(s)</strong>.<hr>
+                    <!-- <h2 class="font-italic">Information for Current Cycle: "{{ cycle.getName() }}"</h2><hr> -->
+                    <h2 class="font-italic">How It Works: </h2><hr>
+                    We are running two independent elections concurrently: (1) for a speaker 
+                    <svg class="bi bi-person-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                    </svg>
+                    and (1) for a discussion panel 
+                    <svg class="bi bi-people-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 100-6 3 3 0 000 6zm-5.784 6A2.238 2.238 0 015 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 005 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd"/>
+                    </svg>
+                    <br><br>
+                    There are 3 phases to each cycle: <br>
+                    <p class="text-left" style="padding-left: 50px;">
+                        <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
+                        </svg>
+                        Nominate - fill out a short form to tell us who you want to see on campus. You get <strong>{{ cycle.getNominateNum() }}</strong> nomination. <br>
+                        <svg class="bi bi-heart-half" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 1.314C3.562-3.248-7.534 4.735 8 15V1.314z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 01.176-.17C12.72-3.042 23.333 4.867 8 15z" clip-rule="evenodd"/>
+                        </svg>
+                        Endorse - speakers need {{ cycle.getThreshold() }} endorsement to be up for the vote. Give your speakers some love! You get <strong>{{ cycle.getEndorseNum()}} </strong> endorsement. <br>
+                        <svg class="bi bi-trophy" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 1h10c-.495 3.467-.5 10-5 10S3.495 4.467 3 1zm0 15a1 1 0 011-1h8a1 1 0 011 1H3zm2-1a1 1 0 011-1h4a1 1 0 011 1H5z"/>
+                            <path fill-rule="evenodd" d="M12.5 3a2 2 0 100 4 2 2 0 000-4zm-3 2a3 3 0 116 0 3 3 0 01-6 0zm-6-2a2 2 0 100 4 2 2 0 000-4zm-3 2a3 3 0 116 0 3 3 0 01-6 0z" clip-rule="evenodd"/>
+                            <path d="M7 10h2v4H7v-4z"/>
+                            <path d="M10 11c0 .552-.895 1-2 1s-2-.448-2-1 .895-1 2-1 2 .448 2 1z"/>
+                        </svg>
+                        Vote - cast your vote to bring your favorite speakers to campus! You get <strong>{{ cycle.getVoteNum() }}</strong> votes. <br>
+                    </p><br>
 
                     {% if validation['nominating'] %}
                         <strong>Nomininations are currently underway!</strong><br>
-                        Nominations will close and endorsements will open on <strong>{{ cycle.getDateEndorse()}}</strong>.<br>
-                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting()}}</strong>.<br>
-                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>.<br>
-                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        Nominations will close and endorsements will open on <strong>{{ cycle.getDateEndorse().strftime("%b %d, %Y")}}</strong>.<br>
+                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting().strftime("%b %d, %Y")}}</strong>.<br>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults().strftime("%b %d, %Y")}}</strong>.<br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}.</strong> </p><hr>
                         <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
                         <div class="btn-group-lg flex-wrap" role="group" aria-label="Navigate group">
                             <div class="btn-group mb-4">
@@ -57,7 +83,7 @@
                                 </div>
                             </div>
                         <div class="btn-group mb-4" role="group">
-                            <button type="button" id="endorsebutton" class="btn btn-info btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle-second="tooltip" data-placement="top" title="Endorsements are currently unavailable and will not open until {{cycle.getDateEndorse()}}; however, you may access the endorsement pages to see which speakers and conversations have been nominated at this time.">
+                            <button type="button" id="endorsebutton" class="btn btn-info btn-lg font-weight-bold pr-4 pl-4 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle-second="tooltip" data-placement="top" title="Endorsements are currently unavailable and will not open until {{cycle.getDateEndorse().strftime("%b %d, %Y") }}; however, you may access the endorsement pages to see which speakers and conversations have been nominated at this time.">
                                 Endorsements
                             </button>
                             <div class="dropdown-menu" aria-labelledby="endorsebutton">
@@ -65,10 +91,10 @@
                                 <a class="dropdown-item" href="scEndorse">View Conversations</a>
                             </div>
                         </div>
-                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Voting is currently unavailable. Voting will open on {{cycle.getDateVoting() }}.">
+                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Voting is currently unavailable. Voting will open on {{cycle.getDateVoting().strftime("%b %d, %Y") }}.">
                             <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
                         </div>
-                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                        <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime("%b %d, %Y") }}">
                             <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
                         </div>
                       </div>
@@ -76,12 +102,12 @@
                     {% elif validation['endorsing'] %}
                         Nomininations have closed. <br>
                         <strong>Endorsements are currently underway!</strong>.<br>
-                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting()}}</strong>. <br>
-                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>. <br>
-                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        Endorsements will end and voting will begin on <strong>{{ cycle.getDateVoting().strftime("%b %d, %Y") }}</strong>. <br>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults().strftime("%b %d, %Y") }}</strong>. <br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}.</strong> </p><hr>
                         <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
                         <div class="btn-group-lg" role="group" aria-label="Navigate group">
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
                             </div>
                             <div class="btn-group mb-4" role="group">
@@ -93,24 +119,24 @@
                                     <a class="dropdown-item" href="scEndorse">Endorse Conversation(s)</a>
                                 </div>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Voting has not yet begun; voting will begin on {{cycle.getDateVoting() }}">
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Voting has not yet begun; voting will begin on {{cycle.getDateVoting().strftime("%b %d, %Y") }}">
                                 <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime("%b %d, %Y") }}">
                                 <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
                             </div>
                         </div>
                     {% elif validation['voting'] %}
                         Nomininations and endorsements have closed. <br>
                         <strong>Voting is currently underway!</strong>.<br>
-                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults()}}</strong>. <br>
-                        <strong> This cycle will end on {{ cycle.getDateEnd() }}.</strong> </p><hr>
+                        Voting will end and results will be shown on <strong>{{ cycle.getDateResults().strftime("%b %d, %Y") }}</strong>. <br>
+                        <strong> This cycle will end on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}.</strong> </p><hr>
                         <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
                         <div class="btn-group-lg" role="group" aria-label="Navigate group">
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, endorsements are currently unavailable; endorsements ended on {{cycle.getDateVoting() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, endorsements are currently unavailable; endorsements ended on {{cycle.getDateVoting().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Endorsements</p>
                             </div>
                             <div class="btn-group mb-4" role="group">
@@ -122,23 +148,23 @@
                                     <a class="dropdown-item" href="scVote">Vote For Conversation(s)</a>
                                 </div>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults() }}">
+                            <div class="btn mb-4 btn-lg btn-outline-dark font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="The results of the voting process will be available once voting ends on {{cycle.getDateResults().strftime("%b %d, %Y") }}">
                                 <p class="m-0 pb-0 pr-4 pl-4">See Results</p>
                             </div>
                         </div>
                     {% elif validation['results'] %}
                         Nomininations, endorsements, and voting have closed. <br>
                         <strong>The results of the vote are now available!</strong><br>
-                        This cycle will end, and results will become unavailable on {{ cycle.getDateEnd() }}.</p><hr>
+                        This cycle will end, and results will become unavailable on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}.</p><hr>
                         <p class="lead text-center font-weight-bold"> Please use the buttons below to navigate the current cycle.</p>
                         <div class="btn-group-lg" role="group" aria-label="Navigate group">
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, nominations are currently unavailable; nominations ended on {{cycle.getDateEndorse().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Nominations</p>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, endorsements are currently unavailable; endorsements ended on {{cycle.getDateVoting() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, endorsements are currently unavailable; endorsements ended on {{cycle.getDateVoting().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Endorsements</p>
                             </div>
-                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, voting is currently unavailable; voting ended on {{cycle.getDateResults() }}.">
+                            <div class="btn mb-4 btn-lg btn-outline-danger font-weight-bold disabled" data-toggle-second="tooltip" data-placement="top" title="Unfortunately, voting is currently unavailable; voting ended on {{cycle.getDateResults().strftime("%b %d, %Y") }}.">
                                 <p class="m-0 pb-0 pr-4 pl-4">Votes</p>
                             </div>
                             <div class="btn-group mb-4" role="group">
@@ -154,7 +180,7 @@
                     {% endif %}
             </div><br><hr><br>
             {% else %}
-                <br><h3> There is currently no active cycle. The most recent cycle ended on {{cycle.getDateEnd()}}. Please check back later to participate in selecting speakers and conversation panels for our campus!</h3><br><hr>
+                <br><h3> There is currently no active cycle. The most recent cycle ended on {{cycle.getDateEnd().strftime("%b %d, %Y") }}. Please check back later to participate in selecting speakers and conversation panels for our campus!</h3><br><hr>
             {% endif %}
 
         </div>

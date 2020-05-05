@@ -24,12 +24,12 @@
 			<br>
 			{% if cycle.getName() %}
 					{% if validation['nominating'] or validation['endorsing'] %}
-							<hr><br><h3>The voting cycle will begin on {{ cycle.getDateVoting() }}.</h3><br><hr>
+							<hr><br><h3>The voting cycle will begin on {{ cycle.getDateVoting().strftime("%b %d, %Y") }}.</h3><br><hr>
 					{% elif validation['voting'] %}
 						{% if hasvoted %}
-							<hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</h3><br><hr>
+							<hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd().strftime("%b %d, %Y") }} to see the results.</h3><br><hr>
 						{% elif speakers|length > 0 %}
-							<h4>These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd()}}. You have {{cycle.getVoteNum()}} vote(s).</h4><hr>
+							<h4>These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} vote(s).</h4><hr>
 									<form action="vote_flask" method= "post" name="vote_form" id="vote_form" autocomplete="off">
 										<div class="row row-cols-2 text-center mx-auto justify-content-center">
 										{%for speaker in speakers: %}
@@ -59,7 +59,7 @@
                         {% endif %}
 					{% elif validation['results'] %}
 						{% if speakers|length > 0 %}
-						<h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p>
+						<h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd().strftime("%b %d, %Y") }}.</p>
 							<div class="row row-cols-2 text-center mx-auto justify-content-center">
 								{%for speaker in speakers: %}
 									<div class="col-auto mb-3">

@@ -18,7 +18,7 @@
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
         				{% if conversations|length > 0 %}
-    						<h4>These are the current nominations. On {{ cycle.getDateEndorse()}}, you will be able to endorse them. </h4><hr>
+    						<h4>These are the current nominations. On {{ cycle.getDateEndorse().strftime("%b %d, %Y") }}, you will be able to endorse them. </h4><hr>
     							{%for conversation in conversations: %}
     								<div class="card text-center" style="border-width: medium; border-color: #F58025">
     									<div class="card-header">
@@ -49,7 +49,7 @@
 					
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
-							<hr><br><h3>Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting()}} to vote.</h3><br><hr>
+							<hr><br><h3>Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting().strftime("%b %d, %Y") }} to vote.</h3><br><hr>
 						{% elif conversations|length > 0 %}
 							<h4>These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </h4><hr>
 								{%for conversation in conversations: %}

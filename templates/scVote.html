@@ -24,12 +24,12 @@
             <br>
                 {% if cycle.getName() %}
                     {% if validation['nominating'] or validation['endorsing'] %}
-                            <hr><br><h3>The voting cycle will begin on {{ cycle.getDateVoting() }}.</h3><br><hr>
+                            <hr><br><h3>The voting cycle will begin on {{ cycle.getDateVoting().strftime("%b %d, %Y") }}.</h3><br><hr>
                     {% elif validation['voting'] %}
                         {% if hasvoted %}
-                            <hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd()}} to see the results.</h3><br><hr>
+                            <hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd().strftime("%b %d, %Y") }} to see the results.</h3><br><hr>
                         {% else %}
-                            <h4>These are the current conversation panels. The voting period ends on {{ cycle.getDateEnd()}}. You have this many votes: {{cycle.getVoteNum()}}. </h4><hr>
+                            <h4>These are the current conversation panels. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} votes. </h4><hr>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form" autocomplete="off">
                                         {%for conversation in conversations: %}
                                             	<div class="card text-center" style="border-width: thin; border-color: #F58025">
@@ -71,7 +71,7 @@
                         {% endif %}
                      {% elif validation['results'] %}
                         {% if conversations|length > 0 %}
-                        <h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd()}}.</p>
+                        <h4> Here are the results of the vote!</h4><p class="text-center font-italic p-0 m-0"> Please note: results will only be available until {{cycle.getDateEnd().strftime("%b %d, %Y") }}.</p>
                                 {%for conversation in conversations: %}
                                     <div class="card text-center" style="border-width: thin; border-color: #F58025">
                                         <div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
