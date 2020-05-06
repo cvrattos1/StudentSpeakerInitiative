@@ -307,13 +307,13 @@ class Database:
     # returns a list of all endorsed speakers with a name fitting
     # the search criteria
     # ---------------------------------------------------------------------
-    def searchEndorsements(self, search):
+    def searchEndorsements(self, search, netid):
         search = search.lower()
         search = '%' + search + '%'
 
         query = "PREPARE stmt(text) AS " \
-                "SELECT * FROM speakers WHERE LOWER(name) LIKE $1;" \
-                "EXECUTE stmt('" + search + "');"
+                "SELECT * FROM speakers WHERE LOWER(name) LIKE $1 AND NOT netid = $2;" \
+                "EXECUTE stmt('" + search + "','" + netid.strip() + "');"
 
         speakers = Database.connectDB(self, query)
 
