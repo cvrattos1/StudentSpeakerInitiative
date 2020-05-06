@@ -14,11 +14,96 @@
 
     <body class="bg-light">
         {% include 'sHeader.html' %}
-        <div class="container-fluid h-100">
-            <div class="container" style="border: solid medium #F58025;"><br>
-                <h2> title </h2><hr>
-                <p>Content</p>
-            </div>
+        <br><div class="container h-100 bg-white" style="border: solid medium #F58025;">
+            <br><h2 class="font-italic text-center"> Frequently Asked Questions </h2><hr>
+	        <div class="accordion" id="fAccordion">
+			  <div class="card">
+			    <div class="card-header" id="headingOne">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			          What is the Students’ Speaker Initiative?
+			        </button>
+			      </h2>
+			    </div>
+
+			    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#fAccordion">
+			      <div class="card-body">
+			        The Students' Speaker Initiative is a student club at Princeton whose goal is to bring speakers, who have been chosen by undergraduate students, to campus to speak. Speakers are brought to campus in two different ways, individually and as part of a conversation panel.  Speakers and conversation panels are chosen during a Students’ Speaker Initiative election cycle.
+			      </div>
+			    </div>
+			  </div>
+
+			  <div class="card">
+			    <div class="card-header" id="headingTwo">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			          What is a conversation panel?
+			        </button>
+			      </h2>
+			    </div>
+			    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#fAccordion">
+			      <div class="card-body">
+			        A conversation panel consists of two to four speakers that are brought to campus to have a discussion in front of the students. When nominating a panel, students have the opportunity to chose whichever speakers they feel can generate a productive discourse on campus. However, for any conversation to make it into the endorsement phase, a faculty member must approve it. Only faculty-approved conversations can be endorsed by students and have the chance to make it into the final voting block.
+			      </div>
+			    </div>
+			  </div>
+			  <div class="card">
+			    <div class="card-header" id="headingThree">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			          What is the nomination phase?
+			        </button>
+			      </h2>
+			    </div>
+			    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#fAccordion">
+			      <div class="card-body">
+			        The nomination phase is the first phase of the Students’ Speaker Initiative election cycle. Students can nominate up to the maximum number of speakers and panels. The maximum number of nominations is set by the Students’ Speaker Initiative administrators and is stated on the student homepage. To nominate a speaker, the student must provide the speaker’s name, a brief description of the speaker, a link to their works or biography, and an image of the speaker. To nominate a conversation panel, the student must provide a name, brief description, link to works/biography, and an image for each of the speakers that will form part of the panel that they would like to nominate. Please note: students' nominations are tracked by the system, meaning that each nomination can be traced back to the student that originally created it.
+			      </div>
+			    </div>
+			  </div>
+			  <div class="card">
+			    <div class="card-header" id="headingFour">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+			          What is the endorsement phase?
+			        </button>
+			      </h2>
+			    </div>
+			    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#fAccordion">
+			      <div class="card-body">
+			        The endorsement phase is the second phase of the Students’ Speaker Initiative election cycle. Students can endorse up to the maximum number of speakers and panels. By the end of the endorsement phase, if a speaker or conversation panel has crossed the endorsement threshold, that speaker or panel will move into the final voting block. Both the maximum number of endorsements that a student can use and the endorsement threshold are set by the Students’ Speaker Initiative administrators and are stated on the student homepage. Please note: students' endorsements are not tracked by the system, and students may only submit their endorsements once per cycle. Thus, if a student doesn’t use all their endorsements, they will not be able to use them at a later date.
+			      </div>
+			    </div>
+			  </div>
+			  <div class="card">
+			    <div class="card-header" id="headingFive">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+			          What is the voting phase?
+			        </button>
+			      </h2>
+			    </div>
+			    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#fAccordion">
+			      <div class="card-body">
+			        The voting phase is the third phase of the Students’ Speaker Initiative election cycle. The voting block consists of speakers and conversation panels that received the minimum number of endorsements needed to cross the endorsement threshold and move into the final voting phase. Students have a maximum number of votes that they may use for speakers and panels during the voting phase; students may distribute their alloted number of votes among the different candidates in the voting block however they may please. The maximum number of votes is set by the Students’ Speaker Initiative administrators and is stated on the student homepage. Please note: students' votes are not tracked by the system, and students may only submit their votes once per cycle. Thus, if a student doesn’t use all their votes, they will not be able to use them at a later date.
+			      </div>
+			    </div>
+			  </div>
+			  <div class="card">
+			    <div class="card-header" id="headingSix">
+			      <h2 class="mb-0">
+			        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+			          Where can I contact the Students' Speaker Initiative for more help?
+			        </button>
+			      </h2>
+			    </div>
+			    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#fAccordion">
+			      <div class="card-body">
+			        If you need additional help or other questions answered, please send us an email at ssidev@princeton.edu. Please sure to be as descriptive as possible so that we can best serve you! We will try to respond to you as quickly as possible; however, please be aware that our response time will be slower whenever there is no cycle currently taking place.
+			      </div>
+			    </div>
+			  </div>
+			</div><br>
         </div><br><hr><br>
 
         <script type="text/javascript">

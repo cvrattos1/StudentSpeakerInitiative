@@ -34,9 +34,9 @@
                             <path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
                         </svg>
-                        Nominate - fill out a short form to tell us who you want to see on campus. You get <strong>{{ cycle.getNominateNum() }}</strong>
-                        {% if cycle.getNominateNum()|int == 1|int %} nomination. <br>
-                        {% else %} nominations. <br>
+                        Nominate - fill out a short form to tell us who you want to see on campus. You may nominate <strong>{{ cycle.getNominateNum() }}</strong>
+                        {% if cycle.getNominateNum()|int == 1|int %} speaker and <strong>{{ cycle.getNominateNum() }}</strong> panel.<br>
+                        {% else %} speakers and <strong>{{ cycle.getNominateNum() }}</strong> panels.<br>
                         {% endif %}
 
                         <svg class="bi bi-heart-half" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -44,13 +44,13 @@
                             <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 01.176-.17C12.72-3.042 23.333 4.867 8 15z" clip-rule="evenodd"/>
                         </svg>
                         Endorse - candidates need {{ cycle.getThreshold() }} 
-                        {% if cycle.getThreshold()|int == 1|int %} endorsement 
+                        {% if cycle.getThreshold()|int == 1|int %} endorsement
                         {% else %} endorsements
                         {% endif %}
-                        to be up for the vote. Give your speakers some love! You get <strong>{{ cycle.getEndorseNum()}} </strong> 
-                        {% if cycle.getEndorseNum()|int == 1|int %} endorsement. <br>
-                        {% else %} endorsements. <br>
-                        {% endif %}
+                        to cross the endorsement threshold and make it into the final vote. Give your speakers some love! You get <strong>{{ cycle.getEndorseNum()}} </strong> 
+                        {% if cycle.getEndorseNum()|int == 1|int %} endorsement
+                        {% else %} endorsements
+                        {% endif %} for the speakers and <strong>{{ cycle.getEndorseNum()}}</strong> for the panels.<br>
                         
                         <svg class="bi bi-trophy" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3 1h10c-.495 3.467-.5 10-5 10S3.495 4.467 3 1zm0 15a1 1 0 011-1h8a1 1 0 011 1H3zm2-1a1 1 0 011-1h4a1 1 0 011 1H5z"/>
@@ -59,9 +59,9 @@
                             <path d="M10 11c0 .552-.895 1-2 1s-2-.448-2-1 .895-1 2-1 2 .448 2 1z"/>
                         </svg>
                         Vote - cast your vote to bring your favorite speakers to campus! You get <strong>{{ cycle.getVoteNum() }}</strong> 
-                        {% if cycle.getVoteNum()|int == 1|int %} vote. <br>
-                        {% else %} votes. <br>
-                        {% endif %}
+                        {% if cycle.getVoteNum()|int == 1|int %} vote
+                        {% else %} votes
+                        {% endif %}for the speakers and <strong>{{ cycle.getVoteNum() }}</strong> for the panels.<br>
                     </p><hr>
 
                     {% if validation['nominating'] %}
@@ -185,7 +185,7 @@
                 <h5 class="font-italic">Need additional information? Please use the buttons below.</h5><hr>
                 <div class="btn-group-lg mb-4" role="group" aria-label="Info group">
                     <a class="btn btn-primary" href="sAdminLogs">Admin Logs</a>
-                    <a class="btn btn-primary" href="#">FAQ</a>
+                    <a class="btn btn-primary" href="sFAQ">FAQ</a>
                 </div>
             </div><br><hr><br>
 

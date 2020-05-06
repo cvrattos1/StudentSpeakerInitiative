@@ -238,6 +238,36 @@ def sHome():
 		response = make_response(html)
 	return response
 
+@app.route('/sFAQ', methods=['GET'])
+def sFAQ():
+	username = CASClient().authenticate()
+	try:
+		pageType = "undergraduates"
+		database = Database()
+		role = uservalidation(username, database)
+		check = checkuser(role, pageType)
+		if not check:
+			return loginfail(username, pageType)
+
+		else:
+			useraccount = userAccount(username, role)
+			login_user(useraccount)
+			cycle = database.getCycle()
+			validation = cyclevalidation(cycle)
+			html = render_template('sFAQ.html',
+								   username=username,
+								   cycle=cycle,
+								   validation=validation
+								   )
+			response = make_response(html)
+
+	except Exception as e:
+		errorDate = datetime.datetime.today()
+		print("ERROR: [" + str(e) + "] occured at " + str(errorDate), file=stderr)
+		html = render_template('error.html')
+		response = make_response(html)
+	return response
+
 @app.route('/fHome', methods=['GET', 'POST'])
 def fHome():
 	username = CASClient().authenticate()
