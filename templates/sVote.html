@@ -205,15 +205,15 @@
 					      		let limit='{{cycle.getVoteNum()}}';
 				        		if (limit != 'unlimited'){
 								    let numcount=0
-								 	if (!Array.isArray(numgroup)) {
-								 		numcount = $(numgroup).val()
-								 	}
-								 	else {
+								 	// if (!Array.isArray(numgroup)) {
+								 	// 	numcount = $(numgroup).val()
+								 	// }
+								 	// else {
 							            for (let i=0; i<numgroup.length; i++)
 							                if ($(numgroup[i]).val()) {
 							                    numcount += parseInt($(numgroup[i]).val());
 							                }
-						            }
+						            // }
 						            if (parseInt(numcount) > parseInt(limit)){
 						             	let max = parseInt(limit) - (parseInt(numcount) - current);
 						             	if (max > 0) 

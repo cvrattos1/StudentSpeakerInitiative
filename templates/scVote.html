@@ -51,7 +51,7 @@
                                                 		</div>
                                                 	</div>
                                                     <div class="card-footer font-weight-bolder">
-                                                        <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{conversation.getConverseId()}} min= 0>
+                                                        <input type="number" class="numInput form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{conversation.getConverseId()}} min= 0>
                                                         <input type="hidden" name="converseid" value={{conversation.getConverseId()}}>
                                                     </div>
                                                 </div>
@@ -157,7 +157,7 @@
                         $('.modal').modal('hide');
                     })
 
-                    $(document).on("click", ".submit", function(e) {
+                    $(document).on("click", ".submitVotes", function(e) {
                             if (voteList.length==0){
                                 $('#errorModal').modal("show");
                                 $("p[id='error']").html("You have not voted for any conversations.");
@@ -196,7 +196,7 @@
 
                     let voteForm = document.getElementById("ccvote_form");
                     if (voteForm) {
-                        let numgroup = document.getElementById("ccvote_form").elements.namedItem("number");
+                        let numgroup = document.getElementsByClassName('numInput');
                         $(document).on('keydown','input', function(e){
                                     if (e.shiftKey === true ) {
                                         if (e.which == 9) {
@@ -215,6 +215,7 @@
 
                         $(document).on('change','input', function(){
                             let current = $(this).val();
+                            console.log(current)
                             let conversationid = this.id
                             let speakers = $(this).parent().parent().find('h4');
                             if (current == 0){
@@ -234,15 +235,16 @@
                                 let limit='{{cycle.getVoteNum()}}';
                                 if (limit != 'unlimited'){
                                     let numcount=0
-                                    if (!Array.isArray(numgroup)) {
-								 		numcount = $(numgroup).val();
-								 	}
-								 	else {
+                                    console.log(Array.isArray(numgroup))
+          //                           if (!Array.isArray(numgroup)) {
+								 	// 	numcount = $(numgroup).val();
+								 	// }
+								 	// else {
 	                                    for (let i=0; i<numgroup.length; i++)
 	                                        if ($(numgroup[i]).val()) {
 	                                            numcount += parseInt($(numgroup[i]).val());
 	                                        }
-	                                }
+	                                // }
                                     if (parseInt(numcount) > parseInt(limit)){
                                         let max = parseInt(limit) - (parseInt(numcount) - current);
                                         if (max > 0) 
