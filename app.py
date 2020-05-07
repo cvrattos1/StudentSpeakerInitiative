@@ -962,6 +962,10 @@ def sVote():
 
             if cycle.getName():
                 speakers = database.getEndorsed(cycle.getThreshold())
+                if validation['results']:
+                    speakers.sort(key=lambda x: x.getVotes(), reverse = True )
+                else:
+                    shuffle(speakers)
                 if user:
                     hasvoted = user.getVotes()
                 else:
@@ -1344,6 +1348,10 @@ def scVote():
 
             if cycle.getName():
                 conversations = database.getccEndorsed(cycle.getThreshold())
+                if validation['results']:
+                    conversations.sort(key=lambda x: x.getVotes(), reverse = True )
+                else:
+                    shuffle(conversations)
                 if student:
                     hasvoted = student.getccVotes()
                 else:
@@ -1487,8 +1495,10 @@ def acVotes():
         cycle = database.getCycle()
         validation = cyclevalidation(cycle)
 
-        approvedconversations = database.getConversations(1)
-
+        approvedconversations = database.getccEndorsed(cycle.getThreshold())
+        if validation['results']:
+                    approvedconversations.sort(key=lambda x: x.getVotes(), reverse = True )
+        print(approvedconversations)
         html = render_template('acVotes.html',
                                username=username,
                                approvedconversations = approvedconversations,
@@ -1521,7 +1531,8 @@ def aVotes():
         cycle = database.getCycle()
         validation = cyclevalidation(cycle)
         speakers = database.getEndorsed(cycle.getThreshold())
-
+        if validation['results']:
+            speakers.sort(key=lambda x: x.getVotes(), reverse = True )
         html = render_template('aVotes.html',
                                username=username,
                                speakers=speakers,
