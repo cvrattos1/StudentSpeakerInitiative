@@ -125,7 +125,7 @@
                     </div>
                         <div class="modal-footer form-group justify-content-between">
                             <button type="button" class="btn btn-danger closeModal">Cancel Submission</button>
-                            <button type="button" class="submit btn btn-primary" name="submitVotes">Confirm Submission</button>
+                            <button type="button" class="submitVotes btn btn-primary">Confirm Submission</button>
                         </div>
                     </form>
                 </div>
@@ -220,12 +220,12 @@
                             if (current == 0){
                                 delete voteList[conversationid];
                             }
-                            else if (current < 0){
-                                $(this).val(0);
-                                $('#errorModal').modal("show");
-                                $("p[id='error']").html("A speaker cannot have a negative number of votes.")
-                                delete voteList[conversationid];
-                            }
+							else if (isNaN(parseInt(current)) || parseInt(current) < 0){
+							   	$(this).val(0);
+					            $('#errorModal').modal("show");
+	                        	$("p[id='error']").html("This number of votes is invalid. Only positive integers within the limit are valid");
+					            delete voteList[conversationid];
+					        }
                             else {
                                 let names = "Conversation: " + $(speakers[0]).html();
                                 for (let i=1; i<speakers.length; i++) {
@@ -234,10 +234,15 @@
                                 let limit='{{cycle.getVoteNum()}}';
                                 if (limit != 'unlimited'){
                                     let numcount=0
-                                    for (let i=0; i<numgroup.length; i++)
-                                        if ($(numgroup[i]).val()) {
-                                            numcount += parseInt($(numgroup[i]).val());
-                                        }
+                                    if (!Array.isArray(numgroup)) {
+								 		numcount = $(numgroup).val();
+								 	}
+								 	else {
+	                                    for (let i=0; i<numgroup.length; i++)
+	                                        if ($(numgroup[i]).val()) {
+	                                            numcount += parseInt($(numgroup[i]).val());
+	                                        }
+	                                }
                                     if (parseInt(numcount) > parseInt(limit)){
                                         let max = parseInt(limit) - (parseInt(numcount) - current);
                                         if (max > 0) 

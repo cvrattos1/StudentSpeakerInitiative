@@ -27,7 +27,10 @@
                     <hr><br><h3>The voting process hasn't started yet. Voting starts on {{cycle.getDateVoting().strftime('%b %d, %Y')}}. Please wait then to see the conversation panels' standings.</h3><br><hr>
                 {% elif validation['voting'] or validation['results'] %}
                     {% if promotedconversations|length > 0 %}
-                        <h4>These are the current standings of the conversations in the voting block.</h4><hr>
+
+                        <h4>{% if validation['voting'] %} These are the current standings of the conversations in the voting block.
+                            {% else %} These are the final standings of the conversations in the voting block.
+                            {% endif %}</h4><hr>
                         <div class="text-center mx-auto justify-content-center">
                         {%for conversation in promotedconversations: %}
                             <div class="card text-center" style="border-width: thin; border-color: #F58025">
