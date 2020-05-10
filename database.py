@@ -309,6 +309,7 @@ class Database:
     # ---------------------------------------------------------------------
     def searchEndorsements(self, search, netid):
         search = search.lower()
+        search = search.strip()
         search = '%' + search + '%'
 
         query = "PREPARE stmt(text) AS " \
