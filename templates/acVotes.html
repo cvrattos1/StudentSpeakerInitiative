@@ -70,10 +70,9 @@
             {% endif %}
         </div>
         <script>
-            $(document.getElementById("acVotes")).addClass("active");
-            $(document.getElementById("navConvo")).addClass("border-light");
+            $("#acVotes").addClass("active");
+            $("#navConvo").addClass("border-light");
             let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
-            // Call
             cl.responsive();
         </script>
     </body>

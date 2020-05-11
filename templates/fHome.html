@@ -109,25 +109,25 @@
             function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
                     if ("{{hasapproved}}" == "1") {
-                        $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
-                        $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                        $("#fApprove").addClass("btn-outline-danger disabled");
+                        $("#fResults").addClass("btn-outline-light disabled");
                     }
                     else {
-                        $(document.getElementById("fApprove")).addClass("btn-success font-weight-bold");
-                        $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                        $("#fApprove").addClass("btn-success font-weight-bold");
+                        $("#fResults").addClass("btn-outline-light disabled");
                     }
                 }
                 else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
-                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                    $("#fApprove").addClass("btn-outline-danger disabled");
+                    $("#fResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("fApprove")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("fResults")).addClass("btn-success font-weight-bold");
+                    $("#fApprove").addClass("btn-outline-danger disabled");
+                    $("#fResults").addClass("btn-success font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("fApprove")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("fResults")).addClass("btn-outline-light disabled");
+                    $("#fApprove").addClass("btn-outline-light disabled");
+                    $("#fResults").addClass("btn-outline-light disabled");
                 }
             } 
 
