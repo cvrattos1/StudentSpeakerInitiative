@@ -69,8 +69,14 @@
         <script>
             function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $("#fApprove").addClass("btn-success font-weight-bold");
-                    $("#fResults").addClass("btn-outline-light disabled");
+                    if ("{{hasapproved}}" == "1") {
+                        $("#fApprove").addClass("btn-outline-danger disabled");
+                        $("#fResults").addClass("btn-outline-light disabled");
+                    }
+                    else {
+                        $("#fApprove").addClass("btn-success font-weight-bold");
+                        $("#fResults").addClass("btn-outline-light disabled");
+                    }
                 }
                 else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
                     $("#fApprove").addClass("btn-outline-danger disabled");

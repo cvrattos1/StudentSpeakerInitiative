@@ -712,28 +712,29 @@ def vote_flask():
 			cycle = database.getCycle()
 			voted = request.form.getlist('number')
 			speakids = request.form.getlist('speakid')
+			print(str(voted))
+			print(str(speakids))
 
+			# student = database.getStudent(username)
+			# if student.getVotes():
+			# 	return redirect('sHome')
 
-			student = database.getStudent(username)
-			if student.getVotes():
-				return redirect('sHome')
+			# error = False
+			# if cycle.getVoteNum() != 'unlimited':
+			# 	count = 0
+			# 	for vote in voted:
+			# 		if vote != '':
+			# 			if int(vote) >= 0:
+			# 				count += int(vote)
+			# 			else:
+			# 				error = True
 
-			error = False
-			if cycle.getVoteNum() != 'unlimited':
-				count = 0
-				for vote in voted:
-					if vote != '':
-						if int(vote) >= 0:
-							count += int(vote)
-						else:
-							error = True
+			# 	if count > int(cycle.getVoteNum()) or error == True:
+			# 		return redirect('sVote')
 
-				if count > int(cycle.getVoteNum()) or error == True:
-					return redirect('sVote')
-
-			for i in range(len(voted)):
-				if voted[i] != '':
-					database.vote(username, speakids[i], voted[i])
+			# for i in range(len(voted)):
+			# 	if voted[i] != '':
+			# 		database.vote(username, speakids[i], voted[i])
 			return redirect('sVote')
 	except Exception as e:
 		errorDate = datetime.datetime.today()

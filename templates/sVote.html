@@ -103,7 +103,6 @@
 							<button type="button" class="btn btn-danger closeModal">Cancel Submission</button>
 							<button type="button" class="submit btn btn-primary" name="submitVotes">Confirm Submission</button>
 						</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -247,12 +246,14 @@
                     $("#navEndorse").addClass("btn-outline-danger disabled");
                     $("#navVote").addClass("btn-success border-light font-weight-bold");
                     $("#navResults").addClass("btn-outline-light disabled");
+                    $("#sVote").addClass("active");
                 }
                 else if ("{{validation['results']}}" == "True") {
                     $("#navNom").addClass("btn-outline-danger disabled");
                     $("#navEndorse").addClass("btn-outline-danger disabled");
                     $("#navVote").addClass("btn-outline-danger disabled");
                     $("#navResults").addClass("btn-success border-light font-weight-bold");
+                    $("#sResults").addClass("active");
                 }
                 else {
                     $("#navNom").addClass("btn-outline-light disabled");
@@ -266,8 +267,6 @@
 	        {
 				let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
 				cl.responsive();
-
-				$("#sVote").addClass("active");
 				navbarUpdate();
 
 	            voteValidation();

@@ -18,10 +18,10 @@
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
 						{% if hasapproved %}
-							<hr><br><h3>You have already approved a conversation for this cycle. Please come back on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results of this cycle.</h3><br><hr>
+							<hr><br><h3>You have already approved a conversation panel for this cycle. Please come back on {{cycle.getDateResults().strftime("%b %d, %Y")}} to see the results of this cycle.</h3><br><hr>
 						{% else %}
 							{% if conversations|length > 0 %}
-								<h4>These are the current student-nominated conversations that have not yet been approved by a faculty member.<br> You have until {{cycle.getDateEndorse().strftime("%b %d, %Y")}} to approve one of these conversations.</h4><hr><br>
+								<h4>These are the current student-nominated conversation panels that have not yet been approved by a faculty member.<br> You have until {{cycle.getDateEndorse().strftime("%b %d, %Y")}} to approve one of these panels.</h4><hr><br>
 									{%for conversation in conversations: %}
 										<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 											<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -42,25 +42,25 @@
 											</div>
 											<div class="card-footer text-center font-weight-bolder custom-control custom-checkbox">
 												<button type="button" class="approveButton btn btn-lg bg-primary font-weight-bold text-light" data-toggle="modal" data-conversationid="{{conversation.getConverseId()}}" data-target="#confirmModal" data-speakers="{{conversation.getNames()}}">
-												Approve This Conversation</button>
+												Approve This Panel</button>
 											</div>
 										</div>
 										<br>
 											 {% endfor %}
 										<hr><br>
 							{% else %}
-								<hr><br><h3> There are no student-nominated conversations at this time!</h3><br><hr>
+								<hr><br><h3> There are no student-nominated conversation panels at this time!</h3><br><hr>
 							{% endif %} 
 						{% endif %}     
 					{% elif validation['endorsing'] %}
-							<hr><br><h3>You may not approve a conversation at this time because students are currently endorsing faculty-approved conversations.</h3><br><hr>
+							<hr><br><h3>You may not approve a conversation panel at this time because students are currently endorsing faculty-approved conversation panels.</h3><br><hr>
 					{% elif validation['voting'] %}
-						<hr><br><h3> You may not approve a conversation at this time because students are currently voting on faculty-approved conversations.</p><br><hr>
+						<hr><br><h3> You may not approve a conversation panel at this time because students are currently voting on faculty-approved conversation panels.</p><br><hr>
 					{% elif validation['results'] %}
-						<hr><br><h3>You may not approve a conversation at this time because voting has already ended for this cycle. The final results of the vote are now available!</h3>
+						<hr><br><h3>You may not approve a conversation panel at this time because voting has already ended for this cycle. The final results of the vote are now available!</h3>
 						<br><a class="btn btn-lg btn-success font-weight-bold" href="fResults">View Results For This Cycle</a><br><br><hr>
 					{% else %}
-						<hr><br><h3> There is no current cycle. Please come back later to approved conversations!</h3><br><hr>
+						<hr><br><h3> There is no current cycle. Please come back later to approved conversation panels!</h3><br><hr>
 						
 					{% endif %}
 
@@ -80,7 +80,7 @@
 					</div>
 					
 					<div class="modal-body text-center">
-					  <p class="font-weight-bold"> You are about to approve a conversation with: </p>
+					  <p class="font-weight-bold"> You are about to approve a conversation panel with: </p>
 					  <p id="names" class="font-italic"></p>
 				  	</div>
 				  	<form action="fapprove_flask" method= "post" name= "approve_form" id="approve_form">
@@ -114,12 +114,18 @@
 
 			function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $("fApprove").addClass("btn-success border-light font-weight-bold");
-                    $("#fResults").addClass("btn-outline-light disabled");
+                    if ("{{hasapproved}}" == "1") {
+                        $("#fApprove").addClass("btn-outline-danger disabled");
+                        $("#fResults").addClass("btn-outline-light disabled");
+                    }
+                    else {
+                        $("#fApprove").addClass("btn-success font-weight-bold");
+                        $("#fResults").addClass("btn-outline-light disabled");
+                    }
                 }
                 else if ("{{validation['endorsing']}}" == "True" || "{{validation['voting']}}" == "True") {
-                    $("fApprove").addClass("btn-outline-danger disabled");
-                    $("fResults").addClass("btn-outline-light disabled");
+                    $("#fApprove").addClass("btn-outline-danger disabled");
+                    $("#fResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
                     $("#fApprove").addClass("btn-outline-danger disabled");

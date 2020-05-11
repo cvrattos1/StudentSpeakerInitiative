@@ -51,7 +51,7 @@
 						{% if hasendorsed %}
 							<hr><br><h3>Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting().strftime("%b %d, %Y") }} to vote.</h3><br><hr>
 						{% elif conversations|length > 0 %}
-							<h4>These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting()}}. </h4><hr>
+							<h4>These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You may submit your endorsements at any time during the endorsement phase; however, you may only submit your endorsements once. Panels will move into the voting block if they have at least {{cycle.getThreshold()}} endorsement(s). The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting().strftime("%b %d, %Y")}}. </h4><hr>
 								{%for conversation in conversations: %}
 									<div class="card text-center" style="border-width: 2px; border-color: #F58025">
 										<div class="card-header"><h3 class="card-title text-center font-italic">Conversation between:</h3></div>
@@ -104,7 +104,7 @@
 	                   	<button type="button" class="close closeModal">&times;</button>
 	                </div>
 	                <div class="modal-body text-center">
-	                    <p class="font-weight-bold"> You have selected the following conversations: </p>
+	                    <p class="font-weight-bold"> You have selected the following conversation panels for endorsement: </p>
 	                    <p id="names" class="font-italic">
 	                    </p>
 	                </div>
@@ -143,10 +143,10 @@
 						$('.modal').modal('hide');
 				})
 
-				$(document).on("click", ".submit", function(e) {
+				$(document).on("click", ".submit", function() {
 						if (Object.keys(checkList).length==0){
 							$('#errorModal').modal("show");
-	                        $("p[id='error']").html("You have not endorsed any conversations.");
+	                        $("p[id='error']").html("You have not endorsed any conversation panels.");
 							return false;
 						}
 						else {
@@ -164,10 +164,10 @@
 				if (cycleName != '') {
 					if ($("#ccendorse_form")) {
 						let checkgroup = document.getElementsByName("check");
-						$(document).on("click", ".endorseButton", function(e) {
+						$(document).on("click", ".endorseButton", function() {
 		                    if (Object.keys(checkList).length==0){
 		                        $('#errorModal').modal("show");
-	                        	$("p[id='error']").html("You have not endorsed any conversations.");
+	                        	$("p[id='error']").html("You have not endorsed any conversation panels.");
 		                    }
 		                    else {
 		                        $('#confirmModal').modal("show")
@@ -203,7 +203,7 @@
 			                        else{
 			                            if (Object.keys(checkList).length>=limit){
 			                                $('#errorModal').modal("show");
-	                        				$("p[id='error']").html("You can only endorse a maximum of "+limit+" candidate(s).");
+	                        				$("p[id='error']").html("You can only endorse a maximum of "+limit+" panel(s).");
 			                                this.checked=false;
 			                            }
 			                            else {

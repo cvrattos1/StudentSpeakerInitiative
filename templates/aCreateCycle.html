@@ -15,7 +15,7 @@
         <script>
             function handleTextBoxNom(value) {
                 if (value == 1) {
-                    let limited = $("$limitnom");
+                    let limited = $("#limitnom");
                     let text = $("#nomtext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
@@ -23,16 +23,16 @@
                     }
                 }
                 if (value == 2) {
-                    let limited = $("limitend");
-                    let text = $("endorsetext")
+                    let limited = $("#limitend");
+                    let text = $("#endorsetext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                             text.focus()
                     }
                 }
                 if (value == 3) {
-                    let limited = $("limitvot");
-                    let text = $("votetext")
+                    let limited = $("#limitvot");
+                    let text = $("#votetext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                         text.focus()
@@ -201,7 +201,7 @@
 
                     $(this).prop("disabled", true);
                     $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-                    $("newcycle_form").submit();
+                    $("#newcycle_form").submit();
                 })
             }
 

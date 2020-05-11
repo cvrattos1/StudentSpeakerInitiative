@@ -278,12 +278,14 @@
                     $("#navEndorse").addClass("btn-outline-danger disabled");
                     $("#navVote").addClass("btn-success border-light font-weight-bold");
                     $("#navResults").addClass("btn-outline-light disabled");
+                    $("#scVote").addClass("active");
                 }
                 else if ("{{validation['results']}}" == "True") {
                     $("#navNom").addClass("btn-outline-danger disabled");
                     $("#navEndorse").addClass("btn-outline-danger disabled");
                     $("#navVote").addClass("btn-outline-danger disabled");
                     $("#navResults").addClass("btn-success border-light font-weight-bold");
+                    $("#scResults").addClass("active");
                 }
                 else {
                     $("#navNom").addClass("btn-outline-light disabled");

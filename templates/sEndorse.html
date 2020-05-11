@@ -37,13 +37,13 @@
 								</div>
 								<br><hr><br>
 						{% else %}
-							<br><h4> There are no candidates nominated at this time!</h4><br><hr>     
+							<br><h4> There are no speakers nominated at this time!</h4><br><hr>     
 						{% endif %}
 					{% elif validation['endorsing'] %}
 						{% if hasendorsed %}
 							<hr><br><h3>Thank you for your endorsements. Please come back later on {{ cycle.getDateVoting().strftime("%b %d, %Y") }} to vote.</h3><br><hr>
 						{% elif speakers|length > 0 %}
-							<h4>These are the current nominations for endorsements. You can use these at any time during the endorsement period. The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting().strftime("%b %d, %Y") }}. You have {{ cycle.getEndorseNum() }} endorsement(s).</h4><hr>
+							<h4>These are the current nominations for endorsements. You have {{ cycle.getEndorseNum() }} endorsements. You may submit your endorsements at any time during the endorsement phase; however, you may only submit your endorsements once. Speakers will move into the voting block if they have at least {{cycle.getThreshold()}} endorsement(s). The endorsement period ends when the voting period begins, on {{ cycle.getDateVoting().strftime("%b %d, %Y") }}. </h4><hr>
 							<div class="justify-content-center mx-auto text-center">
 								<input type="search" class="form-control-lg"style="border-style: solid; border-color: #5cb85c" id="searchBar" placeholder="Search for a Speaker" value="">
 							</div><br>
@@ -236,7 +236,7 @@
 							else{
 								if (Object.keys(checkList).length>=limit){
 									$('#errorModal').modal("show");
-		                        	$("p[id='error']").html("You can only endorse a maximum of "+limit+" candidate(s).");
+		                        	$("p[id='error']").html("You can only endorse a maximum of "+limit+" speakers(s).");
 									this.checked=false;
 								}
 								else checkList[speakid]=name;
