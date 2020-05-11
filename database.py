@@ -99,7 +99,7 @@ class Database:
     # ----------------------------------------------------------------------
     def getSpecial(self, netid):
         query = "PREPARE stmt(text) AS " \
-                "SELECT * FROM admin WHERE netid = $1;" \
+                "SELECT * FROM special WHERE netid = $1;" \
                 "EXECUTE stmt('" + netid.strip() + "');"
 
         result = Database.connectDB(self, query)
