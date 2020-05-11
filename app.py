@@ -244,7 +244,7 @@ def sHome():
 @app.route('/sFAQ', methods=['GET'])
 @login_required
 def sFAQ():
-    username = CASClient().authenticate()
+    username = current_user.id
     try:
         pageType = "undergraduates"
         database = Database()
@@ -253,8 +253,6 @@ def sFAQ():
             return loginfail(username, pageType)
 
         else:
-            useraccount = userAccount(username, role)
-            login_user(useraccount)
             cycle = database.getCycle()
             validation = cyclevalidation(cycle)
             html = render_template('sFAQ.html',
