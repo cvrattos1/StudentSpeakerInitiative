@@ -29,7 +29,7 @@
 						{% if hasvoted %}
 							<hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd().strftime("%b %d, %Y") }} to see the results.</h3><br><hr>
 						{% elif speakers|length > 0 %}
-							<h4>These are the current candidates. You can use these at any time during the voting period. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} vote(s).</h4><hr>
+							<h4>These are the current candidates. You may submit your votes at any time during the voting phase; however, you may only submit your votes once. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} vote(s).</h4><hr>
 									<form action="vote_flask" method= "post" name="vote_form" id="vote_form" autocomplete="off">
 										<div class="row row-cols-2 text-center mx-auto justify-content-center">
 										{%for speaker in speakers: %}
@@ -42,7 +42,7 @@
 													<a class="card-link" href=" {{speaker.getLinks()}}" target="_blank"> Link to Works/Biography</a><br><br>
 												</div>
 												<div class="card-footer">
-													<input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{speaker.getSpeakid()}} data-name="{{speaker.getName()}}" min= 0>
+													<input type="number" class="numInput form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{speaker.getSpeakid()}} data-name="{{speaker.getName()}}" min= 0>
 													<input type="hidden" name="speakid" value="{{ speaker.getSpeakid() }}">
 												</div>
 											</div>
@@ -146,7 +146,7 @@
 
 						      	$(this).prop("disabled", true);
 						      	$(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-						      	document.getElementById("vote_form").submit();
+						      	$("#vote_form").submit();
 							}
 
 					});
@@ -170,9 +170,8 @@
 
 					});
 
-				    let voteForm = document.getElementById("vote_form");
-				    if (voteForm) {
-				        let numgroup = document.getElementById("vote_form").elements.namedItem("number");
+				    if ($("#vote_form")) {
+				        let numgroup = $(".numInput");
 				        $(document).on('keydown','input', function(e){
 							        if (e.shiftKey === true ) {
 							            if (e.which == 9) {
@@ -205,20 +204,16 @@
 					      		let limit='{{cycle.getVoteNum()}}';
 				        		if (limit != 'unlimited'){
 								    let numcount=0
-								 	if (!Array.isArray(numgroup)) {
-								 		numcount = $(numgroup).val()
-								 	}
-								 	else {
-							            for (let i=0; i<numgroup.length; i++)
-							                if ($(numgroup[i]).val()) {
-							                    numcount += parseInt($(numgroup[i]).val());
-							                }
-						            }
+							        for (let i=0; i<numgroup.length; i++)
+							            if ($(numgroup[i]).val()) {
+							                numcount += parseInt($(numgroup[i]).val());
+							        }
 						            if (parseInt(numcount) > parseInt(limit)){
 						             	let max = parseInt(limit) - (parseInt(numcount) - current);
 						             	if (max > 0) 
 						             		voteList[speakid]=name;
 						             	else {
+						             		max = null;
 						             		delete voteList[speakid];
 						             	}
 								    	$(this).val(max);
@@ -236,34 +231,34 @@
 
 			function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-success font-weight-bold");
+                    $("#navEndorse").addClass("btn-info font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-success font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['voting']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success border-light font-weight-bold");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-success border-light font-weight-bold");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success border-light font-weight-bold");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-outline-danger disabled");
+                    $("#navResults").addClass("btn-success border-light font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-light disabled");
+                    $("#navEndorse").addClass("btn-outline-light disabled");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
             }
 			
@@ -272,7 +267,7 @@
 				let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
 				cl.responsive();
 
-				$(document.getElementById("sVote")).addClass("active");
+				$("#sVote").addClass("active");
 				navbarUpdate();
 
 	            voteValidation();

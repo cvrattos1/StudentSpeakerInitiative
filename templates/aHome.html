@@ -12,16 +12,23 @@
     </head>
     <body class="bg-light">
         {% include 'aHeader.html' %}
-        <div class="container text-center">
+        <div class="container-fluid text-center">
         	<br><h2 class="font-weight-bold">Welcome to the admin homepage!</h2>
-            <br><hr><br>
+            <hr>
+            <h4>Currently {% if validation['nominating'] %} nominating are underway.
+                    {% elif validation['endorsing'] %} endorsing are underway.
+                    {% elif validation['voting'] %} voting is underway.
+                    {% else %} results are being shown to students.
+                    {% endif %}</h4><hr>
+        </div>
+         <div class="container text-center">
             <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025">
                 <br><p class="font-italic lead"> Please note: these buttons are not part of our intended product. They merely exist to make grading/testing this application easier. </p><hr>
                 <form class="form-group" action='nextstep_flask' name="nextstep_form" id="nextstep_form" method='post'>
-                    <button class="btn btn-lg font-weight-bold bg-success text-light"> Go To Next Step Of Cycle</button>
+                    <button class="spinnerButton btn btn-lg font-weight-bold bg-success text-light"> Go To Next Step Of Cycle</button>
                 </form>
                 <form class="form-group" action='prevstep_flask' name="prevstep_form" id="prevstep_form" method='post'>
-                    <button class="btn btn-lg font-weight-bold bg-danger text-light"> Go To Previous Step Of Cycle</button>
+                    <button class="spinnerButton btn btn-lg font-weight-bold bg-danger text-light"> Go To Previous Step Of Cycle</button>
                 </form>
             </div><br>
             <div class="container bg-white rounded-lg text-center text-dark lead text-light" style="border: solid medium #F58025">
@@ -37,8 +44,8 @@
                     Nomininating begins on <strong>{{ cycle.getDateNom().strftime('%b %d, %Y')}}</strong>. <br>
                     Endorsing begins on <strong>{{ cycle.getDateEndorse().strftime('%b %d, %Y')}}</strong>.<br>
                     Voting begins on <strong>{{ cycle.getDateVoting().strftime('%b %d, %Y')}}</strong>. <br>
-                    Voting ends and results are shown on <strong>{{ cycle.getDateResults().strftime('%b %d, %Y')}}</strong>. <br><hr>
-                    <strong> This cycle ends on {{ cycle.getDateEnd().strftime('%b %d, %Y')}}</strong>.</p>
+                    Voting ends and results are shown on <strong>{{ cycle.getDateResults().strftime('%b %d, %Y')}}</strong>. <br>
+                    <strong> This cycle ends on {{ cycle.getDateEnd().strftime('%b %d, %Y')}}</strong>.</p><hr>
                     <a class="btn btn-lg btn-primary font-weight-bold text-light mb-4" href="aCreateCycle">Create a new cycle</a>
                 {% else %}
                     <p class="lead font-weight-bold text-center">There is currently no active cycle. The most recent cycle ended on {{cycle.getDateEnd().strftime('%b %d, %Y')}}.</p><br>
@@ -51,7 +58,7 @@
                     <h4 class="font-weight-bold text-center">Add A New Admin:</h4><hr>
                     <form class="form-group" action='addAdmin' method='get'>
                         <input type="text" placeholder="Netid of Admin" class="form-control mb-4" name="newAdmin" id="newAdmin" required="">
-                        <input type="submit" class="btn font-weight-bold btn-lg bg-success text-light" value = "Add">
+                        <button class="spinnerBtn btn font-weight-bold btn-lg bg-success text-light">Add</button>
                     </form>
                 </div>
                  <div class="col-sm-6 rounded-lg text-dark bg-white" style="border: solid medium #F58025;">
@@ -63,7 +70,7 @@
                                 <option value="{{admin[0]}}">{{admin[0]}}</option>
                             {% endfor %}
                         </select>
-                        <input type="submit" class="btn btn-lg bg-danger text-light" value = "Remove">
+                        <button class="spinnerBtn btn font-weight-bold btn-lg bg-danger text-light">Remove</button>
                     </form>
                 </div>
             </div>
@@ -72,8 +79,14 @@
         <script>
             function setup()
             {
-                $(document.getElementById("aHome")).addClass("active");
-                $(document.getElementById("navAdmin")).addClass("border-light");
+                $("#aHome").addClass("active");
+                $("#navAdmin").addClass("border-light");
+
+                $(document).on("submit", "form", function(e) {
+                    let $button = $(this).find('button')
+                    $button.prop("disabled", true);
+                    $button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing Action...');
+                })
             }
 
             $('document').ready(setup);

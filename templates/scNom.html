@@ -57,7 +57,8 @@
                                 </div>
                             </div>
                             <br><button class="btn btn-lg bg-primary text-light" id="submitButton">Submit Nomination</button>
-                        </form><hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a conversation that you have nominated.  </p><hr><br>
+                        </form>
+                        <hr><p class="font-italic"> Please note: nominations are not retractable, and you cannot endorse a conversation that you have nominated. For best results, please use a square images for the nominations. </p><hr><br>
                      {% else %}
                         <hr><br><h3>You have already nominated your allowed amount of conversations.</h3><br><hr>
                      {% endif %}
@@ -92,11 +93,9 @@
 
             function nomValidation() {
                 $(document).on("click", ".newSpeaker", function() {
-                    let cards = document.getElementsByClassName("card");
-                    if (cards.length < 4) {
-                        speaker = document.getElementById("copy");
-                        let newSpeaker = $(speaker).clone()
-                        $(document.getElementById("deck")).append(newSpeaker);
+                    if ($(".card").length < 4) {
+                        let newSpeaker = $('#copy').clone()
+                        $("#deck").append(newSpeaker);
 
                         // Clears the clone's input
                         let inputs = $(newSpeaker).find("input");
@@ -115,8 +114,7 @@
                         // Sets function for remove button
                         let remove = $(newSpeaker).find("button.removeButton");
                         $(remove).on('click', function () {
-                            let checkCards = document.getElementsByClassName("card");
-                            if (cards.length > 2)
+                            if ($(".card").length > 2)
                                 $(this).parent().parent().remove();
                             else {
                                 $('#errorModal').modal("show");
@@ -131,19 +129,16 @@
                     
                 });
 
-                let fileInputs = document.getElementsByClassName("custom-file-input");
-                for (let i=0; i<fileInputs.length; i++){
-        	        $(fileInputs[i]).on("change", function() {
+                for (let i=0; i<$(".custom-file-input").length; i++){
+        	        $($(".custom-file-input")[i]).on("change", function() {
         	          var fileName = $(this).val().split("\\").pop();
         	          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         	        });
             	}
 
-                let removeButtons = document.getElementsByClassName("removeButton");
-                for (let i=0; i<removeButtons.length; i++){
-                    $(removeButtons[i]).on('click', function () {
-                        let cards = document.getElementsByClassName("card");
-                        if (cards.length > 2)
+                for (let i=0; i<$(".removeButton").length; i++){
+                    $($(".removeButton")[i]).on('click', function () {
+                        if ($(".card").length > 2)
                             $(this).parent().parent().remove();
                         else {
                             $('#errorModal').modal("show");
@@ -155,45 +150,45 @@
 
             function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-success border-light font-weight-bold");
-                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-success border-light font-weight-bold");
+                    $("#navEndorse").addClass("btn-info font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-success font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['voting']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-success font-weight-bold");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success font-weight-bold");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-outline-danger disabled");
+                    $("#navResults").addClass("btn-success font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-light disabled");
+                    $("#navEndorse").addClass("btn-outline-light disabled");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
             }
 
             function setup()
              {
-                $(document.getElementById("scNom")).addClass("active");
+                $("#scNom").addClass("active");
                 navbarUpdate();
                 
-                $(document.getElementById("ccnom_form")).on("submit", function(){
-                    $(document.getElementById("submitButton")).prop("disabled", true);
-                    $(document.getElementById("submitButton")).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+                $("#ccnom_form").on("submit", function(){
+                    $("#submitButton").prop("disabled", true);
+                    $("#submitButton").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
                 })
                 nomValidation();
              }

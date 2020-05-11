@@ -38,8 +38,9 @@
                                     <div class="card-footer"><button class="btn btn-lg bg-primary text-light" id="submitButton">Submit Nomination</button></div>
                                 </div>
                              </form>
-                             <hr><p class="text-center font-italic"> Please note: nominations are not retractable, and you cannot endorse a speaker that you have nominated.</p><hr><br>
-                        </div>
+                            </div>
+                            <div class="container-fluid text-center">
+                                <hr><p class="font-italic"> Please note: nominations are not retractable, and you cannot endorse a conversation that you have nominated. For best results, please use a square images for the nominations. </p><hr><br>
                      {% else %}
                         <hr><br><h3>You have already nominated your allowed amount of speakers.</h3><br><hr>
                      {% endif %}
@@ -57,45 +58,45 @@
         <script>
             function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-success border-light font-weight-bold");
-                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-success border-light font-weight-bold");
+                    $("#navEndorse").addClass("btn-info font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-success font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['voting']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-success font-weight-bold");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success font-weight-bold");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-outline-danger disabled");
+                    $("#navResults").addClass("btn-success font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-light disabled");
+                    $("#navEndorse").addClass("btn-outline-light disabled");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
             }
 
             function setup()
             { 
-                $(document.getElementById("sNom")).addClass("active");
+                $("#sNom").addClass("active");
                 navbarUpdate();
                 
-                $(document.getElementById("nom_form")).on("submit", function(){
-                    $(document.getElementById("submitButton")).prop("disabled", true);
-                    $(document.getElementById("submitButton")).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+                $("#nom_form").on("submit", function(){
+                    $("#submitButton").prop("disabled", true);
+                    $("#submitButton").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
                 })
                 $(".custom-file-input").on("change", function() {
                   var fileName = $(this).val().split("\\").pop();

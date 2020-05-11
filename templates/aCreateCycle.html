@@ -15,24 +15,24 @@
         <script>
             function handleTextBoxNom(value) {
                 if (value == 1) {
-                    let limited = document.getElementById("limitnom");
-                    let text = document.getElementById("nomtext")
+                    let limited = $("$limitnom");
+                    let text = $("#nomtext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                         text.focus()
                     }
                 }
                 if (value == 2) {
-                    let limited = document.getElementById("limitend");
-                    let text = document.getElementById("endorsetext")
+                    let limited = $("limitend");
+                    let text = $("endorsetext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                             text.focus()
                     }
                 }
                 if (value == 3) {
-                    let limited = document.getElementById("limitvot");
-                    let text = document.getElementById("votetext")
+                    let limited = $("limitvot");
+                    let text = $("votetext")
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                         text.focus()
@@ -190,7 +190,7 @@
                 })
 
                 $(document).on("click", ".submitButton", function(e) {
-                    let dategroup = document.getElementsByClassName("dateInput")
+                    let dategroup = $(".dateInput")
                     for (let i=0; i<dategroup.length-1; i++) {
                         if ($(dategroup[i]).val() >= $(dategroup[i+1]).val()) {
                             $('#errorModal').modal("show")
@@ -201,14 +201,14 @@
 
                     $(this).prop("disabled", true);
                     $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-                    document.getElementById("newcycle_form").submit();
+                    $("newcycle_form").submit();
                 })
             }
 
             function setup()
             {
-                $(document.getElementById("aCreateCycle")).addClass("active");
-                $(document.getElementById("navAdmin")).addClass("border-light");
+                $("#aCreateCycle").addClass("active");
+                $("#navAdmin").addClass("border-light");
                 createValidation();
 
             }

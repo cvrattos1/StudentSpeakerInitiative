@@ -29,7 +29,7 @@
                         {% if hasvoted %}
                             <hr><br><h3>Thank you for voting. Come back on {{ cycle.getDateEnd().strftime("%b %d, %Y") }} to see the results.</h3><br><hr>
                         {% else %}
-                            <h4>These are the current conversation panels. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} votes. </h4><hr>
+                            <h4>These are the current conversation panels. Tou may submit your votes at any time during the voting phase; however, you may only submit your votes once. The voting period ends on {{ cycle.getDateEnd().strftime("%b %d, %Y") }}. You have {{cycle.getVoteNum()}} votes. </h4><hr>
                             <form action="ccvote_flask" method= "post" name= "ccvote_form" id="ccvote_form" autocomplete="off">
                                         {%for conversation in conversations: %}
                                             	<div class="card text-center" style="border-width: thin; border-color: #F58025">
@@ -51,7 +51,7 @@
                                                 		</div>
                                                 	</div>
                                                     <div class="card-footer font-weight-bolder">
-                                                        <input type="number" class="form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{conversation.getConverseId()}} min= 0>
+                                                        <input type="number" class="numInput form-control text-center bg-white text-dark font-weight-bold" placeholder="Number of Votes" name="number" id={{conversation.getConverseId()}} min= 0>
                                                         <input type="hidden" name="converseid" value={{conversation.getConverseId()}}>
                                                     </div>
                                                 </div>
@@ -157,7 +157,7 @@
                         $('.modal').modal('hide');
                     })
 
-                    $(document).on("click", ".submit", function(e) {
+                    $(document).on("click", ".submitVotes", function(e) {
                             if (voteList.length==0){
                                 $('#errorModal').modal("show");
                                 $("p[id='error']").html("You have not voted for any conversations.");
@@ -170,7 +170,7 @@
 
                                 $(this).prop("disabled", true);
                                 $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-                                document.getElementById("ccvote_form").submit();
+                                $("#ccvote_form").submit();
                             }
 
                     });
@@ -194,9 +194,8 @@
 
                     });
 
-                    let voteForm = document.getElementById("ccvote_form");
-                    if (voteForm) {
-                        let numgroup = document.getElementById("ccvote_form").elements.namedItem("number");
+                    if ($("#ccvote_form")) {
+                        let numgroup = $(".numInput");
                         $(document).on('keydown','input', function(e){
                                     if (e.shiftKey === true ) {
                                         if (e.which == 9) {
@@ -215,6 +214,7 @@
 
                         $(document).on('change','input', function(){
                             let current = $(this).val();
+                            console.log(current)
                             let conversationid = this.id
                             let speakers = $(this).parent().parent().find('h4');
                             if (current == 0){
@@ -234,20 +234,16 @@
                                 let limit='{{cycle.getVoteNum()}}';
                                 if (limit != 'unlimited'){
                                     let numcount=0
-                                    if (!Array.isArray(numgroup)) {
-								 		numcount = $(numgroup).val();
-								 	}
-								 	else {
-	                                    for (let i=0; i<numgroup.length; i++)
-	                                        if ($(numgroup[i]).val()) {
-	                                            numcount += parseInt($(numgroup[i]).val());
-	                                        }
+	                                for (let i=0; i<numgroup.length; i++)
+	                                    if ($(numgroup[i]).val()) {
+	                                        numcount += parseInt($(numgroup[i]).val());
 	                                }
                                     if (parseInt(numcount) > parseInt(limit)){
                                         let max = parseInt(limit) - (parseInt(numcount) - current);
                                         if (max > 0) 
                                             voteList[conversationid]=names;
                                         else {
+                                            max = null;
                                             delete voteList[conversationid];
                                         }
                                         $(this).val(max);
@@ -266,34 +262,34 @@
 
             function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-success font-weight-bold");
+                    $("#navEndorse").addClass("btn-info font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-success font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['voting']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success border-light font-weight-bold");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-success border-light font-weight-bold");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success border-light font-weight-bold");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-outline-danger disabled");
+                    $("#navResults").addClass("btn-success border-light font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-light disabled");
+                    $("#navEndorse").addClass("btn-outline-light disabled");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
             }
 
@@ -302,7 +298,7 @@
                 let cl = cloudinary.Cloudinary.new({  cloud_name: '<Cloud Name>' });
                 cl.responsive();
 
-                $(document.getElementById("scVote")).addClass("active");
+                $("#scVote").addClass("active");
                 navbarUpdate();
 
                 voteValidation();

@@ -309,6 +309,7 @@ class Database:
     # ---------------------------------------------------------------------
     def searchEndorsements(self, search, netid):
         search = search.lower()
+        search = search.strip()
         search = '%' + search + '%'
 
         query = "PREPARE stmt(text) AS " \
@@ -671,24 +672,32 @@ class Database:
     def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, endorsethresh, rollthresh,
                     nomdate, endorsedate,
                     votingdate, resultsdate, enddate):
+
+        print('in database')
         query = 'SELECT ids FROM cycle'
         result = Database.connectDB(self, query)
         query = 'SELECT speakid FROM speakers'
         speakers = Database.connectDB(self, query)
-        if not result and not speakers:
+
+        print(len(speakers))
+
+        if not speakers or len(speakers) == 0:
             ids = 0
         else:
             champ = 0
             for i in range(len(speakers[0])):
+                print(i)
                 if int(speakers[0][i]) > champ:
                     champ = int(speakers[0][i])
             ids = champ
+
+        print('out of list')
 
         query = 'SELECT ccids FROM cycle'
         result = Database.connectDB(self, query)
         query = 'SELECT converseid FROM conversation'
         converseids = Database.connectDB(self, query)
-        if not result and not converseids:
+        if not converseids or len(converseids) == 0:
             ccids = 0
         else:
             champ = 0

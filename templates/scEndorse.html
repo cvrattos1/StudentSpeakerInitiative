@@ -18,7 +18,7 @@
 				{% if cycle.getName() %}
 					{% if validation['nominating'] %}
         				{% if conversations|length > 0 %}
-    						<h4>These are the current nominations. On {{ cycle.getDateEndorse().strftime("%b %d, %Y") }}, you will be able to endorse them. </h4><hr>
+    						<h4>These are the current nominations that have been faculty-approved. On {{ cycle.getDateEndorse().strftime("%b %d, %Y") }}, you will be able to endorse them. </h4><hr>
     							{%for conversation in conversations: %}
     								<div class="card text-center" style="border-width: medium; border-color: #F58025">
     									<div class="card-header">
@@ -156,14 +156,13 @@
 
 					      	$(this).prop("disabled", true);
 					      	$(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-					      	document.getElementById("ccendorse_form").submit();
+					      	$("#ccendorse_form").submit();
 						}
 
 				});
 				let cycleName = '{{cycle.getName()}}';
 				if (cycleName != '') {
-					let endorseForm = document.getElementById("ccendorse_form");
-					if (endorseForm) {
+					if ($("#ccendorse_form")) {
 						let checkgroup = document.getElementsByName("check");
 						$(document).on("click", ".endorseButton", function(e) {
 		                    if (Object.keys(checkList).length==0){
@@ -220,40 +219,40 @@
 
 			function navbarUpdate(){
                 if ("{{validation['nominating']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navEndorse")).addClass("btn-info font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-success font-weight-bold");
+                    $("#navEndorse").addClass("btn-info font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['endorsing']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-success border-light font-weight-bold");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-success border-light font-weight-bold");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['voting']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-success font-weight-bold");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-success font-weight-bold");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
                 else if ("{{validation['results']}}" == "True") {
-                    $(document.getElementById("navNom")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-danger disabled");
-                    $(document.getElementById("navResults")).addClass("btn-success font-weight-bold");
+                    $("#navNom").addClass("btn-outline-danger disabled");
+                    $("#navEndorse").addClass("btn-outline-danger disabled");
+                    $("#navVote").addClass("btn-outline-danger disabled");
+                    $("#navResults").addClass("btn-success font-weight-bold");
                 }
                 else {
-                    $(document.getElementById("navNom")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navEndorse")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navVote")).addClass("btn-outline-light disabled");
-                    $(document.getElementById("navResults")).addClass("btn-outline-light disabled");
+                    $("#navNom").addClass("btn-outline-light disabled");
+                    $("#navEndorse").addClass("btn-outline-light disabled");
+                    $("#navVote").addClass("btn-outline-light disabled");
+                    $("#navResults").addClass("btn-outline-light disabled");
                 }
             }
 
 	        function setup()
 	         {
-	            $(document.getElementById("scEndorse")).addClass("active");
+	            $("#scEndorse").addClass("active");
 				navbarUpdate();
 				
 	            endorseValidation();
