@@ -15,24 +15,25 @@
         <script>
             function handleTextBoxNom(value) {
                 if (value == 1) {
-                    let limited = $("#limitnom");
-                    let text = $("#nomtext")
+                    let limited = document.getElementById("limitnom");
+                    let text = document.getElementById("nomtext");
+                    
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                         text.focus()
                     }
                 }
                 if (value == 2) {
-                    let limited = $("#limitend");
-                    let text = $("#endorsetext")
+                    let limited = document.getElementById("limitend");
+                    let text = document.getElementById("endorsetext");
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                             text.focus()
                     }
                 }
                 if (value == 3) {
-                    let limited = $("#limitvot");
-                    let text = $("#votetext")
+                    let limited = document.getElementById("limitvot");
+                    let text = document.getElementById("votetext");
                     text.disabled = limited.checked ? false : true;
                     if (!text.disabled) {
                         text.focus()
