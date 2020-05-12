@@ -672,40 +672,23 @@ class Database:
     def createCycle(self, name, datecreated, admin, nominatenum, endorsenum, votenum, endorsethresh, rollthresh,
                     nomdate, endorsedate,
                     votingdate, resultsdate, enddate):
-
-        print('in database')
-        query = 'SELECT ids FROM cycle'
-        result = Database.connectDB(self, query)
-        query = 'SELECT speakid FROM speakers'
+       
+        query = 'SELECT MAX(speakid) FROM speakers'
         speakers = Database.connectDB(self, query)
 
-        print(len(speakers))
-
         if not speakers or len(speakers) == 0:
-            ids = 0
+            ids = 1
         else:
-            champ = 0
-            for i in range(len(speakers[0])):
-                print(i)
-                if int(speakers[0][i]) > champ:
-                    champ = int(speakers[0][i])
-            ids = champ
-
-        print('out of list')
-
-        query = 'SELECT ccids FROM cycle'
-        result = Database.connectDB(self, query)
-        query = 'SELECT converseid FROM conversation'
+            ids = int(speakers[0][0]) + 1
+            
+        query = 'SELECT MAX(converseid) FROM conversation'
         converseids = Database.connectDB(self, query)
+        print(converseids)
         if not converseids or len(converseids) == 0:
-            ccids = 0
+            ccids = 1
         else:
-            champ = 0
-            for i in range(len(converseids[0])):
-                if int(converseids[0][i]) > champ:
-                    champ = converseids[0][i]
-            ccids = champ
-
+            ccids = int(converseids[0][0]) + 1
+            
         query = 'DELETE FROM cycle'
         Database.connectDB(self, query)
 
@@ -717,7 +700,7 @@ class Database:
 
         query = 'DELETE FROM reports'
         Database.connectDB(self, query)
-
+        
         if not rollthresh:
             rollthresh = 0;
         query = "PREPARE stmt(text, date, text, int, int, int, int, int, int, date, date, date, date, date, int) AS " \
