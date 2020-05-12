@@ -676,7 +676,7 @@ class Database:
         query = 'SELECT MAX(speakid) FROM speakers'
         speakers = Database.connectDB(self, query)
         
-        if not speakers[0][0] or len(speakers) == 0:
+        if not speakers or len(speakers) == 0 or not speakers[0][0]:
             ids = 1
         else:
             print("speaker", speakers[0][0])
@@ -685,7 +685,7 @@ class Database:
         query = 'SELECT MAX(converseid) FROM conversation'
         converseids = Database.connectDB(self, query)
         print(converseids)
-        if not converseids[0][0] or len(converseids) == 0:
+        if not converseids[0][0] or len(converseids) == 0 or not conversids[0][0]:
             ccids = 1
         else:
             print("converse", converseids[0][0])
