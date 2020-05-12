@@ -499,14 +499,14 @@ def new_cycle():
 
         if (argdict['Number of Endorsements'] == "limited"):
             endorse_count = request.args.get('endorsetext')
-            if int(nomination_count) < 1:
+            if int(endorse_count) < 1:
                 return redirect('aCreateCycle')
         else:
             endorse_count = UNLIMITED_VALUE
 
         if (argdict['Number of Votes'] == "limited"):
             vote_count = request.args.get('votetext')
-            if int(nomination_count) < 1:
+            if int(vote_count) < 1:
                 return redirect('aCreateCycle')
         else:
             vote_count = UNLIMITED_VALUE
@@ -614,21 +614,21 @@ def prevstep_flask():
         validation = cyclevalidation(cycle)
         if (validation['nominating']): return redirect('aHome')
         elif (validation['endorsing']):
-            nomdate = datetime.date.today();
+            nomdate = datetime.date.today()
             endorsedate = datetime.date.today() + timedelta(days=1)
             votingdate = datetime.date.today() + timedelta(days=2)
             resultsdate = datetime.date.today() + timedelta(days=3)
             enddate = datetime.date.today() + timedelta(days=4)
         elif (validation['voting']):
             nomdate = cycle.getDateNom()
-            endorsedate = datetime.date.today();
+            endorsedate = datetime.date.today()
             votingdate = datetime.date.today() + timedelta(days=1)
             resultsdate = datetime.date.today() + timedelta(days=2)
             enddate = datetime.date.today() + timedelta(days=3)
         elif (validation['results']):
             nomdate = cycle.getDateNom()
             endorsedate = cycle.getDateEndorse()
-            votingdate = datetime.date.today();
+            votingdate = datetime.date.today()
             resultsdate = datetime.date.today() + timedelta(days=1)
             enddate = datetime.date.today() + timedelta(days=2)
         else:
