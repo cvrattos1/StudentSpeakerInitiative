@@ -196,11 +196,6 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
-
-@app.route('/aboutdevelopers')
-def aboutdevelopers():
-    return render_template('aboutdevelopers.html')
-
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
